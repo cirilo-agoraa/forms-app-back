@@ -1,0 +1,295 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="PedroCostaa">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="PedroCostaa">
+        <createTable tableName="authorities">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="authority" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="authorities"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_authorities_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="3" author="PedroCostaa">
+        <createTable tableName="suppliers">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="orders" type="INT"/>
+            <column name="orders_not_delivered" type="INT"/>
+            <column name="orders_not_delivered_percentage" type="FLOAT"/>
+            <column name="total_value" type="FLOAT"/>
+            <column name="value_received" type="FLOAT"/>
+            <column name="value_received_percentage" type="FLOAT"/>
+            <column name="average_value_received" type="FLOAT"/>
+            <column name="min_value_received" type="FLOAT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="PedroCostaa">
+        <createTable tableName="extra_orders">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="partial_complete" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="origin" type="VARCHAR(255)"/>
+            <column name="stores_complete" type="VARCHAR(255)"/>
+            <column name="store_partial" type="VARCHAR(255)"/>
+            <column name="processed" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_submitted" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="extra_orders"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_extra_order_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="extra_orders"
+                                 baseColumnNames="supplier_id"
+                                 constraintName="fk_extra_order_supplier"
+                                 referencedTableName="suppliers"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="5" author="PedroCostaa">
+        <createTable tableName="products">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="barcode" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="out_of_mix" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="weight" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sector" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_name" type="VARCHAR(255)"/>
+            <column name="subgroup" type="VARCHAR(255)"/>
+            <column name="package_quantity" type="INT"/>
+            <column name="minimum_stock" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sales_last30days" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sales_last12months" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sales_last7days" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="daily_sales" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_cost" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="average_sales_last30days" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_stock" type="FLOAT"/>
+            <column name="open_order" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiration_date" type="DATE"/>
+            <column name="loss_quantity" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="promotion_type" type="VARCHAR(255)"/>
+            <column name="brand" type="VARCHAR(255)"/>
+            <column name="exchange_quantity" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flag1" type="VARCHAR(255)"/>
+            <column name="flag2" type="VARCHAR(255)"/>
+            <column name="flag3" type="VARCHAR(255)"/>
+            <column name="flag4" type="VARCHAR(255)"/>
+            <column name="flag5" type="VARCHAR(255)"/>
+            <column name="average_expiration" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="network_stock" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transfer_package" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="promotion_quantity" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="no_delivery_quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="average_sales30d12m" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="highest_sales" type="FLOAT"/>
+            <column name="daily_sales_amount" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="days_to_expire" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sales_projection" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_projection" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="excess_stock" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_cost" type="FLOAT"/>
+            <column name="total_sales" type="FLOAT"/>
+            <column name="term" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_stock_per_package" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="average_sales" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost_p" type="FLOAT"/>
+            <column name="sales_p" type="FLOAT"/>
+            <column name="available_stock" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stock_turnover" type="FLOAT"/>
+            <column name="net_cost" type="FLOAT"/>
+            <column name="sales_price" type="FLOAT"/>
+            <column name="sales_price2" type="FLOAT"/>
+            <column name="promotion_price" type="FLOAT"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="products"
+                                 baseColumnNames="supplier_id"
+                                 constraintName="fk_product_supplier"
+                                 referencedTableName="suppliers"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="6" author="PedroCostaa">
+        <createTable tableName="extra_order_products">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extra_order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="extra_order_products"
+                                 baseColumnNames="extra_order_id"
+                                 constraintName="fk_extra_order_products_extra_order"
+                                 referencedTableName="extra_orders"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="7" author="PedroCostaa">
+        <createTable tableName="token_blacklist">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="token_blacklist"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_token_blacklist_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="8" author="PedroCostaa">
+        <addColumn tableName="users">
+            <column name="first_access" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="9" author="PedroCostaa">
+        <dropColumn tableName="extra_order_products" columnName="name"/>
+    </changeSet>
+
+</databaseChangeLog>
