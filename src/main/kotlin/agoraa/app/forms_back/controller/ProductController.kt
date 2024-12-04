@@ -66,7 +66,8 @@ class ProductController(private val productService: ProductService) {
 
     @GetMapping
     fun getAllProducts(
-        @RequestParam(defaultValue = "true") outOfMix: String,
+        @RequestParam(defaultValue = "true") includeOutOfMix: String,
+        @RequestParam(defaultValue = "") outOfMix: String,
         @RequestParam(defaultValue = "0") supplierId: Long,
         @RequestParam(defaultValue = "") supplierName: String,
         @RequestParam(defaultValue = "") name: String,
@@ -77,7 +78,7 @@ class ProductController(private val productService: ProductService) {
         @RequestParam(defaultValue = "asc") direction: String
     ): ResponseEntity<Page<ProductModel>> =
         ResponseEntity.status(HttpStatus.OK)
-            .body(productService.findAll(outOfMix, supplierId, supplierName, name, code, page, size, sort, direction))
+            .body(productService.findAll(includeOutOfMix, outOfMix, supplierId, supplierName, name, code, page, size, sort, direction))
 
     @GetMapping("/{id}")
     fun getProductById(@PathVariable id: Long): ResponseEntity<Any> {

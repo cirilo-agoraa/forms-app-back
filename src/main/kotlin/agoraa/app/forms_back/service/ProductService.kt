@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class ProductService(
@@ -32,11 +31,21 @@ class ProductService(
         val sortDirection = if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort))
 
+        val queryMap = mapOf(
+            "outOfMix" to { productRepository.findByOutOfMix(outOfMix.toBoolean(), pageable) },
+            "supplierId" to { productRepository.findBySupplierIdAndOutOfMixEquals(supplierId, outOfMix.toBoolean(), pageable) },
+            "supplierName" to { productRepository.findBySupplierNameContainingAndOutOfMixEquals(supplierName, outOfMix.toBoolean(), pageable) },
+            "name" to { productRepository.findByNameContainingAndOutOfMixEquals(name, outOfMix.toBoolean(), pageable) },
+            "code" to { productRepository.findByCodeContainingAndOutOfMixEquals(code, outOfMix.toBoolean(), pageable) }
+        )
+
         return when {
+            outOfMix.isNotEmpty() && outOfMix.toBoolean() -> queryMap.entries.firstOrNull()?.value?.invoke()
+                ?: productRepository.findByOutOfMix(outOfMix.toBoolean(), pageable)
             supplierId != 0L -> productRepository.findBySupplierId(supplierId, pageable)
-            supplierName.isNotEmpty() -> productRepository.findBySupplierNameContainingAndOutOfMix(supplierName, outOfMix.toBoolean(), pageable)
-            name.isNotEmpty() -> productRepository.findByNameContainingAndOutOfMix(name, outOfMix.toBoolean(), pageable)
-            code.isNotEmpty() -> productRepository.findByCodeContainingAndOutOfMix(code, outOfMix.toBoolean(), pageable)
+            supplierName.isNotEmpty() -> productRepository.findBySupplierNameContaining(supplierName, pageable)
+            name.isNotEmpty() -> productRepository.findByNameContaining(name, pageable)
+            code.isNotEmpty() -> productRepository.findByCodeContaining(code, pageable)
             else -> productRepository.findAll(pageable)
         }
     }

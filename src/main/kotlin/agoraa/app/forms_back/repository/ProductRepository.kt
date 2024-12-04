@@ -1,7 +1,6 @@
 package agoraa.app.forms_back.repository
 
 import agoraa.app.forms_back.model.ProductModel
-import agoraa.app.forms_back.model.SupplierModel
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -13,13 +12,15 @@ import java.util.*
 interface ProductRepository : JpaRepository<ProductModel, Long>, PagingAndSortingRepository<ProductModel, Long> {
     fun findByCode(code: String): Optional<ProductModel>
 
-    fun findByNameContainingAndOutOfMix(name: String, outOfMix: Boolean, pageable: Pageable): Page<ProductModel>
-    fun findBySupplierNameContainingAndOutOfMix(
+    fun findByNameContainingAndOutOfMixEquals(name: String, outOfMix: Boolean, pageable: Pageable): Page<ProductModel>
+    fun findBySupplierNameContainingAndOutOfMixEquals(
         supplierName: String,
         outOfMix: Boolean,
         pageable: Pageable
     ): Page<ProductModel>
-    fun findByCodeContainingAndOutOfMix(code: String, outOfMix: Boolean, pageable: Pageable): Page<ProductModel>
+
+    fun findByCodeContainingAndOutOfMixEquals(code: String, outOfMix: Boolean, pageable: Pageable): Page<ProductModel>
+    fun findBySupplierIdAndOutOfMixEquals(supplierId: Long, outOfMix: Boolean, pageable: Pageable): Page<ProductModel>
 
     fun findByNameContaining(name: String, pageable: Pageable): Page<ProductModel>
     fun findBySupplierNameContaining(supplierName: String, pageable: Pageable): Page<ProductModel>

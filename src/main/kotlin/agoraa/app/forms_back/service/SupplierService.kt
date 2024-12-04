@@ -19,20 +19,27 @@ import java.util.*
 class SupplierService(private val supplierRepository: SupplierRepository) {
 
     fun findAll(
+        pagination: String,
         name: String,
         status: String,
         page: Int,
         size: Int,
         sort: String,
         direction: String
-    ): Page<SupplierModel> {
+    ): Any {
         val sortDirection = if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort))
 
+        val queryMap = mapOf(
+            "name" to { supplierRepository.findByNameContaining(name, pageable) },
+            "status" to { supplierRepository.findByStatus(SupplierStatusEnum.valueOf(status).name, pageable) }
+        )
         return when {
-            name.isNotEmpty() -> supplierRepository.findByNameContaining(name, pageable)
-            status.isNotEmpty() -> supplierRepository.findByStatus(SupplierStatusEnum.valueOf(status).name, pageable)
-            else -> supplierRepository.findAll(pageable)
+            pagination.toBoolean() -> queryMap.entries.firstOrNull()?.value?.invoke()
+                ?: supplierRepository.findAll(pageable)
+            name.isNotEmpty() -> supplierRepository.findByNameContaining(name)
+            status.isNotEmpty() -> supplierRepository.findByStatus(SupplierStatusEnum.valueOf(status).name)
+            else -> supplierRepository.findAll()
         }
     }
 

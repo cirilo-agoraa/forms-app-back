@@ -13,6 +13,7 @@ interface SupplierRepository: JpaRepository<SupplierModel, Long> {
     fun findByName(name: String): Optional<SupplierModel>
 
     fun findByNameContaining(name: String, pageable: Pageable): Page<SupplierModel>
-
     fun findByStatus(status: String, pageable: Pageable): Page<SupplierModel>
+    fun findByNameContaining(name: String): Iterable<SupplierModel>
+    fun findByStatus(status: String): Iterable<SupplierModel>
 }

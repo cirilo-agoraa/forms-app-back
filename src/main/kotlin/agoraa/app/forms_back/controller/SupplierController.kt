@@ -93,6 +93,7 @@ class SupplierController(private val supplierService: SupplierService) {
 
     @GetMapping
     fun getAllSuppliers(
+        @RequestParam(defaultValue = "true") pagination: String,
         @RequestParam(defaultValue = "") name: String,
         @RequestParam(defaultValue = "") status: String,
         @RequestParam(defaultValue = "0") page: Int,
@@ -101,7 +102,7 @@ class SupplierController(private val supplierService: SupplierService) {
         @RequestParam(defaultValue = "asc") direction: String
     ): ResponseEntity<Any> {
         return try {
-            ResponseEntity.ok(supplierService.findAll(name, status, page, size, sort, direction))
+            ResponseEntity.ok(supplierService.findAll(pagination, name, status, page, size, sort, direction))
         } catch (e: IllegalArgumentException) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }
