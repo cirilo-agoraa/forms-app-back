@@ -24,6 +24,13 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
+        val requestURI = request.requestURI
+
+        if (requestURI == "/api/auth/refresh" || requestURI == "/api/auth") {
+            filterChain.doFilter(request, response)
+            return
+        }
+
         val authHeader: String? = request.getHeader("Authorization")
 
         if (authHeader.doesNotContainBearerToken()) {
@@ -32,17 +39,24 @@ class JwtAuthenticationFilter(
         }
 
         val jwtToken = authHeader!!.extractTokenValue()
-        val email = tokenService.extractEmail(jwtToken)
+        try {
+            val email = tokenService.extractEmail(jwtToken)
 
-        if (email != null && SecurityContextHolder.getContext().authentication == null) {
-            val foundUser = userDetailsService.loadUserByUsername(email)
+            if (email != null && SecurityContextHolder.getContext().authentication == null) {
+                val foundUser = userDetailsService.loadUserByUsername(email)
 
-            if (tokenService.isValid(jwtToken, foundUser)) {
-                updateContext(foundUser, request)
+                if (tokenService.isValid(jwtToken, foundUser)) {
+                    updateContext(foundUser, request)
+                }
             }
-        }
 
-        filterChain.doFilter(request, response)
+            filterChain.doFilter(request, response)
+
+        } catch (e: ExpiredJwtException) {
+            println("Expired token")
+            response.status = HttpServletResponse.SC_UNAUTHORIZED
+            return
+        }
     }
 
     private fun updateContext(foundUser: UserDetails, request: HttpServletRequest) {

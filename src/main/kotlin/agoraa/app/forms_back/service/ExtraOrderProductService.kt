@@ -20,25 +20,38 @@ class ExtraOrderProductService(
     @Lazy private val extraOrderService: ExtraOrderService
 ) {
 
+    private fun createPageable(
+        page: Int,
+        size: Int,
+        sort: String,
+        direction: String
+    ): PageRequest {
+        val sortDirection = if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
+        return PageRequest.of(page, size, Sort.by(sortDirection, sort))
+    }
+
     fun findAll(
         customUserDetails: CustomUserDetails,
+        pagination: String,
         extraOrderId: Long,
         page: Int,
         size: Int,
         sort: String,
         direction: String
-    ): Page<ExtraOrderProductModel> {
-        val sortDirection = if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
-        val pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort))
+    ): Any {
+        val pageable = createPageable(page, size, sort, direction)
 
         return when {
             extraOrderId != 0L -> {
                 val extraOrder = extraOrderService.findById(customUserDetails, extraOrderId)
-                extraOrderProductRepository.findByExtraOrderId(extraOrder.id, pageable)
+                if (pagination.toBoolean()) extraOrderProductRepository.findByExtraOrderId(
+                    extraOrder.id,
+                    pageable
+                ) else extraOrderProductRepository.findByExtraOrderId(extraOrder.id)
             }
 
             else -> {
-                extraOrderProductRepository.findAll(pageable)
+                if (pagination.toBoolean()) extraOrderProductRepository.findAll(pageable) else extraOrderProductRepository.findAll()
             }
         }
     }

@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.schema.extra_order
 
+import agoraa.app.forms_back.model.SupplierModel
 import agoraa.app.forms_back.schema.extra_order_product.ExtraOrderProductCreateSchema
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.NotBlank
@@ -7,10 +8,7 @@ import jakarta.validation.constraints.Pattern
 
 data class ExtraOrderCreateSchema(
     @field:NotNull
-    val supplierId: Long,
-
-    @field:NotNull
-    val userId: Long,
+    val supplier: SupplierModel,
 
     @field:NotBlank
     @field:Pattern(regexp = "PARCIAL|COMPLETO", message = "Invalid ExtraOrder Type")
@@ -24,5 +22,5 @@ data class ExtraOrderCreateSchema(
     @field:Pattern(regexp = "TRESMANN_SMJ|TRESMANN_VIX|TRESMANN_STT|MERCAPP", message = "Invalid Store Type")
     val storePartial: String? = null,
 
-    val productsInfo: List<ExtraOrderProductCreateSchema>
+    val products: List<ExtraOrderProductCreateSchema>
 )

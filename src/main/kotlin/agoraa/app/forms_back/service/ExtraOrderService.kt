@@ -12,14 +12,11 @@ import agoraa.app.forms_back.repository.ExtraOrderRepository
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
 import jakarta.transaction.Transactional
-import org.springdoc.api.OpenApiResourceNotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import java.util.*
 
 @Service
 class ExtraOrderService(
@@ -136,9 +133,6 @@ class ExtraOrderService(
             partialComplete = request.partialComplete?.let { PartialCompleteEnum.valueOf(it) }
                 ?: extraOrder.partialComplete,
             origin = request.origin?.let { OriginEnum.valueOf(it) } ?: extraOrder.origin,
-            storesComplete = request.storesComplete?.map { StoresEnum.valueOf(it) }
-                ?: extraOrder.storesComplete,
-            storePartial = request.storePartial?.let { StoresEnum.valueOf(it) } ?: extraOrder.storePartial,
             processed = request.processed ?: extraOrder.processed,
             dateSubmitted = request.dateSubmitted?.let { LocalDate.parse(it) } ?: extraOrder.dateSubmitted
         )
@@ -147,7 +141,9 @@ class ExtraOrderService(
 
     @Transactional
     fun create(user: UserModel, request: ExtraOrderCreateSchema): ExtraOrderModel {
-        val supplier = supplierService.findById(request.supplierId)
+        if (!supplierService.existsInDatabase(request.supplier)) {
+            throw ResourceNotFoundException("Supplier not Found")
+        }
 
         when (PartialCompleteEnum.valueOf(request.partialComplete)) {
             PartialCompleteEnum.PARCIAL -> {
@@ -166,14 +162,12 @@ class ExtraOrderService(
         val extraOrder = extraOrderRepository.save(
             ExtraOrderModel(
                 user = user,
-                supplier = supplier,
+                supplier = request.supplier,
                 partialComplete = PartialCompleteEnum.valueOf(request.partialComplete),
                 origin = request.origin?.let { OriginEnum.valueOf(it) },
-                storesComplete = request.storesComplete?.map { StoresEnum.valueOf(it) },
-                storePartial = request.storePartial?.let { StoresEnum.valueOf(it) }
             )
         )
-        extraOrderProductService.create(extraOrder, request.productsInfo)
+        extraOrderProductService.create(extraOrder, request.products)
 
         return extraOrder
     }

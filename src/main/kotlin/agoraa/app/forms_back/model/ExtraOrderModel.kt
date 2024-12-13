@@ -1,6 +1,5 @@
 package agoraa.app.forms_back.model
 
-import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.enums.extra_order.OriginEnum
 import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
 import jakarta.persistence.*
@@ -28,13 +27,6 @@ data class ExtraOrderModel(
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val origin: OriginEnum?,
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    val storesComplete: List<StoresEnum>?,
-
-    @Column(nullable = false)
-    val storePartial: StoresEnum?,
 
     @Column(nullable = false)
     val processed: Boolean = false,

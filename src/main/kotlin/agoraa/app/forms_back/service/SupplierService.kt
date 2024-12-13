@@ -43,6 +43,10 @@ class SupplierService(private val supplierRepository: SupplierRepository) {
         }
     }
 
+    fun existsInDatabase(supplier: SupplierModel): Boolean {
+        return supplierRepository.existsById(supplier.id)
+    }
+
     fun findById(id: Long): SupplierModel {
         return supplierRepository.findById(id)
             .orElseThrow { throw ResourceNotFoundException("Supplier not Found") }

@@ -12,12 +12,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/extra-order-products")
+@RequestMapping("/api/extra-orders-products")
 class ExtraOrderProductController(private val extraOrderProductService: ExtraOrderProductService) {
 
     @GetMapping
     fun getAllExtraOrderProducts(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
+        @RequestParam(defaultValue = "true") pagination: String,
         @RequestParam(defaultValue = "0") extraOrderId: Long,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
@@ -26,7 +27,7 @@ class ExtraOrderProductController(private val extraOrderProductService: ExtraOrd
     ): ResponseEntity<Any> {
         return try {
             ResponseEntity.status(HttpStatus.OK)
-                .body(extraOrderProductService.findAll(customUserDetails, extraOrderId, page, size, sort, direction))
+                .body(extraOrderProductService.findAll(customUserDetails, pagination, extraOrderId, page, size, sort, direction))
         } catch (e: ResourceNotFoundException) {
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
         }

@@ -33,8 +33,20 @@ class ProductService(
 
         val queryMap = mapOf(
             "outOfMix" to { productRepository.findByOutOfMix(outOfMix.toBoolean(), pageable) },
-            "supplierId" to { productRepository.findBySupplierIdAndOutOfMixEquals(supplierId, outOfMix.toBoolean(), pageable) },
-            "supplierName" to { productRepository.findBySupplierNameContainingAndOutOfMixEquals(supplierName, outOfMix.toBoolean(), pageable) },
+            "supplierId" to {
+                productRepository.findBySupplierIdAndOutOfMixEquals(
+                    supplierId,
+                    outOfMix.toBoolean(),
+                    pageable
+                )
+            },
+            "supplierName" to {
+                productRepository.findBySupplierNameContainingAndOutOfMixEquals(
+                    supplierName,
+                    outOfMix.toBoolean(),
+                    pageable
+                )
+            },
             "name" to { productRepository.findByNameContainingAndOutOfMixEquals(name, outOfMix.toBoolean(), pageable) },
             "code" to { productRepository.findByCodeContainingAndOutOfMixEquals(code, outOfMix.toBoolean(), pageable) }
         )
@@ -42,6 +54,7 @@ class ProductService(
         return when {
             outOfMix.isNotEmpty() && outOfMix.toBoolean() -> queryMap.entries.firstOrNull()?.value?.invoke()
                 ?: productRepository.findByOutOfMix(outOfMix.toBoolean(), pageable)
+
             supplierId != 0L -> productRepository.findBySupplierId(supplierId, pageable)
             supplierName.isNotEmpty() -> productRepository.findBySupplierNameContaining(supplierName, pageable)
             name.isNotEmpty() -> productRepository.findByNameContaining(name, pageable)
