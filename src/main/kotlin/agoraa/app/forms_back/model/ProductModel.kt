@@ -1,10 +1,21 @@
 package agoraa.app.forms_back.model
 
+import agoraa.app.forms_back.enums.StoresEnum
 import jakarta.persistence.*
 import java.time.LocalDate
 
 @Entity
 @Table(name = "products")
+@NamedEntityGraph(
+    name = "ProductModel.supplier",
+    attributeNodes = [NamedAttributeNode("supplier")],
+    subgraphs = [
+        NamedSubgraph(
+        name = "supplier",
+        attributeNodes = [NamedAttributeNode("id"), NamedAttributeNode("name")]
+    )]
+
+)
 data class ProductModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +27,7 @@ data class ProductModel(
     @Column(nullable = false)
     val name: String,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = false)
     val supplier: SupplierModel,
 
@@ -24,7 +35,8 @@ data class ProductModel(
     val barcode: String,
 
     @Column(nullable = false)
-    val store: String,
+    @Enumerated(EnumType.STRING)
+    val store: StoresEnum,
 
     @Column(nullable = false)
     val outOfMix: Boolean,

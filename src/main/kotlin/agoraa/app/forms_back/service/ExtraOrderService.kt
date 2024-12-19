@@ -1,20 +1,25 @@
 package agoraa.app.forms_back.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.enums.authority.AuthorityTypeEnum
 import agoraa.app.forms_back.enums.extra_order.OriginEnum
 import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.exceptions.NotAllowedException
 import agoraa.app.forms_back.exceptions.ResourceNotFoundException
 import agoraa.app.forms_back.model.ExtraOrderModel
+import agoraa.app.forms_back.model.SupplierModel
 import agoraa.app.forms_back.model.UserModel
 import agoraa.app.forms_back.repository.ExtraOrderRepository
-import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
-import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
+import agoraa.app.forms_back.schema.extra_order.*
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.Predicate
+import jakarta.persistence.criteria.Root
 import jakarta.transaction.Transactional
-import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -23,88 +28,121 @@ class ExtraOrderService(
     private val extraOrderRepository: ExtraOrderRepository,
     private val supplierService: SupplierService,
     private val userService: UserService,
-    private val extraOrderProductService: ExtraOrderProductService
+    private val extraOrderProductService: ExtraOrderProductService,
+    private val extraOrderStoreService: ExtraOrderStoreService
 ) {
+
+    private fun createCriteria(
+        supplier: Long?,
+        user: Long?,
+        processed: Boolean?,
+        dateSubmitted: String?,
+        origin: String?,
+        partialComplete: PartialCompleteEnum?,
+    ): Specification<ExtraOrderModel> {
+        return Specification { root: Root<ExtraOrderModel>, query: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+
+            supplier?.let {
+                predicates.add(criteriaBuilder.equal(root.get<SupplierModel>("supplier").get<Long>("id"), it))
+            }
+
+            user?.let {
+                predicates.add(criteriaBuilder.equal(root.get<UserModel>("user").get<Long>("id"), it))
+            }
+
+            processed?.let {
+                predicates.add(criteriaBuilder.equal(root.get<Boolean>("processed"), it))
+            }
+
+            dateSubmitted?.let {
+                predicates.add(criteriaBuilder.equal(root.get<LocalDate>("dateSubmitted"), LocalDate.parse(it)))
+            }
+
+            origin?.let {
+                predicates.add(criteriaBuilder.equal(root.get<OriginEnum>("origin"), OriginEnum.valueOf(it)))
+            }
+
+            partialComplete?.let {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<PartialCompleteEnum>("partialComplete"), it)
+                )
+            }
+
+            criteriaBuilder.and(*predicates.toTypedArray())
+        }
+    }
+
+    private fun createExtraOrderDTO(extraOrder: ExtraOrderModel): ExtraOrderDTO {
+        return ExtraOrderDTO(
+            id = extraOrder.id,
+            user = extraOrder.user.username,
+            supplier = extraOrder.supplier.name,
+            partialComplete = extraOrder.partialComplete,
+            processed = extraOrder.processed,
+            dateSubmitted = extraOrder.dateSubmitted,
+            stores = extraOrder.stores.map { store -> store.store.name },
+            products = extraOrder.products.map {
+                ExtraOrderProductsDTO(
+                    code = it.product.code,
+                    price = it.price,
+                    quantity = it.quantity
+                )
+            },
+            origin = extraOrder.origin
+        )
+    }
+
+    private fun validateCreateRequest(request: ExtraOrderCreateSchema) {
+        if (request.partialComplete == "PARCIAL") {
+            require(request.stores.size == 1) { "For PARCIAL orders, there must be exactly one store." }
+            require(!request.products.isNullOrEmpty()) { "For PARCIAL orders, products cannot be null or empty." }
+            require(request.origin != null) { "For PARCIAL orders, origin cannot be null." }
+        }
+    }
 
     fun findAll(
         customUserDetails: CustomUserDetails,
-        supplierId: Long,
-        userId: Long,
-        processed: String,
-        dateSubmitted: String,
-        origin: String,
-        partialComplete: String,
+        pagination: Boolean,
+        supplier: Long?,
+        user: Long?,
+        processed: Boolean?,
+        dateSubmitted: String?,
+        origin: String?,
+        partialComplete: PartialCompleteEnum?,
         page: Int,
         size: Int,
         sort: String,
         direction: String
-    ): Page<ExtraOrderModel> {
+    ): Any {
         val currentUser = customUserDetails.getUserModel()
-        val sortDirection = if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
-        val pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort))
+        val spec = createCriteria(supplier, user, processed, dateSubmitted, origin, partialComplete)
 
-        return when {
-            supplierId != 0L -> {
-                val supplier = supplierService.findById(supplierId)
-                if (customUserDetails.authorities.map { it.authority }.contains("ROLE_ADMIN")) {
-                    extraOrderRepository.findBySupplierId(supplier.id, pageable)
-                } else {
-                    throw NotAllowedException("You are not allowed to access this resource")
-                }
+        return if (pagination) {
+            val sortDirection =
+                if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
+            val pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort))
+            val extraOrderPage = extraOrderRepository.findAll(spec, pageable)
+            val extraOrderDTOs = extraOrderPage.content.map { createExtraOrderDTO(it) }
+
+            if (!currentUser.authorities.any { it.authority == AuthorityTypeEnum.ROLE_ADMIN }) {
+                val extraOrderDTOsFiltered = extraOrderDTOs.filter { it.user == currentUser.username }
+                val start = pageable.offset.toInt()
+                val end = (start + pageable.pageSize).coerceAtMost(extraOrderDTOsFiltered.size)
+                return PageImpl(extraOrderDTOsFiltered.subList(start, end), pageable, extraOrderDTOsFiltered.size.toLong())
             }
 
-            userId != 0L -> {
-                val user = userService.findById(userId)
-                if (customUserDetails.authorities.map { it.authority }.contains("ROLE_ADMIN")) {
-                    extraOrderRepository.findByUserId(user.id, pageable)
-                } else {
-                    throw NotAllowedException("You are not allowed to access this resource")
-                }
+            PageImpl(extraOrderDTOs, pageable, extraOrderPage.totalElements)
+        } else {
+            val extraOrders = extraOrderRepository.findAll(spec)
+            val extraOrderDTOs = extraOrders.map { createExtraOrderDTO(it) }
+
+            if (!currentUser.authorities.any { it.authority == AuthorityTypeEnum.ROLE_ADMIN }) {
+                return extraOrderDTOs.filter { it.user == currentUser.username }
             }
 
-            processed.isNotEmpty() -> {
-                if (customUserDetails.authorities.map { it.authority }.contains("ROLE_ADMIN")) {
-                    extraOrderRepository.findByProcessed(processed.toBoolean(), pageable)
-                } else {
-                    extraOrderRepository.findByProcessedAndUserId(processed.toBoolean(), currentUser.id, pageable)
-                }
-            }
-
-            dateSubmitted.isNotEmpty() -> {
-                if (customUserDetails.authorities.map { it.authority }.contains("ROLE_ADMIN")) {
-                    extraOrderRepository.findByDateSubmitted(LocalDate.parse(dateSubmitted), pageable)
-                } else {
-                    extraOrderRepository.findByDateSubmittedAndUserId(
-                        LocalDate.parse(dateSubmitted),
-                        currentUser.id,
-                        pageable
-                    )
-                }
-            }
-
-            origin.isNotEmpty() -> {
-                if (customUserDetails.authorities.map { it.authority }.contains("ROLE_ADMIN")) {
-                    extraOrderRepository.findByOrigin(origin, pageable)
-                } else {
-                    extraOrderRepository.findByOriginAndUserId(origin, currentUser.id, pageable)
-                }
-            }
-
-            partialComplete.isNotEmpty() -> {
-                if (customUserDetails.authorities.map { it.authority }.contains("ROLE_ADMIN")) {
-                    extraOrderRepository.findByPartialComplete(partialComplete, pageable)
-                } else {
-                    extraOrderRepository.findByPartialCompleteAndUserId(partialComplete, currentUser.id, pageable)
-                }
-            }
-
-            else -> {
-                if (customUserDetails.authorities.map { it.authority }.contains("ROLE_ADMIN")) {
-                    extraOrderRepository.findAll(pageable)
-                } else {
-                    extraOrderRepository.findByUserId(currentUser.id, pageable)
-                }
-            }
+            extraOrderDTOs
         }
     }
 
@@ -122,53 +160,60 @@ class ExtraOrderService(
             .orElseThrow { throw ResourceNotFoundException("Extra Order not Found") }
     }
 
-    fun edit(customUserDetails: CustomUserDetails, id: Long, request: ExtraOrderEditSchema): ExtraOrderModel {
+    fun returnById(customUserDetails: CustomUserDetails, id: Long): ExtraOrderDTO {
         val extraOrder = findById(customUserDetails, id)
-        val user = request.userId?.let { userService.findById(it) }
-        val supplier = request.supplierId?.let { supplierService.findById(it) }
-
-        val extraOrderEdited = extraOrder.copy(
-            user = user ?: extraOrder.user,
-            supplier = supplier ?: extraOrder.supplier,
-            partialComplete = request.partialComplete?.let { PartialCompleteEnum.valueOf(it) }
-                ?: extraOrder.partialComplete,
-            origin = request.origin?.let { OriginEnum.valueOf(it) } ?: extraOrder.origin,
-            processed = request.processed ?: extraOrder.processed,
-            dateSubmitted = request.dateSubmitted?.let { LocalDate.parse(it) } ?: extraOrder.dateSubmitted
-        )
-        return extraOrderRepository.save(extraOrderEdited)
+        return createExtraOrderDTO(extraOrder)
     }
 
     @Transactional
-    fun create(user: UserModel, request: ExtraOrderCreateSchema): ExtraOrderModel {
-        if (!supplierService.existsInDatabase(request.supplier)) {
-            throw ResourceNotFoundException("Supplier not Found")
-        }
+    fun edit(customUserDetails: CustomUserDetails, id: Long, request: ExtraOrderEditSchema): ExtraOrderDTO {
+        val extraOrder = findById(customUserDetails, id)
+        val partialComplete = request.partialComplete?.let { PartialCompleteEnum.valueOf(it) } ?: extraOrder.partialComplete
 
-        when (PartialCompleteEnum.valueOf(request.partialComplete)) {
-            PartialCompleteEnum.PARCIAL -> {
-                if (request.storePartial == null || request.origin == null) {
-                    throw IllegalArgumentException("Partial order must have origin and store")
-                }
-            }
-
-            PartialCompleteEnum.COMPLETO -> {
-                if (request.storesComplete == null) {
-                    throw IllegalArgumentException("Complete order must have at least one store")
-                }
-            }
-        }
-
-        val extraOrder = extraOrderRepository.save(
-            ExtraOrderModel(
-                user = user,
-                supplier = request.supplier,
-                partialComplete = PartialCompleteEnum.valueOf(request.partialComplete),
-                origin = request.origin?.let { OriginEnum.valueOf(it) },
-            )
+        val updatedOrder = extraOrder.copy(
+            partialComplete = partialComplete,
+            supplier = request.supplier?.let { supplierService.findById(it.id) } ?: extraOrder.supplier,
+            processed = request.processed ?: extraOrder.processed,
+            stores = request.stores?.let { extraOrderStoreService.edit(extraOrder, it) } ?: extraOrder.stores,
         )
-        extraOrderProductService.create(extraOrder, request.products)
 
-        return extraOrder
+        if (partialComplete == PartialCompleteEnum.PARCIAL) {
+            updatedOrder.products = request.products?.let { extraOrderProductService.edit(extraOrder, it)} ?: extraOrder.products
+            updatedOrder.origin =  request.origin?.let { OriginEnum.valueOf(it) } ?: extraOrder.origin
+
+        } else {
+            extraOrder.products = mutableListOf()
+            updatedOrder.origin = null
+        }
+
+        extraOrderRepository.save(extraOrder)
+
+        return createExtraOrderDTO(extraOrder)
+    }
+
+    @Transactional
+    fun create(customUserDetails: CustomUserDetails, request: ExtraOrderCreateSchema): ExtraOrderDTO {
+        validateCreateRequest(request)
+
+        val user = customUserDetails.getUserModel()
+        val supplier = supplierService.findById(request.supplier.id)
+
+        val extraOrder = ExtraOrderModel(
+            user = user,
+            supplier = supplier,
+            partialComplete = PartialCompleteEnum.valueOf(request.partialComplete),
+        )
+
+        val stores = extraOrderStoreService.create(extraOrder, request.stores)
+        extraOrder.stores.addAll(stores)
+
+        if (extraOrder.partialComplete == PartialCompleteEnum.PARCIAL) {
+            val products = extraOrderProductService.create(extraOrder, request.products!!)
+            extraOrder.products.addAll(products)
+            extraOrder.origin = OriginEnum.valueOf(request.origin!!)
+        }
+
+        extraOrderRepository.save(extraOrder)
+        return createExtraOrderDTO(extraOrder)
     }
 }

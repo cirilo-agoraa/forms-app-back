@@ -19,5 +19,8 @@ data class UserModel(
     val enabled: Boolean = true,
 
     @Column(nullable = false)
-    val firstAccess: Boolean = true
+    val firstAccess: Boolean = true,
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var authorities: MutableList<AuthorityModel> = mutableListOf()
 )

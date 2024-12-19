@@ -5,46 +5,53 @@ import agoraa.app.forms_back.exceptions.ResourceNotFoundException
 import agoraa.app.forms_back.model.SupplierModel
 import agoraa.app.forms_back.repository.SupplierRepository
 import agoraa.app.forms_back.schema.supplier.SupplierCreateSchema
-import agoraa.app.forms_back.schema.supplier.SupplierEditMultipleSchema
-import agoraa.app.forms_back.schema.supplier.SupplierEditSchema
-import org.springdoc.api.OpenApiResourceNotFoundException
-import org.springframework.data.domain.Page
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.Predicate
+import jakarta.persistence.criteria.Root
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 @Service
 class SupplierService(private val supplierRepository: SupplierRepository) {
 
+    private fun createCriteria(name: String?, status: List<SupplierStatusEnum>?): Specification<SupplierModel> {
+        return Specification { root: Root<SupplierModel>, query: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+
+            name?.let {
+                predicates.add(criteriaBuilder.like(root.get("name"), "%$it%"))
+            }
+
+            status?.let {
+                predicates.add(root.get<SupplierStatusEnum>("status").`in`(it))
+            }
+
+            criteriaBuilder.and(*predicates.toTypedArray())
+        }
+    }
+
     fun findAll(
-        pagination: String,
-        name: String,
-        status: String,
+        pagination: Boolean,
+        name: String?,
+        status: List<SupplierStatusEnum>?,
         page: Int,
         size: Int,
         sort: String,
         direction: String
     ): Any {
-        val sortDirection = if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
-        val pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort))
+        val spec = createCriteria(name, status)
 
-        val queryMap = mapOf(
-            "name" to { supplierRepository.findByNameContaining(name, pageable) },
-            "status" to { supplierRepository.findByStatus(SupplierStatusEnum.valueOf(status).name, pageable) }
-        )
-        return when {
-            pagination.toBoolean() -> queryMap.entries.firstOrNull()?.value?.invoke()
-                ?: supplierRepository.findAll(pageable)
-            name.isNotEmpty() -> supplierRepository.findByNameContaining(name)
-            status.isNotEmpty() -> supplierRepository.findByStatus(SupplierStatusEnum.valueOf(status).name)
-            else -> supplierRepository.findAll()
+        if(pagination) {
+            val sortDirection = if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
+            val pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort))
+            return supplierRepository.findAll(spec, pageable)
+        } else {
+            return supplierRepository.findAll(spec)
         }
-    }
-
-    fun existsInDatabase(supplier: SupplierModel): Boolean {
-        return supplierRepository.existsById(supplier.id)
     }
 
     fun findById(id: Long): SupplierModel {
@@ -58,7 +65,7 @@ class SupplierService(private val supplierRepository: SupplierRepository) {
     }
 
     @Transactional
-    fun createBatch(request: List<SupplierCreateSchema>): List<SupplierModel> {
+    fun createMultiple(request: List<SupplierCreateSchema>): List<SupplierModel> {
         val suppliers = request
             .map { supplier ->
                 SupplierModel(
@@ -77,56 +84,36 @@ class SupplierService(private val supplierRepository: SupplierRepository) {
         return supplierRepository.saveAll(suppliers)
     }
 
-    fun create(request: SupplierCreateSchema): SupplierModel {
-        val supplier = SupplierModel(
-            name = request.name,
-            status = SupplierStatusEnum.valueOf(request.status),
-            orders = request.orders,
-            ordersNotDelivered = request.ordersNotDelivered,
-            ordersNotDeliveredPercentage = request.ordersNotDeliveredPercentage,
-            totalValue = request.totalValue,
-            valueReceived = request.valueReceived,
-            valueReceivedPercentage = request.valueReceivedPercentage,
-            averageValueReceived = request.averageValueReceived,
-            minValueReceived = request.minValueReceived
-        )
-        return supplierRepository.save(supplier)
-    }
-
-    fun edit(id: Long, request: SupplierEditSchema): SupplierModel {
-        val supplier = findById(id)
-        val updatedSupplier = supplier.copy(
-            name = request.name ?: supplier.name,
-            status = request.status?.let { SupplierStatusEnum.valueOf(it) } ?: supplier.status,
-            orders = request.orders ?: supplier.orders,
-            ordersNotDelivered = request.ordersNotDelivered ?: supplier.ordersNotDelivered,
-            ordersNotDeliveredPercentage = request.ordersNotDeliveredPercentage
-                ?: supplier.ordersNotDeliveredPercentage,
-            totalValue = request.totalValue ?: supplier.totalValue,
-            valueReceived = request.valueReceived ?: supplier.valueReceived,
-            valueReceivedPercentage = request.valueReceivedPercentage ?: supplier.valueReceivedPercentage,
-            averageValueReceived = request.averageValueReceived ?: supplier.averageValueReceived,
-            minValueReceived = request.minValueReceived ?: supplier.minValueReceived
-        )
-        return supplierRepository.save(updatedSupplier)
-    }
-
     @Transactional
-    fun editMultipleByName(request: List<SupplierEditMultipleSchema>): List<SupplierModel> {
+    fun editOrCreateMultipleByName(request: List<SupplierCreateSchema>): List<SupplierModel> {
         val suppliers = request.map { supplier ->
-            val supplierModel = findByName(supplier.name)
-            supplierModel.copy(
-                status = supplier.status?.let { SupplierStatusEnum.valueOf(it) } ?: supplierModel.status,
-                orders = supplier.orders ?: supplierModel.orders,
-                ordersNotDelivered = supplier.ordersNotDelivered ?: supplierModel.ordersNotDelivered,
-                ordersNotDeliveredPercentage = supplier.ordersNotDeliveredPercentage
-                    ?: supplierModel.ordersNotDeliveredPercentage,
-                totalValue = supplier.totalValue ?: supplierModel.totalValue,
-                valueReceived = supplier.valueReceived ?: supplierModel.valueReceived,
-                valueReceivedPercentage = supplier.valueReceivedPercentage ?: supplierModel.valueReceivedPercentage,
-                averageValueReceived = supplier.averageValueReceived ?: supplierModel.averageValueReceived,
-                minValueReceived = supplier.minValueReceived ?: supplierModel.minValueReceived
-            )
+            try {
+                val existingSupplier = findByName(supplier.name)
+                existingSupplier.copy(
+                    status = SupplierStatusEnum.valueOf(supplier.status),
+                    orders = supplier.orders,
+                    ordersNotDelivered = supplier.ordersNotDelivered,
+                    ordersNotDeliveredPercentage = supplier.ordersNotDeliveredPercentage,
+                    totalValue = supplier.totalValue,
+                    valueReceived = supplier.valueReceived,
+                    valueReceivedPercentage = supplier.valueReceivedPercentage,
+                    averageValueReceived = supplier.averageValueReceived,
+                    minValueReceived = supplier.minValueReceived
+                )
+            } catch(e: ResourceNotFoundException) {
+                SupplierModel(
+                    name = supplier.name,
+                    status = SupplierStatusEnum.valueOf(supplier.status),
+                    orders = supplier.orders,
+                    ordersNotDelivered = supplier.ordersNotDelivered,
+                    ordersNotDeliveredPercentage = supplier.ordersNotDeliveredPercentage,
+                    totalValue = supplier.totalValue,
+                    valueReceived = supplier.valueReceived,
+                    valueReceivedPercentage = supplier.valueReceivedPercentage,
+                    averageValueReceived = supplier.averageValueReceived,
+                    minValueReceived = supplier.minValueReceived
+                )
+            }
         }
         return supplierRepository.saveAll(suppliers)
     }

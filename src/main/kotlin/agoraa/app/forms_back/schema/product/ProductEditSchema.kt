@@ -4,9 +4,23 @@ import jakarta.validation.constraints.*
 import java.time.LocalDate
 
 data class ProductEditSchema(
+    @field:NotNull(message = "Product code is required")
+    @field:Size(max = 255)
+    val code: String,
+
     @field:NotBlank(message = "Product name is required")
     @field:Size(max = 255)
     val name: String,
+
+    @field:NotBlank(message = "Supplier name is required")
+    val supplier: String,
+
+    @field:NotNull(message = "Product barcode is required")
+    val barcode: String,
+
+    @field:NotBlank(message = "Store name is required")
+    @field:Size(max = 255)
+    val store: String,
 
     @field:NotNull(message = "Out of mix is required")
     val outOfMix: Boolean,

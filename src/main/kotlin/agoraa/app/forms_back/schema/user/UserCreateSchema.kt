@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.schema.user
 
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 
 data class UserCreateSchema(
@@ -18,7 +19,6 @@ data class UserCreateSchema(
     )
     val password: String,
 
-    @field:NotBlank
-    @field:Pattern(regexp = "FISCAL|COMPRADOR", message = "Invalid role")
-    val role: String
+    @field:NotNull
+    val roles: List<String>
 )

@@ -1,7 +1,9 @@
 package agoraa.app.forms_back.schema.extra_order_product
 
+import agoraa.app.forms_back.model.ProductModel
+
 data class ExtraOrderProductEditSchema(
-    val code: String? = null,
+    val product: ProductModel? = null,
     val price: Double? = null,
     val quantity: Int? = null,
 )

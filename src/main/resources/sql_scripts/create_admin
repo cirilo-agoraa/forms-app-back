@@ -1,8 +1,0 @@
-INSERT INTO forms.users
-(id, username, password, enabled)
-VALUES(0, 'ph.mc@hotmail.com', '$2a$12$t81xNK33GJU5cdt64kv59O7TX7M9MTMSQnK8hjpTIhbfm8iCtbDB2', 1);
-
-
-INSERT INTO forms.authorities
-(id, authority, user_id)
-VALUES(0, 'ROLE_ADMIN', 1);

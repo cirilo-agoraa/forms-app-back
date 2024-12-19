@@ -54,7 +54,7 @@ class JwtAuthenticationFilter(
 
         } catch (e: ExpiredJwtException) {
             println("Expired token")
-            response.status = HttpServletResponse.SC_UNAUTHORIZED
+            response.status = HttpServletResponse.SC_FORBIDDEN
             return
         }
     }

@@ -57,7 +57,7 @@ class AuthenticationService(
         val foundUser = jdbcUserDetailsManager.loadUserByUsername(email)
             ?: throw IllegalArgumentException("User not found for the provided token")
 
-        val user = userService.findByUsername(email).orElseThrow { IllegalArgumentException("User not Found") }
+        val user = userService.findByUsername(email)
 
         tokenBlacklistService.blacklistToken(request.refreshToken, user)
 

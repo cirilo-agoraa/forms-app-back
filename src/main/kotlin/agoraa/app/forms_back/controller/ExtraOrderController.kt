@@ -1,19 +1,15 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
+import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.exceptions.NotAllowedException
 import agoraa.app.forms_back.exceptions.ResourceNotFoundException
-import agoraa.app.forms_back.model.ExtraOrderModel
-import agoraa.app.forms_back.model.UserModel
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
 import agoraa.app.forms_back.service.ExtraOrderService
 import jakarta.validation.Valid
-import org.springdoc.api.OpenApiResourceNotFoundException
-import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
@@ -25,38 +21,34 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     @GetMapping
     fun getAllExtraOrders(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestParam(defaultValue = "0") supplierId: Long,
-        @RequestParam(defaultValue = "0") userId: Long,
-        @RequestParam(defaultValue = "") processed: String,
-        @RequestParam(defaultValue = "") dateSubmitted: String,
-        @RequestParam(defaultValue = "") partialComplete: String,
-        @RequestParam(defaultValue = "") origin: String,
+        @RequestParam(defaultValue = "true") pagination: Boolean,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "id") sort: String,
-        @RequestParam(defaultValue = "asc") direction: String
+        @RequestParam(defaultValue = "asc") direction: String,
+        @RequestParam supplier: Long?,
+        @RequestParam user: Long?,
+        @RequestParam processed: Boolean?,
+        @RequestParam dateSubmitted: String?,
+        @RequestParam partialComplete: PartialCompleteEnum?,
+        @RequestParam origin: String?,
     ): ResponseEntity<Any> {
-        return try {
-            ResponseEntity.ok(
-                extraOrderService.findAll(
-                    customUserDetails,
-                    supplierId,
-                    userId,
-                    processed,
-                    dateSubmitted,
-                    origin,
-                    partialComplete,
-                    page,
-                    size,
-                    sort,
-                    direction
-                )
+        return ResponseEntity.ok(
+            extraOrderService.findAll(
+                customUserDetails,
+                pagination,
+                supplier,
+                user,
+                processed,
+                dateSubmitted,
+                origin,
+                partialComplete,
+                page,
+                size,
+                sort,
+                direction
             )
-        } catch (e: NotAllowedException) {
-            ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.message)
-        } catch (e: ResourceNotFoundException) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
-        }
+        )
     }
 
     @GetMapping("/{id}")
@@ -64,13 +56,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long
     ): ResponseEntity<Any> {
-        return try {
-            ResponseEntity.ok(extraOrderService.findById(customUserDetails, id))
-        } catch (e: NotAllowedException) {
-            ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.message)
-        } catch (e: ResourceNotFoundException) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(extraOrderService.returnById(customUserDetails, id))
     }
 
     @PutMapping("/{id}/edit")
@@ -84,15 +70,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
             val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
         }
-        return try {
-            ResponseEntity.ok(extraOrderService.edit(customUserDetails, id, request))
-        } catch (e: NotAllowedException) {
-            ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.message)
-        } catch (e: ResourceNotFoundException) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(extraOrderService.edit(customUserDetails, id, request))
     }
 
     @PostMapping
@@ -105,13 +83,6 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
             val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
         }
-        return try {
-            val currentUser = customUserDetails.getUserModel()
-            return ResponseEntity.status(HttpStatus.CREATED).body(extraOrderService.create(currentUser, request))
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
-        } catch (e: ResourceNotFoundException) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(extraOrderService.create(customUserDetails, request))
     }
 }

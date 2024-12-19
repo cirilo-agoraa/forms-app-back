@@ -1,64 +1,26 @@
 package agoraa.app.forms_back.service
 
-import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.exceptions.ResourceNotFoundException
 import agoraa.app.forms_back.model.ExtraOrderModel
 import agoraa.app.forms_back.model.ExtraOrderProductModel
 import agoraa.app.forms_back.repository.ExtraOrderProductRepository
 import agoraa.app.forms_back.schema.extra_order_product.ExtraOrderProductCreateSchema
-import agoraa.app.forms_back.schema.extra_order_product.ExtraOrderProductEditSchema
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import org.springframework.context.annotation.Lazy
 
 @Service
 class ExtraOrderProductService(
     private val productService: ProductService,
     private val extraOrderProductRepository: ExtraOrderProductRepository,
-    @Lazy private val extraOrderService: ExtraOrderService
 ) {
 
-    private fun createPageable(
-        page: Int,
-        size: Int,
-        sort: String,
-        direction: String
-    ): PageRequest {
-        val sortDirection = if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
-        return PageRequest.of(page, size, Sort.by(sortDirection, sort))
+    fun delete(extraOrderProduct: ExtraOrderProductModel) {
+        val foundExtraOrderProduct = extraOrderProductRepository.findById(extraOrderProduct.id)
+            .map { extraOrderProductRepository.delete(it) }
+            .orElseThrow { ResourceNotFoundException("Extra Order Store not found.") }
     }
 
-    fun findAll(
-        customUserDetails: CustomUserDetails,
-        pagination: String,
-        extraOrderId: Long,
-        page: Int,
-        size: Int,
-        sort: String,
-        direction: String
-    ): Any {
-        val pageable = createPageable(page, size, sort, direction)
-
-        return when {
-            extraOrderId != 0L -> {
-                val extraOrder = extraOrderService.findById(customUserDetails, extraOrderId)
-                if (pagination.toBoolean()) extraOrderProductRepository.findByExtraOrderId(
-                    extraOrder.id,
-                    pageable
-                ) else extraOrderProductRepository.findByExtraOrderId(extraOrder.id)
-            }
-
-            else -> {
-                if (pagination.toBoolean()) extraOrderProductRepository.findAll(pageable) else extraOrderProductRepository.findAll()
-            }
-        }
-    }
-
-    fun findById(id: Long): ExtraOrderProductModel {
-        return extraOrderProductRepository.findById(id)
-            .orElseThrow { throw ResourceNotFoundException("Extra Order Product not found") }
+    fun deleteAll(extraOrderProducts: List<ExtraOrderProductModel>) {
+        extraOrderProducts.forEach { delete(it) }
     }
 
     fun create(
@@ -66,32 +28,48 @@ class ExtraOrderProductService(
         productsInfo: List<ExtraOrderProductCreateSchema>
     ): List<ExtraOrderProductModel> {
         val extraOrderProducts = productsInfo.map { p ->
-            val product = productService.findByCode(p.code)
+            val product = productService.findById(p.product.id)
             ExtraOrderProductModel(
+                product = product,
                 extraOrder = extraOrder,
-                code = product.code,
                 price = p.price,
                 quantity = p.quantity
             )
         }
-        return extraOrderProductRepository.saveAll(extraOrderProducts)
+        return extraOrderProducts
     }
 
-    fun delete(id: Long): Any {
-        return if (extraOrderProductRepository.existsById(id)) {
-            extraOrderProductRepository.deleteById(id)
-        } else {
-            throw ResourceNotFoundException("Extra Order Product not found")
+    fun edit(
+        extraOrder: ExtraOrderModel,
+        products: List<ExtraOrderProductCreateSchema>
+    ): MutableList<ExtraOrderProductModel> {
+        val currentProductsSet = extraOrder.products.map { it.product.id }.toSet()
+        val newProductsSet = products.map { it.product.id }.toSet()
+
+        val productsToRemove = extraOrder.products.filter { it.product.id !in newProductsSet }
+        extraOrder.products.removeAll(productsToRemove)
+        deleteAll(productsToRemove)
+
+        val productsToAdd = products.filter { it.product.id !in currentProductsSet }
+        val newProducts = productsToAdd.map { productInfo ->
+            val product = productService.findById(productInfo.product.id)
+
+            ExtraOrderProductModel(
+                product = product,
+                extraOrder = extraOrder,
+                price = productInfo.price,
+                quantity = productInfo.quantity
+            )
         }
-    }
+        extraOrder.products.addAll(newProducts)
 
-    fun edit(id: Long, request: ExtraOrderProductEditSchema): ExtraOrderProductModel {
-        val extraOrderProduct = findById(id)
-        val editedExtraOrderProduct = extraOrderProduct.copy(
-            code = request.code?.let { productService.findByCode(it).code } ?: extraOrderProduct.code,
-            price = request.price ?: extraOrderProduct.price,
-            quantity = request.quantity ?: extraOrderProduct.quantity
-        )
-        return extraOrderProductRepository.save(editedExtraOrderProduct)
+        val productsToUpdate = extraOrder.products.filter { it.product.id in newProductsSet }
+        productsToUpdate.forEach { extraOrderProduct ->
+            val productInfo = products.find { it.product.id == extraOrderProduct.product.id }!!
+            extraOrderProduct.price = productInfo.price
+            extraOrderProduct.quantity = productInfo.quantity
+        }
+
+        return extraOrder.products
     }
 }

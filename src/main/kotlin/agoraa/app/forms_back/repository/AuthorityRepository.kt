@@ -6,5 +6,5 @@ import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface AuthorityRepository : JpaRepository<AuthorityModel, Long>, PagingAndSortingRepository<AuthorityModel, Long> {
+interface AuthorityRepository : JpaRepository<AuthorityModel, Long> {
 }

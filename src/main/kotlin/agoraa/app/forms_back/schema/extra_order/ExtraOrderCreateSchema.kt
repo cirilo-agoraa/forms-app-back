@@ -7,20 +7,18 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 
 data class ExtraOrderCreateSchema(
-    @field:NotNull
+    @field:NotNull(message = "Supplier cannot be null")
     val supplier: SupplierModel,
 
     @field:NotBlank
     @field:Pattern(regexp = "PARCIAL|COMPLETO", message = "Invalid ExtraOrder Type")
     val partialComplete: String,
 
+    @field:NotNull(message = "Stores cannot be null")
+    val stores: List<String>,
+
+    val products: List<ExtraOrderProductCreateSchema>? = null,
+
     @field:Pattern(regexp = "EXTRA|RECEBIMENTO", message = "Invalid Origin Type")
-    val origin: String? = null,
-
-    val storesComplete: List<String>? = null,
-
-    @field:Pattern(regexp = "TRESMANN_SMJ|TRESMANN_VIX|TRESMANN_STT|MERCAPP", message = "Invalid Store Type")
-    val storePartial: String? = null,
-
-    val products: List<ExtraOrderProductCreateSchema>
+    val origin: String? = null
 )

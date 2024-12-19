@@ -31,39 +31,14 @@ class SecurityConfiguration(
 
                     // users endpoints
                     .requestMatchers("/api/users").hasRole("ADMIN")
-                    .requestMatchers("/api/users/{id}").hasRole("ADMIN")
-                    .requestMatchers("/api/users/{id}/edit").hasRole("ADMIN")
-
-                    //.requestMatchers("/api/users/edit-current").hasAnyRole("ADMIN", "FISCAL", "COMPRADOR")
 
                     // suppliers endpoints
-                    .requestMatchers(HttpMethod.POST, "/api/suppliers").hasRole("ADMIN")
-                    .requestMatchers("/api/suppliers/{id}").hasRole("ADMIN")
-                    .requestMatchers("/api/suppliers/{id}/edit").hasRole("ADMIN")
                     .requestMatchers("/api/suppliers/create-multiple").hasRole("ADMIN")
-                    .requestMatchers("/api/suppliers/edit-multiple").hasRole("ADMIN")
-
-                    //.requestMatchers(HttpMethod.GET, "/api/suppliers").hasAnyRole("ADMIN", "FISCAL", "COMPRADOR")
+                    .requestMatchers("/api/suppliers/edit-or-create-multiple").hasRole("ADMIN")
 
                     // products endpoints
-                    .requestMatchers(HttpMethod.POST,"/api/products").hasRole("ADMIN")
                     .requestMatchers("/api/products/create-multiple").hasRole("ADMIN")
-
-                    //.requestMatchers(HttpMethod.GET, "/api/products").hasAnyRole("ADMIN", "FISCAL", "COMPRADOR")
-                    //.requestMatchers("/api/products/{id}").hasAnyRole("ADMIN", "FISCAL", "COMPRADOR")
-
-                    // extra-orders endpoints
-                    .requestMatchers("api/extra-orders/{id}/edit").hasRole("ADMIN")
-
-                    //.requestMatchers("/api/extra-orders").hasAnyRole("ADMIN", "FISCAL", "COMPRADOR")
-                    //.requestMatchers("/api/extra-orders/{id}").hasAnyRole("ADMIN", "FISCAL", "COMPRADOR")
-
-                    // extra-order-products endpoints
-                    .requestMatchers("/api/extra-order-products/{id}").hasRole("ADMIN")
-                    .requestMatchers("/api/extra-order-products/{id}/edit").hasRole("ADMIN")
-                    .requestMatchers("/api/extra-order-products/{id}/delete").hasRole("ADMIN")
-
-                    //.requestMatchers("/api/extra-order-products").hasAnyRole("ADMIN", "FISCAL", "COMPRADOR")
+                    .requestMatchers("/api/products/edit-or-create-multiple").hasRole("ADMIN")
 
                     .anyRequest().fullyAuthenticated()
             }

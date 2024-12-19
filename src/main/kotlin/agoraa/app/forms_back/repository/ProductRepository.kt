@@ -1,30 +1,36 @@
 package agoraa.app.forms_back.repository
 
+import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.model.ProductModel
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface ProductRepository : JpaRepository<ProductModel, Long>, PagingAndSortingRepository<ProductModel, Long> {
-    fun findByCode(code: String): Optional<ProductModel>
+interface ProductRepository : JpaRepository<ProductModel, Long>, JpaSpecificationExecutor<ProductModel> {
 
-    fun findByNameContainingAndOutOfMixEquals(name: String, outOfMix: Boolean, pageable: Pageable): Page<ProductModel>
-    fun findBySupplierNameContainingAndOutOfMixEquals(
-        supplierName: String,
-        outOfMix: Boolean,
-        pageable: Pageable
-    ): Page<ProductModel>
+    @EntityGraph(value = "ProductModel.supplier", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findById(id: Long): Optional<ProductModel>
 
-    fun findByCodeContainingAndOutOfMixEquals(code: String, outOfMix: Boolean, pageable: Pageable): Page<ProductModel>
-    fun findBySupplierIdAndOutOfMixEquals(supplierId: Long, outOfMix: Boolean, pageable: Pageable): Page<ProductModel>
+    @EntityGraph(value = "ProductModel.supplier", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findAll(): MutableList<ProductModel>
 
-    fun findByNameContaining(name: String, pageable: Pageable): Page<ProductModel>
-    fun findBySupplierNameContaining(supplierName: String, pageable: Pageable): Page<ProductModel>
-    fun findByCodeContaining(code: String, pageable: Pageable): Page<ProductModel>
-    fun findByOutOfMix(outOfMix: Boolean, pageable: Pageable): Page<ProductModel>
-    fun findBySupplierId(supplierId: Long, pageable: Pageable): Page<ProductModel>
+    @EntityGraph(value = "ProductModel.supplier", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findAll(pageable: Pageable): Page<ProductModel>
+
+    @EntityGraph(value = "ProductModel.supplier", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findAll(spec: Specification<ProductModel>?): MutableList<ProductModel>
+
+    @EntityGraph(value = "ProductModel.supplier", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findAll(spec: Specification<ProductModel>?, pageable: Pageable): Page<ProductModel>
+
+    @EntityGraph(value = "ProductModel.supplier", type = EntityGraph.EntityGraphType.LOAD)
+    fun findByCodeAndStore(code: String, store: StoresEnum): Optional<ProductModel>
+
 }

@@ -17,10 +17,11 @@
             <column name="enabled" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
+            <column name="first_access" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
-    </changeSet>
 
-    <changeSet id="2" author="PedroCostaa">
         <createTable tableName="authorities">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -32,14 +33,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseTableName="authorities"
-                                 baseColumnNames="user_id"
-                                 constraintName="fk_authorities_user"
-                                 referencedTableName="users"
-                                 referencedColumnNames="id"/>
-    </changeSet>
 
-    <changeSet id="3" author="PedroCostaa">
         <createTable tableName="suppliers">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -59,45 +53,7 @@
             <column name="average_value_received" type="FLOAT"/>
             <column name="min_value_received" type="FLOAT"/>
         </createTable>
-    </changeSet>
 
-    <changeSet id="4" author="PedroCostaa">
-        <createTable tableName="extra_orders">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="user_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="supplier_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="partial_complete" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="origin" type="VARCHAR(255)"/>
-            <column name="stores_complete" type="VARCHAR(255)"/>
-            <column name="store_partial" type="VARCHAR(255)"/>
-            <column name="processed" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-            <column name="date_submitted" type="DATE">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <addForeignKeyConstraint baseTableName="extra_orders"
-                                 baseColumnNames="user_id"
-                                 constraintName="fk_extra_order_user"
-                                 referencedTableName="users"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="extra_orders"
-                                 baseColumnNames="supplier_id"
-                                 constraintName="fk_extra_order_supplier"
-                                 referencedTableName="suppliers"
-                                 referencedColumnNames="id"/>
-    </changeSet>
-
-    <changeSet id="5" author="PedroCostaa">
         <createTable tableName="products">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -225,40 +181,33 @@
             <column name="sales_price2" type="FLOAT"/>
             <column name="promotion_price" type="FLOAT"/>
         </createTable>
-        <addForeignKeyConstraint baseTableName="products"
-                                 baseColumnNames="supplier_id"
-                                 constraintName="fk_product_supplier"
-                                 referencedTableName="suppliers"
-                                 referencedColumnNames="id"/>
-    </changeSet>
 
-    <changeSet id="6" author="PedroCostaa">
-        <createTable tableName="extra_order_products">
+        <createTable tableName="extra_orders">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="code" type="VARCHAR(255)">
+            <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="VARCHAR(255)"/>
-            <column name="price" type="DOUBLE">
+            <column name="supplier_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="quantity" type="INT">
+            <column name="stores" type="BIGINT" defaultValue="0">
                 <constraints nullable="false"/>
             </column>
-            <column name="extra_order_id" type="BIGINT">
+            <column name="partial_complete" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="processed" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_submitted" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="products" type="BIGINT"/>
+            <column name="origin" type="VARCHAR(255)"/>
         </createTable>
-        <addForeignKeyConstraint baseTableName="extra_order_products"
-                                 baseColumnNames="extra_order_id"
-                                 constraintName="fk_extra_order_products_extra_order"
-                                 referencedTableName="extra_orders"
-                                 referencedColumnNames="id"/>
-    </changeSet>
 
-    <changeSet id="7" author="PedroCostaa">
         <createTable tableName="token_blacklist">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -273,23 +222,98 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <createTable tableName="extra_order_stores">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="store" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extra_order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="extra_order_products">
+
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extra_order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="authorities"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_authorities_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="products"
+                                 baseColumnNames="supplier_id"
+                                 constraintName="fk_product_supplier"
+                                 referencedTableName="suppliers"
+                                 referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="token_blacklist"
                                  baseColumnNames="user_id"
                                  constraintName="fk_token_blacklist_user"
                                  referencedTableName="users"
                                  referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="extra_order_stores"
+                                 baseColumnNames="extra_order_id"
+                                 constraintName="fk_extra_order_stores_extra_order"
+                                 referencedTableName="extra_orders"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="extra_order_products"
+                                 baseColumnNames="product_id"
+                                 constraintName="fk_extra_order_product_product"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="extra_order_products"
+                                 baseColumnNames="extra_order_id"
+                                 constraintName="fk_extra_order_product_extra_order"
+                                 referencedTableName="extra_orders"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="extra_orders"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_extra_order_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="extra_orders"
+                                 baseColumnNames="supplier_id"
+                                 constraintName="fk_extra_order_supplier"
+                                 referencedTableName="suppliers"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="extra_orders"
+                                 baseColumnNames="stores"
+                                 constraintName="fk_extra_order_stores"
+                                 referencedTableName="extra_order_stores"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="extra_orders"
+                                 baseColumnNames="products"
+                                 constraintName="fk_extra_order_products"
+                                 referencedTableName="extra_order_products"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="8" author="PedroCostaa">
-        <addColumn tableName="users">
-            <column name="first_access" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
+    <changeSet id="2" author="PedroCostaa">
+        <dropForeignKeyConstraint baseTableName="extra_orders"
+                                  constraintName="fk_extra_order_stores"/>
+        <dropColumn tableName="extra_orders" columnName="stores"/>
 
-    <changeSet id="9" author="PedroCostaa">
-        <dropColumn tableName="extra_order_products" columnName="name"/>
+        <dropForeignKeyConstraint baseTableName="extra_orders"
+                                  constraintName="fk_extra_order_products"/>
+        <dropColumn tableName="extra_orders" columnName="products"/>
     </changeSet>
 
 </databaseChangeLog>

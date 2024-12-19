@@ -1,30 +1,33 @@
 package agoraa.app.forms_back.repository
 
 import agoraa.app.forms_back.model.ExtraOrderModel
-import agoraa.app.forms_back.model.SupplierModel
-import agoraa.app.forms_back.model.UserModel
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.repository.PagingAndSortingRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
+import java.util.*
 
 @Repository
-interface ExtraOrderRepository : JpaRepository<ExtraOrderModel, Long> {
+interface ExtraOrderRepository : JpaRepository<ExtraOrderModel, Long>, JpaSpecificationExecutor<ExtraOrderModel> {
 
-    fun findBySupplierId(supplierId: Long, pageable: Pageable): Page<ExtraOrderModel>
-    fun findByUserId(userId: Long, pageable: Pageable): Page<ExtraOrderModel>
+    @EntityGraph(value = "graph.ExtraOrderModel.all", type = EntityGraph.EntityGraphType.LOAD)
+    override fun <S : ExtraOrderModel?> save(entity: S & Any): S & Any
 
-    fun findByProcessed(processed: Boolean, pageable: Pageable): Page<ExtraOrderModel>
-    fun findByProcessedAndUserId(processed: Boolean, userId: Long, pageable: Pageable): Page<ExtraOrderModel>
+    @EntityGraph(value = "graph.ExtraOrderModel.all", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findById(id: Long): Optional<ExtraOrderModel>
 
-    fun findByDateSubmitted(dateSubmitted: LocalDate, pageable: Pageable): Page<ExtraOrderModel>
-    fun findByDateSubmittedAndUserId(dateSubmitted: LocalDate, userId: Long, pageable: Pageable): Page<ExtraOrderModel>
+    @EntityGraph(value = "graph.ExtraOrderModel.all", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findAll(pageable: Pageable): Page<ExtraOrderModel>
 
-    fun findByOrigin(origin: String, pageable: Pageable): Page<ExtraOrderModel>
-    fun findByOriginAndUserId(origin: String, userId: Long, pageable: Pageable): Page<ExtraOrderModel>
+    @EntityGraph(value = "graph.ExtraOrderModel.all", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findAll(): MutableList<ExtraOrderModel>
 
-    fun findByPartialComplete(partialComplete: String, pageable: Pageable): Page<ExtraOrderModel>
-    fun findByPartialCompleteAndUserId(partialComplete: String, userId: Long,  pageable: Pageable): Page<ExtraOrderModel>
+    @EntityGraph(value = "graph.ExtraOrderModel.all", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findAll(spec: Specification<ExtraOrderModel>?): MutableList<ExtraOrderModel>
+
+    @EntityGraph(value = "graph.ExtraOrderModel.all", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findAll(spec: Specification<ExtraOrderModel>?, pageable: Pageable): Page<ExtraOrderModel>
 }

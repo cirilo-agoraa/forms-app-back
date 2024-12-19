@@ -47,7 +47,6 @@ class Configuration(
                 authorities: MutableList<GrantedAuthority>
             ): CustomUserDetails {
                 val userModel = userService.findByUsername(username)
-                    .orElseThrow { IllegalArgumentException("User not found") }
 
                 return CustomUserDetails(
                     userModel,

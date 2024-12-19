@@ -16,5 +16,5 @@ data class AuthorityModel(
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    val userId: UserModel
+    val user: UserModel
 )
