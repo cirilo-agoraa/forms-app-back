@@ -1,17 +1,14 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.exceptions.ResourceNotFoundException
 import agoraa.app.forms_back.service.UserService
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
-import agoraa.app.forms_back.model.UserModel
 import agoraa.app.forms_back.schema.user.UserEditSchema
 import agoraa.app.forms_back.schema.user.UserCreateSchema
-import org.springframework.data.domain.Page
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 
 @RestController
@@ -32,11 +29,13 @@ class UserController(private val userService: UserService) {
         @RequestBody @Valid request: UserEditSchema,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
-        if (bindingResult.hasErrors()) {
-            val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+        return when {
+            bindingResult.hasErrors() -> {
+                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+            }
+            else -> ResponseEntity.status(HttpStatus.OK).body(userService.edit(customUserDetails, id, request))
         }
-        return ResponseEntity.status(HttpStatus.OK).body(userService.edit(customUserDetails, id, request))
     }
 
     // ADMIN ONLY
@@ -55,10 +54,12 @@ class UserController(private val userService: UserService) {
 
     @PostMapping
     fun createUser(@RequestBody @Valid request: UserCreateSchema, bindingResult: BindingResult): ResponseEntity<Any> {
-        if (bindingResult.hasErrors()) {
-            val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+        return when {
+            bindingResult.hasErrors() -> {
+                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+            }
+            else -> ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request))
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request))
     }
 }

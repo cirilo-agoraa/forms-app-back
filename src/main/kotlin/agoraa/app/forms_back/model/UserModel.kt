@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
 @Entity
@@ -21,6 +22,7 @@ data class UserModel(
     @Column(nullable = false)
     val firstAccess: Boolean = true,
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var authorities: MutableList<AuthorityModel> = mutableListOf()
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JsonManagedReference
+    var authorities: MutableList<AuthorityModel> = mutableListOf(),
 )

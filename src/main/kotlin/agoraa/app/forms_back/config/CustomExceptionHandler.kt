@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.config
 
-import agoraa.app.forms_back.exceptions.NotAllowedException
-import agoraa.app.forms_back.exceptions.ResourceNotFoundException
+import agoraa.app.forms_back.exception.NotAllowedException
+import agoraa.app.forms_back.exception.ResourceNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice

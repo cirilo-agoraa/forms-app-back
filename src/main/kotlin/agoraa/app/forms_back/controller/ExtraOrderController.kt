@@ -1,9 +1,7 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
-import agoraa.app.forms_back.exceptions.NotAllowedException
-import agoraa.app.forms_back.exceptions.ResourceNotFoundException
+import agoraa.app.forms_back.enum.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
 import agoraa.app.forms_back.service.ExtraOrderService
@@ -22,6 +20,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     fun getAllExtraOrders(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @RequestParam(defaultValue = "true") pagination: Boolean,
+        @RequestParam(defaultValue = "true") convertToDTO: Boolean,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "id") sort: String,
@@ -37,6 +36,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
             extraOrderService.findAll(
                 customUserDetails,
                 pagination,
+                convertToDTO,
                 supplier,
                 user,
                 processed,
@@ -54,10 +54,10 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     @GetMapping("/{id}")
     fun getExtraOrderById(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
+        @RequestParam(defaultValue = "true") convertToDTO: Boolean,
         @PathVariable id: Long
-    ): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.OK).body(extraOrderService.returnById(customUserDetails, id))
-    }
+    ): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.OK).body(extraOrderService.returnById(customUserDetails, id, convertToDTO))
 
     @PutMapping("/{id}/edit")
     fun editExtraOrder(
@@ -66,23 +66,31 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
         @RequestBody @Valid request: ExtraOrderEditSchema,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
-        if (bindingResult.hasErrors()) {
-            val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+        return when {
+            bindingResult.hasErrors() -> {
+                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+            }
+
+            else -> ResponseEntity.status(HttpStatus.OK).body(extraOrderService.edit(customUserDetails, id, request))
         }
-        return ResponseEntity.status(HttpStatus.OK).body(extraOrderService.edit(customUserDetails, id, request))
     }
 
     @PostMapping
     fun createExtraOrder(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
+        @RequestParam(defaultValue = "true") convertToDTO: Boolean,
         @RequestBody @Valid request: ExtraOrderCreateSchema,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
-        if (bindingResult.hasErrors()) {
-            val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+        return when {
+            bindingResult.hasErrors() -> {
+                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+            }
+
+            else -> ResponseEntity.status(HttpStatus.CREATED)
+                .body(extraOrderService.create(customUserDetails, convertToDTO, request))
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(extraOrderService.create(customUserDetails, request))
     }
 }

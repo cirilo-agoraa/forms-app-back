@@ -1,4 +1,4 @@
-package agoraa.app.forms_back.enums.extra_order
+package agoraa.app.forms_back.enum.extra_order
 
 enum class PartialCompleteEnum {
     PARCIAL,

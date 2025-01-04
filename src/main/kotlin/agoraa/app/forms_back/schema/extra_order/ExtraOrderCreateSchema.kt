@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Pattern
 
 data class ExtraOrderCreateSchema(
     @field:NotNull(message = "Supplier cannot be null")
-    val supplier: SupplierModel,
+    val supplierId: Long,
 
     @field:NotBlank
     @field:Pattern(regexp = "PARCIAL|COMPLETO", message = "Invalid ExtraOrder Type")

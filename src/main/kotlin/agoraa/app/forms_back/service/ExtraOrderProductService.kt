@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.service
 
-import agoraa.app.forms_back.exceptions.ResourceNotFoundException
+import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.ExtraOrderModel
 import agoraa.app.forms_back.model.ExtraOrderProductModel
 import agoraa.app.forms_back.repository.ExtraOrderProductRepository
@@ -28,7 +28,7 @@ class ExtraOrderProductService(
         productsInfo: List<ExtraOrderProductCreateSchema>
     ): List<ExtraOrderProductModel> {
         val extraOrderProducts = productsInfo.map { p ->
-            val product = productService.findById(p.product.id)
+            val product = productService.findById(p.productId)
             ExtraOrderProductModel(
                 product = product,
                 extraOrder = extraOrder,
@@ -44,15 +44,15 @@ class ExtraOrderProductService(
         products: List<ExtraOrderProductCreateSchema>
     ): MutableList<ExtraOrderProductModel> {
         val currentProductsSet = extraOrder.products.map { it.product.id }.toSet()
-        val newProductsSet = products.map { it.product.id }.toSet()
+        val newProductsSet = products.map { it.productId }.toSet()
 
         val productsToRemove = extraOrder.products.filter { it.product.id !in newProductsSet }
         extraOrder.products.removeAll(productsToRemove)
         deleteAll(productsToRemove)
 
-        val productsToAdd = products.filter { it.product.id !in currentProductsSet }
+        val productsToAdd = products.filter { it.productId !in currentProductsSet }
         val newProducts = productsToAdd.map { productInfo ->
-            val product = productService.findById(productInfo.product.id)
+            val product = productService.findById(productInfo.productId)
 
             ExtraOrderProductModel(
                 product = product,
@@ -65,7 +65,7 @@ class ExtraOrderProductService(
 
         val productsToUpdate = extraOrder.products.filter { it.product.id in newProductsSet }
         productsToUpdate.forEach { extraOrderProduct ->
-            val productInfo = products.find { it.product.id == extraOrderProduct.product.id }!!
+            val productInfo = products.find { it.productId == extraOrderProduct.product.id }!!
             extraOrderProduct.price = productInfo.price
             extraOrderProduct.quantity = productInfo.quantity
         }

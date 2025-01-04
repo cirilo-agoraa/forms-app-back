@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.service
 
-import agoraa.app.forms_back.enums.authority.AuthorityTypeEnum
-import agoraa.app.forms_back.exceptions.ResourceNotFoundException
+import agoraa.app.forms_back.enum.authority.AuthorityTypeEnum
+import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.AuthorityModel
 import agoraa.app.forms_back.model.UserModel
 import agoraa.app.forms_back.repository.AuthorityRepository

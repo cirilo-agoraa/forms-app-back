@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.controller
 
-import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.enum.product.ProductDtoOptionsEnum
 import agoraa.app.forms_back.schema.product.ProductCreateSchema
 import agoraa.app.forms_back.service.ProductService
 import jakarta.validation.Valid
@@ -16,11 +17,11 @@ class ProductController(private val productService: ProductService) {
     @GetMapping
     fun getAllProducts(
         @RequestParam(defaultValue = "true") pagination: Boolean,
-        @RequestParam(defaultValue = "true") convertToDTO: Boolean,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "id") sort: String,
         @RequestParam(defaultValue = "asc") direction: String,
+        @RequestParam(defaultValue = "MINIMAL") dtoOptions: ProductDtoOptionsEnum,
         @RequestParam outOfMix: Boolean?,
         @RequestParam supplierId: Long?,
         @RequestParam supplierName: String?,
@@ -30,51 +31,61 @@ class ProductController(private val productService: ProductService) {
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
             .body(
-                productService.findAll(
+                productService.getAll(
                     pagination,
-                    convertToDTO,
+                    page,
+                    size,
+                    sort,
+                    direction,
+                    dtoOptions,
                     outOfMix,
                     supplierId,
                     supplierName,
                     name,
                     code,
                     store,
-                    page,
-                    size,
-                    sort,
-                    direction
                 )
             )
 
     @GetMapping("/{id}")
-    fun getProductById(@PathVariable id: Long): ResponseEntity<Any> =
-        ResponseEntity.status(HttpStatus.OK).body(productService.returnById(id))
+    fun getProductById(
+        @PathVariable id: Long,
+        @RequestParam(defaultValue = "MINIMAL") dtoOptions: ProductDtoOptionsEnum
+    ): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.OK).body(productService.returnById(dtoOptions, id))
 
     // ADMIN ONLY
 
     @PostMapping("/create-multiple")
     fun createProducts(
         @RequestBody @Valid request: List<ProductCreateSchema>,
+        @RequestParam(defaultValue = "MINIMAL") dtoOptions: ProductDtoOptionsEnum,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
-        if (bindingResult.hasErrors()) {
-            val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
-        }
+        return when {
+            bindingResult.hasErrors() -> {
+                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+            }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createMultiple(request))
+            else -> ResponseEntity.status(HttpStatus.CREATED).body(productService.createMultiple(dtoOptions, request))
+        }
     }
 
     @PutMapping("/edit-or-create-multiple")
     fun editOrCreateProducts(
         @RequestBody @Valid request: List<ProductCreateSchema>,
+        @RequestParam(defaultValue = "MINIMAL") dtoOptions: ProductDtoOptionsEnum,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
-        if (bindingResult.hasErrors()) {
-            val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
-        }
+        return when {
+            bindingResult.hasErrors() -> {
+                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+            }
 
-        return ResponseEntity.status(HttpStatus.OK).body(productService.editOrCreateMultipleByCodeAndStore(request))
+            else -> ResponseEntity.status(HttpStatus.OK)
+                .body(productService.editOrCreateMultipleByCodeAndStore(dtoOptions, request))
+        }
     }
 }

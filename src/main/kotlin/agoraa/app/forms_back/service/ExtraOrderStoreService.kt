@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.service
 
-import agoraa.app.forms_back.enums.StoresEnum
-import agoraa.app.forms_back.exceptions.ResourceNotFoundException
+import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.ExtraOrderModel
 import agoraa.app.forms_back.model.ExtraOrderStoreModel
 import agoraa.app.forms_back.repository.ExtraOrderStoreRepository

@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.model
 
-import agoraa.app.forms_back.enums.authority.AuthorityTypeEnum
+import agoraa.app.forms_back.enum.authority.AuthorityTypeEnum
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 
 @Entity
@@ -16,5 +17,6 @@ data class AuthorityModel(
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     val user: UserModel
 )

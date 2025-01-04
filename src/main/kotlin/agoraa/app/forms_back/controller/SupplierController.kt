@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.controller
 
-import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
+import agoraa.app.forms_back.enum.supplier.SupplierDtoOptionsEnum
+import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
 import agoraa.app.forms_back.schema.supplier.SupplierCreateSchema
 import agoraa.app.forms_back.service.SupplierService
 import jakarta.validation.Valid
@@ -27,39 +28,51 @@ class SupplierController(private val supplierService: SupplierService) {
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "id") sort: String,
         @RequestParam(defaultValue = "asc") direction: String,
+        @RequestParam(defaultValue = "MINIMAL") dtoOptions: SupplierDtoOptionsEnum,
         @RequestParam name: String?,
         @RequestParam status: List<SupplierStatusEnum>?,
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
-            .body(supplierService.findAll(pagination, name, status, page, size, sort, direction))
+            .body(supplierService.getAll(pagination, page, size, sort, direction, dtoOptions, name, status))
 
     @GetMapping("/{id}")
-    fun getSupplierById(@PathVariable id: Long): ResponseEntity<Any> =
-        ResponseEntity.status(HttpStatus.OK).body(supplierService.findById(id))
-
-    // ADMIN ONLY
+    fun getSupplierById(
+        @PathVariable id: Long,
+        @RequestParam(defaultValue = "MINIMAL") dtoOptions: SupplierDtoOptionsEnum,
+    ): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.OK).body(supplierService.getById(dtoOptions, id))
 
     @PostMapping("/create-multiple")
     fun createSuppliers(
         @RequestBody @Valid request: List<SupplierCreateSchema>,
+        @RequestParam(defaultValue = "MINIMAL") dtoOptions: SupplierDtoOptionsEnum,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
-        if (bindingResult.hasErrors()) {
-            val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+        return when {
+            bindingResult.hasErrors() -> {
+                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+            }
+
+            else -> ResponseEntity.status(HttpStatus.CREATED)
+                .body(supplierService.createMultiple(dtoOptions, request))
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(supplierService.createMultiple(request))
     }
 
     @PutMapping("/edit-or-create-multiple")
     fun editOrCreateSuppliers(
         @RequestBody @Valid request: List<SupplierCreateSchema>,
+        @RequestParam(defaultValue = "MINIMAL") dtoOptions: SupplierDtoOptionsEnum,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
-        if (bindingResult.hasErrors()) {
-            val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+        return when {
+            bindingResult.hasErrors() -> {
+                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+            }
+
+            else -> ResponseEntity.status(HttpStatus.OK)
+                .body(supplierService.editOrCreateMultipleByName(dtoOptions, request))
         }
-        return ResponseEntity.status(HttpStatus.OK).body(supplierService.editOrCreateMultipleByName(request))
     }
 }

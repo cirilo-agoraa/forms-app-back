@@ -1,4 +1,4 @@
-package agoraa.app.forms_back.enums.authority
+package agoraa.app.forms_back.enum.authority
 
 enum class AuthorityTypeEnum {
     ROLE_FISCAL,

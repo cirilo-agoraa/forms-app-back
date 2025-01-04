@@ -1,4 +1,4 @@
-package agoraa.app.forms_back.enums
+package agoraa.app.forms_back.enum
 
 enum class StoresEnum {
     TRESMANN_SMJ,

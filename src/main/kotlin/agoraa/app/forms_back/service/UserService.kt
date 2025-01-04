@@ -1,9 +1,9 @@
 package agoraa.app.forms_back.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enums.authority.AuthorityTypeEnum
-import agoraa.app.forms_back.exceptions.NotAllowedException
-import agoraa.app.forms_back.exceptions.ResourceNotFoundException
+import agoraa.app.forms_back.enum.authority.AuthorityTypeEnum
+import agoraa.app.forms_back.exception.NotAllowedException
+import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.UserModel
 import agoraa.app.forms_back.repository.UserRepository
 import agoraa.app.forms_back.schema.user.UserEditSchema
@@ -40,14 +40,15 @@ class UserService(
 
     fun findAll(pagination: Boolean, username: String?, page: Int, size: Int, sort: String, direction: String): Any {
         val spec = createCriteria(username)
+        val sortDirection =
+            if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
+        val sortBy = Sort.by(sortDirection, sort)
 
-        if (pagination) {
-            val sortDirection =
-                if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
-            val pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort))
-            return userRepository.findAll(spec, pageable)
+        return if (pagination) {
+            val pageable = PageRequest.of(page, size, sortBy)
+            userRepository.findAll(spec, pageable)
         } else {
-            return userRepository.findAll(spec)
+            userRepository.findAll(spec, sortBy)
         }
     }
 

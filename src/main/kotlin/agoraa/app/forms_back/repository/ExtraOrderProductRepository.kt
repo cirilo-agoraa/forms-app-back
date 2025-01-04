@@ -9,6 +9,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ExtraOrderProductRepository : JpaRepository<ExtraOrderProductModel, Long>{
-        fun findByExtraOrderId(extraOrderId: Long, pageable: Pageable): Page<ExtraOrderProductModel>
-        fun findByExtraOrderId(extraOrderId: Long): Iterable<ExtraOrderProductModel>
 }

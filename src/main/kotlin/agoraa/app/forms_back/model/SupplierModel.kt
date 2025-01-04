@@ -1,6 +1,8 @@
 package agoraa.app.forms_back.model
 
-import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
+import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
 @Entity
@@ -39,5 +41,5 @@ data class SupplierModel(
     val averageValueReceived: Float?,
 
     @Column
-    val minValueReceived: Float?
+    val minValueReceived: Float?,
 )
