@@ -33,8 +33,10 @@ class ExtraOrderService(
 ) {
 
     private fun createCriteria(
-        supplier: Long?,
-        user: Long?,
+        supplierId: Long?,
+        supplierName: String?,
+        userId: Long?,
+        userName: String?,
         processed: Boolean?,
         dateSubmitted: String?,
         origin: String?,
@@ -43,12 +45,20 @@ class ExtraOrderService(
         return Specification { root: Root<ExtraOrderModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
 
-            supplier?.let {
+            supplierId?.let {
                 predicates.add(criteriaBuilder.equal(root.get<SupplierModel>("supplier").get<Long>("id"), it))
             }
 
-            user?.let {
+            supplierName?.let {
+                predicates.add(criteriaBuilder.like(root.get<SupplierModel>("supplier").get<String>("name"), "%$it%"))
+            }
+
+            userId?.let {
                 predicates.add(criteriaBuilder.equal(root.get<UserModel>("user").get<Long>("id"), it))
+            }
+
+            userName?.let {
+                predicates.add(criteriaBuilder.like(root.get<UserModel>("user").get("username"), "%$it%"))
             }
 
             processed?.let {
@@ -101,8 +111,10 @@ class ExtraOrderService(
         customUserDetails: CustomUserDetails,
         pagination: Boolean,
         convertToDTO: Boolean,
-        supplier: Long?,
-        user: Long?,
+        supplierId: Long?,
+        supplierName: String?,
+        userId: Long?,
+        userName: String?,
         processed: Boolean?,
         dateSubmitted: String?,
         origin: String?,
@@ -113,7 +125,16 @@ class ExtraOrderService(
         direction: String
     ): Any {
         val currentUser = customUserDetails.getUserModel()
-        val spec = createCriteria(supplier, user, processed, dateSubmitted, origin, partialComplete)
+        val spec = createCriteria(
+            supplierId,
+            supplierName,
+            userId,
+            userName,
+            processed,
+            dateSubmitted,
+            origin,
+            partialComplete
+        )
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
