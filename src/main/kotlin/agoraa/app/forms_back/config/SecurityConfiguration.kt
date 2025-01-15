@@ -40,6 +40,11 @@ class SecurityConfiguration(
                     .requestMatchers("/api/products/create-multiple").hasRole("ADMIN")
                     .requestMatchers("/api/products/edit-or-create-multiple").hasRole("ADMIN")
 
+                    // resources endpoints
+                    .requestMatchers(HttpMethod.GET, "/api/resources").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/resources").hasAnyRole("ADMIN", "LOJA")
+                    .requestMatchers(HttpMethod.GET, "/api/resources/current-user").hasAnyRole("ADMIN", "LOJA")
+
                     .anyRequest().fullyAuthenticated()
             }
             .sessionManagement {

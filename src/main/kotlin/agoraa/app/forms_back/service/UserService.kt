@@ -27,7 +27,7 @@ class UserService(
     private val authorityService: AuthorityService
 ) {
     private fun createCriteria(username: String?): Specification<UserModel> {
-        return Specification { root: Root<UserModel>, query: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
+        return Specification { root: Root<UserModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
 
             username?.let {
