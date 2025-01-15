@@ -22,12 +22,12 @@ class ProductController(private val productService: ProductService) {
         @RequestParam(defaultValue = "id") sort: String,
         @RequestParam(defaultValue = "asc") direction: String,
         @RequestParam(defaultValue = "MINIMAL") dtoOptions: ProductDtoOptionsEnum,
-        @RequestParam outOfMix: Boolean?,
-        @RequestParam supplierId: Long?,
-        @RequestParam supplierName: String?,
-        @RequestParam name: String?,
-        @RequestParam code: String?,
-        @RequestParam store: List<StoresEnum>?
+        outOfMix: Boolean?,
+        supplierId: Long?,
+        supplierName: String?,
+        name: String?,
+        code: String?,
+        isResource: Boolean?
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
             .body(
@@ -43,7 +43,7 @@ class ProductController(private val productService: ProductService) {
                     supplierName,
                     name,
                     code,
-                    store,
+                    isResource
                 )
             )
 

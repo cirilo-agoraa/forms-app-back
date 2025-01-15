@@ -17,6 +17,9 @@ data class ProductModel(
     @Column(nullable = false)
     val name: String,
 
+    @Column(nullable = false)
+    val isResource: Boolean = false,
+
     @ManyToOne
     @JoinColumn(name = "supplier_id", nullable = false)
     val supplier: SupplierModel,

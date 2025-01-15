@@ -369,4 +369,12 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="4" author="PedroCostaa">
+        <addColumn tableName="products">
+            <column name="is_resource" type="BOOLEAN" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
