@@ -22,6 +22,7 @@ data class UserModel(
     @Column(nullable = false)
     val firstAccess: Boolean = true,
 
+    // Remove later
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonManagedReference
     var authorities: MutableList<AuthorityModel> = mutableListOf(),

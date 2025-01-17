@@ -1,7 +1,6 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.enum.product.ProductDtoOptionsEnum
 import agoraa.app.forms_back.schema.product.ProductCreateSchema
 import agoraa.app.forms_back.service.ProductService
 import jakarta.validation.Valid
@@ -21,13 +20,13 @@ class ProductController(private val productService: ProductService) {
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "id") sort: String,
         @RequestParam(defaultValue = "asc") direction: String,
-        @RequestParam(defaultValue = "MINIMAL") dtoOptions: ProductDtoOptionsEnum,
-        outOfMix: Boolean?,
-        supplierId: Long?,
-        supplierName: String?,
-        name: String?,
-        code: String?,
-        isResource: Boolean?
+        @RequestParam(required = false) outOfMix: Boolean?,
+        @RequestParam(required = false) supplierId: Long?,
+        @RequestParam(required = false) supplierName: String?,
+        @RequestParam(required = false) name: String?,
+        @RequestParam(required = false) code: String?,
+        @RequestParam(required = false) isResource: Boolean?,
+        @RequestParam(required = false) stores: List<StoresEnum>?
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
             .body(
@@ -37,29 +36,27 @@ class ProductController(private val productService: ProductService) {
                     size,
                     sort,
                     direction,
-                    dtoOptions,
                     outOfMix,
                     supplierId,
                     supplierName,
                     name,
                     code,
-                    isResource
+                    isResource,
+                    stores
                 )
             )
 
     @GetMapping("/{id}")
     fun getProductById(
         @PathVariable id: Long,
-        @RequestParam(defaultValue = "MINIMAL") dtoOptions: ProductDtoOptionsEnum
     ): ResponseEntity<Any> =
-        ResponseEntity.status(HttpStatus.OK).body(productService.returnById(dtoOptions, id))
+        ResponseEntity.status(HttpStatus.OK).body(productService.returnById(id))
 
     // ADMIN ONLY
 
     @PostMapping("/create-multiple")
     fun createProducts(
         @RequestBody @Valid request: List<ProductCreateSchema>,
-        @RequestParam(defaultValue = "MINIMAL") dtoOptions: ProductDtoOptionsEnum,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {
@@ -68,14 +65,13 @@ class ProductController(private val productService: ProductService) {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
             }
 
-            else -> ResponseEntity.status(HttpStatus.CREATED).body(productService.createMultiple(dtoOptions, request))
+            else -> ResponseEntity.status(HttpStatus.CREATED).body(productService.createMultiple(request))
         }
     }
 
     @PutMapping("/edit-or-create-multiple")
     fun editOrCreateProducts(
         @RequestBody @Valid request: List<ProductCreateSchema>,
-        @RequestParam(defaultValue = "MINIMAL") dtoOptions: ProductDtoOptionsEnum,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {
@@ -85,7 +81,7 @@ class ProductController(private val productService: ProductService) {
             }
 
             else -> ResponseEntity.status(HttpStatus.OK)
-                .body(productService.editOrCreateMultipleByCodeAndStore(dtoOptions, request))
+                .body(productService.editOrCreateMultipleByCodeAndStore(request))
         }
     }
 }

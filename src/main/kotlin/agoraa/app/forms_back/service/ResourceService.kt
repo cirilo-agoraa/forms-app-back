@@ -126,7 +126,7 @@ class ResourceService(
     }
 
     @Transactional
-    fun create(customUserDetails: CustomUserDetails, request: ResourceCreateSchema): ResourceModel {
+    fun create(customUserDetails: CustomUserDetails, request: ResourceCreateSchema) {
         val currentUser = customUserDetails.getUserModel()
         val resource = resourceRepository.saveAndFlush(
             ResourceModel(
@@ -137,11 +137,10 @@ class ResourceService(
 
         resourceProductService.create(resource, request.products)
 
-        return resource
     }
 
     @Transactional
-    fun edit(customUserDetails: CustomUserDetails, id: Long, request: ResourceEditSchema): ResourceModel {
+    fun edit(customUserDetails: CustomUserDetails, id: Long, request: ResourceEditSchema) {
         val resource = findById(customUserDetails, id)
 
         val resourceEdited = resourceRepository.saveAndFlush(
@@ -152,7 +151,5 @@ class ResourceService(
         )
 
         request.products?.let { resourceProductService.edit(resourceEdited, it) }
-
-        return resourceEdited
     }
 }

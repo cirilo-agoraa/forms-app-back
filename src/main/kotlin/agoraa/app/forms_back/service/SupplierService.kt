@@ -1,7 +1,5 @@
 package agoraa.app.forms_back.service
 
-import agoraa.app.forms_back.dto.supplier.SupplierDto
-import agoraa.app.forms_back.enum.supplier.SupplierDtoOptionsEnum
 import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.SupplierModel
@@ -11,14 +9,11 @@ import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.reflect.KMutableProperty
-import kotlin.reflect.full.memberProperties
 
 @Service
 class SupplierService(private val supplierRepository: SupplierRepository) {
@@ -39,29 +34,6 @@ class SupplierService(private val supplierRepository: SupplierRepository) {
         }
     }
 
-    fun createDto(fields: List<String>, supplierModel: SupplierModel): SupplierDto {
-        val supplierDto = SupplierDto(
-            id = supplierModel.id
-        )
-
-        val supplierModelProperties = SupplierModel::class.memberProperties.associateBy { it.name }
-        val supplierDtoProperties = SupplierDto::class.memberProperties.associateBy { it.name }
-
-        fields.forEach { field ->
-            val modelProperty = supplierModelProperties[field]
-            val dtoProperty = supplierDtoProperties[field]
-
-            if (modelProperty != null && dtoProperty != null) {
-                if (dtoProperty is KMutableProperty<*>) {
-                    val value = modelProperty.get(supplierModel)
-                    dtoProperty.setter.call(supplierDto, value)
-                }
-            }
-        }
-
-        return supplierDto
-    }
-
     fun findById(id: Long): SupplierModel {
         return supplierRepository.findById(id)
             .orElseThrow { throw ResourceNotFoundException("Supplier not Found") }
@@ -73,7 +45,6 @@ class SupplierService(private val supplierRepository: SupplierRepository) {
         size: Int,
         sort: String,
         direction: String,
-        dtoOptions: SupplierDtoOptionsEnum,
         name: String?,
         status: List<SupplierStatusEnum>?
     ): Any {
@@ -84,18 +55,17 @@ class SupplierService(private val supplierRepository: SupplierRepository) {
         return when {
             pagination -> {
                 val pageable = PageRequest.of(page, size, sortBy)
-                val pagedResult = supplierRepository.findAll(spec, pageable)
-                PageImpl(pagedResult.content.map { createDto(dtoOptions.fields, it) }, pageable, pagedResult.totalElements)
+                return supplierRepository.findAll(spec, pageable)
             }
 
             else -> {
-                supplierRepository.findAll(spec, sortBy).map { createDto(dtoOptions.fields, it) }
+                supplierRepository.findAll(spec, sortBy)
             }
         }
     }
 
-    fun getById(dtoOptions: SupplierDtoOptionsEnum, id: Long): SupplierDto {
-        return createDto(dtoOptions.fields, findById(id))
+    fun getById(id: Long): SupplierModel {
+        return findById(id)
     }
 
     fun findByName(name: String): SupplierModel {
@@ -104,7 +74,7 @@ class SupplierService(private val supplierRepository: SupplierRepository) {
     }
 
     @Transactional
-    fun createMultiple(dtoOptions: SupplierDtoOptionsEnum, request: List<SupplierCreateSchema>): List<SupplierDto> {
+    fun createMultiple(request: List<SupplierCreateSchema>): List<SupplierModel> {
         val suppliers = request
             .map { supplier ->
                 SupplierModel(
@@ -121,12 +91,11 @@ class SupplierService(private val supplierRepository: SupplierRepository) {
                 )
             }
 
-        val newSuppliers = supplierRepository.saveAll(suppliers)
-        return newSuppliers.map { createDto(dtoOptions.fields, it) }
+        return supplierRepository.saveAll(suppliers)
     }
 
     @Transactional
-    fun editOrCreateMultipleByName(dtoOptions: SupplierDtoOptionsEnum, request: List<SupplierCreateSchema>): List<SupplierDto> {
+    fun editOrCreateMultipleByName(request: List<SupplierCreateSchema>): List<SupplierModel> {
         val suppliers = request.map { supplier ->
             try {
                 val existingSupplier = findByName(supplier.name)
@@ -156,7 +125,6 @@ class SupplierService(private val supplierRepository: SupplierRepository) {
                 )
             }
         }
-        val savedSuppliers = supplierRepository.saveAll(suppliers)
-        return savedSuppliers.map { createDto(dtoOptions.fields, it) }
+        return supplierRepository.saveAll(suppliers)
     }
 }

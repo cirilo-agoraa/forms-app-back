@@ -8,16 +8,11 @@ import agoraa.app.forms_back.service.ResourceService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
 @RestController
-@RequestMapping("/api/resource-products")
+@RequestMapping("/api/resources")
 class ResourceController(private val resourceService: ResourceService) {
 
     @GetMapping
@@ -52,9 +47,9 @@ class ResourceController(private val resourceService: ResourceService) {
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "id") sort: String,
         @RequestParam(defaultValue = "asc") direction: String,
-        store: StoresEnum?,
-        createdAt: LocalDateTime?,
-        processed: Boolean?
+        @RequestParam(required = false) store: StoresEnum?,
+        @RequestParam(required = false) createdAt: LocalDateTime?,
+        @RequestParam(required = false) processed: Boolean?
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             resourceService.getAllByCurrentUser(
@@ -73,7 +68,7 @@ class ResourceController(private val resourceService: ResourceService) {
     @GetMapping("/{id}")
     fun getResource(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestParam id: Long
+        @PathVariable id: Long
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             resourceService.getById(
@@ -86,7 +81,7 @@ class ResourceController(private val resourceService: ResourceService) {
     @PostMapping
     fun createResource(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestParam request: ResourceCreateSchema
+        @RequestBody request: ResourceCreateSchema
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.CREATED).body(
             resourceService.create(
@@ -99,8 +94,8 @@ class ResourceController(private val resourceService: ResourceService) {
     @PutMapping("/{id}/edit")
     fun editResource(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestParam id: Long,
-        @RequestParam request: ResourceEditSchema
+        @PathVariable id: Long,
+        @RequestBody request: ResourceEditSchema
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             resourceService.edit(

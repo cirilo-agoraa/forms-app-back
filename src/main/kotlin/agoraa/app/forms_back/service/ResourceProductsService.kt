@@ -22,13 +22,14 @@ class ResourceProductsService(
     @Lazy val resourceService: ResourceService
 ) {
 
-    private fun editMultiple(resourceProducts: List<ResourceProductsModel>) {
+    private fun editMultiple(resourceProducts: List<ResourceProductsModel>, products: List<ResourceProductsCreateSchema>) {
         val editedResourceProducts = resourceProducts.map { rp ->
+            val updatedProduct = products.find { it.productId == rp.product.id }
             rp.copy(
-                quantity = rp.quantity
+                quantity = updatedProduct?.quantity ?: rp.quantity
             )
         }
-        resourceProductsRepository.saveAll(editedResourceProducts)
+        resourceProductsRepository.saveAllAndFlush(editedResourceProducts)
     }
 
     private fun createCriteria(
@@ -106,7 +107,6 @@ class ResourceProductsService(
         resourceProductsRepository.deleteAll(toDelete)
 
         val toEdit = resourceProducts.filter { it.product.id in newProductsSet }
-        editMultiple(toEdit)
-
+        editMultiple(toEdit, products)
     }
 }
