@@ -26,7 +26,8 @@ class ProductController(private val productService: ProductService) {
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false) code: String?,
         @RequestParam(required = false) isResource: Boolean?,
-        @RequestParam(required = false) stores: List<StoresEnum>?
+        @RequestParam(required = false) stores: List<StoresEnum>?,
+        @RequestParam(required = false) sector: String?
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
             .body(
@@ -42,7 +43,8 @@ class ProductController(private val productService: ProductService) {
                     name,
                     code,
                     isResource,
-                    stores
+                    stores,
+                    sector
                 )
             )
 

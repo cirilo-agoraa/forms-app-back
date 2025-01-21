@@ -20,7 +20,7 @@ data class ProductModel(
     @Column(nullable = false)
     val isResource: Boolean = false,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = false)
     val supplier: SupplierModel,
 

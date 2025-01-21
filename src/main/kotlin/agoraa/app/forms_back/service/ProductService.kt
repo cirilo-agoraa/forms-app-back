@@ -25,7 +25,7 @@ class ProductService(
 ) {
 
     fun createDto(productModel: ProductModel, full: Boolean = false): ProductDto {
-        val productDto =  ProductDto(
+        val productDto = ProductDto(
             id = productModel.id,
             code = productModel.code,
             name = productModel.name,
@@ -36,59 +36,58 @@ class ProductService(
             groupName = productModel.groupName,
             subgroup = productModel.subgroup,
             brand = productModel.brand,
-            weight = productModel.weight,
             packageQuantity = productModel.packageQuantity,
-            minimumStock = productModel.minimumStock,
-            salesLast30Days = productModel.salesLast30Days,
-            salesLast12Months = productModel.salesLast12Months,
-            salesLast7Days = productModel.salesLast7Days,
-            dailySales = productModel.dailySales,
-            lastCost = productModel.lastCost,
-            averageSalesLast30Days = productModel.averageSalesLast30Days,
-            currentStock = productModel.currentStock,
-            openOrder = productModel.openOrder,
-            expirationDate = productModel.expirationDate,
-            lossQuantity = productModel.lossQuantity,
-            promotionType = productModel.promotionType,
-            exchangeQuantity = productModel.exchangeQuantity,
-            flag1 = productModel.flag1,
-            flag2 = productModel.flag2,
-            flag3 = productModel.flag3,
-            flag4 = productModel.flag4,
-            flag5 = productModel.flag5,
-            averageExpiration = productModel.averageExpiration,
-            networkStock = productModel.networkStock,
-            transferPackage = productModel.transferPackage,
-            promotionQuantity = productModel.promotionQuantity,
             category = productModel.category,
-            noDeliveryQuantity = productModel.noDeliveryQuantity,
-            averageSales30d12m = productModel.averageSales30d12m,
-            highestSales = productModel.highestSales,
-            dailySalesAmount = productModel.dailySalesAmount,
-            daysToExpire = productModel.daysToExpire,
-            salesProjection = productModel.salesProjection,
-            inProjection = productModel.inProjection,
-            excessStock = productModel.excessStock,
-            totalCost = productModel.totalCost,
-            totalSales = productModel.totalSales,
-            term = productModel.term,
-            currentStockPerPackage = productModel.currentStockPerPackage,
-            averageSales = productModel.averageSales,
-            costP = productModel.costP,
-            salesP = productModel.salesP,
-            availableStock = productModel.availableStock,
-            stockTurnover = productModel.stockTurnover,
-            netCost = productModel.netCost,
-            salesPrice = productModel.salesPrice,
-            salesPrice2 = productModel.salesPrice2,
-            promotionPrice = productModel.promotionPrice
         )
 
         return if (full) {
+            productDto.weight = productModel.weight
+            productDto.minimumStock = productModel.minimumStock
+            productDto.salesLast30Days = productModel.salesLast30Days
+            productDto.salesLast12Months = productModel.salesLast12Months
+            productDto.salesLast7Days = productModel.salesLast7Days
+            productDto.dailySales = productModel.dailySales
+            productDto.lastCost = productModel.lastCost
+            productDto.averageSalesLast30Days = productModel.averageSalesLast30Days
+            productDto.currentStock = productModel.currentStock
+            productDto.openOrder = productModel.openOrder
+            productDto.expirationDate = productModel.expirationDate
+            productDto.lossQuantity = productModel.lossQuantity
+            productDto.promotionType = productModel.promotionType
+            productDto.exchangeQuantity = productModel.exchangeQuantity
+            productDto.flag1 = productModel.flag1
+            productDto.flag2 = productModel.flag2
+            productDto.flag3 = productModel.flag3
+            productDto.flag4 = productModel.flag4
+            productDto.flag5 = productModel.flag5
+            productDto.averageExpiration = productModel.averageExpiration
+            productDto.networkStock = productModel.networkStock
+            productDto.transferPackage = productModel.transferPackage
+            productDto.promotionQuantity = productModel.promotionQuantity
+            productDto.noDeliveryQuantity = productModel.noDeliveryQuantity
+            productDto.averageSales30d12m = productModel.averageSales30d12m
+            productDto.highestSales = productModel.highestSales
+            productDto.dailySalesAmount = productModel.dailySalesAmount
+            productDto.daysToExpire = productModel.daysToExpire
+            productDto.salesProjection = productModel.salesProjection
+            productDto.inProjection = productModel.inProjection
+            productDto.excessStock = productModel.excessStock
+            productDto.totalCost = productModel.totalCost
+            productDto.totalSales = productModel.totalSales
+            productDto.term = productModel.term
+            productDto.currentStockPerPackage = productModel.currentStockPerPackage
+            productDto.averageSales = productModel.averageSales
+            productDto.costP = productModel.costP
+            productDto.salesP = productModel.salesP
+            productDto.availableStock = productModel.availableStock
+            productDto.stockTurnover = productModel.stockTurnover
+            productDto.netCost = productModel.netCost
+            productDto.salesPrice = productModel.salesPrice
+            productDto.salesPrice2 = productModel.salesPrice2
+            productDto.promotionPrice = productModel.promotionPrice
             productDto.supplier = productModel.supplier
             productDto
-        }
-        else {
+        } else {
             productDto
         }
     }
@@ -101,6 +100,7 @@ class ProductService(
         code: String? = null,
         stores: List<StoresEnum>? = null,
         isResource: Boolean? = null,
+        sector: String? = null
     ): Specification<ProductModel> {
         return Specification { root: Root<ProductModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -133,6 +133,10 @@ class ProductService(
                 predicates.add(criteriaBuilder.equal(root.get<Boolean>("isResource"), it))
             }
 
+            sector?.let {
+                predicates.add(criteriaBuilder.equal(root.get<String>("sector"), it))
+            }
+
             criteriaBuilder.and(*predicates.toTypedArray())
         }
     }
@@ -149,9 +153,11 @@ class ProductService(
         name: String?,
         code: String?,
         isResource: Boolean?,
-        stores: List<StoresEnum>?
+        stores: List<StoresEnum>?,
+        sector: String?
     ): Any {
-        val spec = createCriteria(outOfMix, supplierId, supplierName, name, code, stores, isResource=isResource)
+        val spec =
+            createCriteria(outOfMix, supplierId, supplierName, name, code, stores, isResource = isResource, sector)
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)

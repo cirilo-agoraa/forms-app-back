@@ -62,9 +62,11 @@ class ResourceProductsService(
     }
 
     fun createDto(resourceProduct: ResourceProductsModel): ResourceProductsDto {
+        val productDto = productService.createDto(resourceProduct.product)
+
         return ResourceProductsDto(
             id = resourceProduct.id,
-            product = resourceProduct.product,
+            product = productDto,
             quantity = resourceProduct.quantity
         )
     }
@@ -75,11 +77,11 @@ class ResourceProductsService(
         name: String?,
         code: String?,
         sector: String?
-    ): List<ResourceProductsModel> {
+    ): List<ResourceProductsDto> {
         val resource = resourceService.findById(customUserDetails, resourceId)
         val spec = createCriteria(resource.id, name, code, sector)
 
-        return resourceProductsRepository.findAll(spec)
+        return resourceProductsRepository.findAll(spec).map { createDto(it) }
     }
 
     fun create(resource: ResourceModel, products: List<ResourceProductsCreateSchema>) {
