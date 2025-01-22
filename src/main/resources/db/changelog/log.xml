@@ -377,4 +377,8 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="5" author="PedroCostaa">
+        <dropColumn tableName="users" columnName="first_access"/>
+    </changeSet>
+
 </databaseChangeLog>

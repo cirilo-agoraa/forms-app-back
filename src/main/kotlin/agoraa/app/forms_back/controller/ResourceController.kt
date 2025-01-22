@@ -17,17 +17,20 @@ class ResourceController(private val resourceService: ResourceService) {
 
     @GetMapping
     fun getAllResources(
-        @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") size: Int,
-        @RequestParam(defaultValue = "id") sort: String,
-        @RequestParam(defaultValue = "asc") direction: String,
-        username: String?,
-        store: StoresEnum?,
-        createdAt: LocalDateTime?,
-        processed: Boolean?
+        @RequestParam(required = false, defaultValue = "false") pagination: Boolean,
+        @RequestParam(required = false, defaultValue = "0") page: Int,
+        @RequestParam(required = false, defaultValue = "10") size: Int,
+        @RequestParam(required = false, defaultValue = "id") sort: String,
+        @RequestParam(required = false, defaultValue = "asc") direction: String,
+        @RequestParam(required = false) username: String?,
+        @RequestParam(required = false) store: StoresEnum?,
+        @RequestParam(required = false) createdAt: LocalDateTime?,
+        @RequestParam(required = false) processed: Boolean?,
+        @RequestParam(required = false) full: Boolean?
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             resourceService.getAll(
+                pagination,
                 page,
                 size,
                 sort,
@@ -35,7 +38,8 @@ class ResourceController(private val resourceService: ResourceService) {
                 username,
                 store,
                 createdAt,
-                processed
+                processed,
+                full
             )
         )
     }

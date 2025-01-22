@@ -12,23 +12,27 @@ class AuthorityService(
     private val authorityRepository: AuthorityRepository
 ) {
 
-    fun create(user: UserModel, authorities: List<String>): List<AuthorityModel> {
+    fun findByUserId(userId: Long): List<AuthorityModel> {
+        return authorityRepository.findByUserId(userId)
+    }
+
+    fun create(user: UserModel, authorities: List<String>) {
         val roles = authorities.map { role ->
             AuthorityModel(
                 authority = AuthorityTypeEnum.valueOf(role),
                 user = user
             )
         }
-        return roles
+        authorityRepository.saveAll(roles)
     }
 
-    fun edit(user: UserModel, authorities: List<String>): MutableList<AuthorityModel> {
-        val currentRolesSet = user.authorities.map { it.authority.name }.toSet()
+    fun edit(user: UserModel, authorities: List<String>) {
+        val currentRoles = findByUserId(user.id)
+        val currentRolesSet = currentRoles.map { it.authority.name }.toSet()
         val newRolesSet = authorities.toSet()
 
-        val rolesToDelete = user.authorities.filter { it.authority.name !in newRolesSet }
+        val rolesToDelete = currentRoles.filter { it.authority.name !in newRolesSet }
         deleteAll(rolesToDelete)
-        user.authorities.removeAll(rolesToDelete)
 
         val rolesToAdd = authorities.filter { it !in currentRolesSet }
         val newRoles = rolesToAdd.map { role ->
@@ -37,8 +41,7 @@ class AuthorityService(
                 user = user
             )
         }
-        user.authorities.addAll(newRoles)
-        return user.authorities
+        authorityRepository.saveAll(newRoles)
     }
 
     fun delete(authority: AuthorityModel){

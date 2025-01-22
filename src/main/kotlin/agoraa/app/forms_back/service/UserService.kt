@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
+import agoraa.app.forms_back.dto.user.UserDto
 import agoraa.app.forms_back.enum.authority.AuthorityTypeEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
@@ -38,6 +39,24 @@ class UserService(
         }
     }
 
+    fun createDto(user: UserModel, full: Boolean = false): UserDto {
+        val userDto = UserDto(
+            id = user.id,
+            username = user.username,
+            enabled = user.enabled,
+        )
+
+        return when {
+            full -> {
+                val authorities = authorityService.findByUserId(user.id)
+                userDto.authorities = authorities.map { it.authority }
+                userDto
+            }
+
+            else -> userDto
+        }
+    }
+
     fun findAll(pagination: Boolean, username: String?, page: Int, size: Int, sort: String, direction: String): Any {
         val spec = createCriteria(username)
         val sortDirection =
@@ -52,16 +71,8 @@ class UserService(
         }
     }
 
-    fun findById(customUserDetails: CustomUserDetails, id: Long): UserModel {
-        val currentUser = customUserDetails.getUserModel()
+    fun findById(id: Long): UserModel {
         return userRepository.findById(id)
-            .map { user ->
-                if (currentUser.id == user.id || currentUser.authorities.any { it.authority == AuthorityTypeEnum.ROLE_ADMIN }) {
-                    user
-                } else {
-                    throw NotAllowedException("You are not allowed to access this resource")
-                }
-            }
             .orElseThrow { ResourceNotFoundException("User not Found") }
     }
 
@@ -72,43 +83,27 @@ class UserService(
     }
 
     @Transactional
-    fun create(request: UserCreateSchema): UserModel {
-        val user = UserModel(
-            username = request.username,
-            password = encode.encode(request.password)
+    fun create(request: UserCreateSchema) {
+        val createdUser = userRepository.saveAndFlush(
+            UserModel(
+                username = request.username,
+                password = encode.encode(request.password)
+            )
         )
 
-        val roles = authorityService.create(user, request.roles)
-        user.authorities.addAll(roles)
-        userRepository.save(user)
-
-        return user
+        authorityService.create(createdUser, request.roles)
     }
 
-    fun edit(customUserDetails: CustomUserDetails, id: Long, request: UserEditSchema): UserModel {
-        val currentUser = customUserDetails.getUserModel()
-        val existingUser = findById(customUserDetails, id)
+    fun edit(id: Long, request: UserEditSchema) {
+        val user = findById(id)
 
-        val editedUser = when {
-            currentUser.id == existingUser.id -> existingUser.copy(
-                password = request.password?.let { encode.encode(it) } ?: existingUser.password,
-                firstAccess = false
+        val editedUser = userRepository.saveAndFlush(
+            user.copy(
+                enabled = request.enabled ?: user.enabled,
+                password = request.password?.let { encode.encode(it) } ?: user.password,
             )
+        )
 
-            currentUser.authorities.any { it.authority == AuthorityTypeEnum.ROLE_ADMIN } -> {
-                existingUser.copy(
-                    username = request.username ?: existingUser.username,
-                    password = request.password?.let { encode.encode(it) } ?: existingUser.password,
-                    enabled = request.enabled ?: existingUser.enabled,
-                    firstAccess = request.firstAccess ?: existingUser.firstAccess,
-                    authorities = request.roles?.let { authorityService.edit(existingUser, it) }
-                        ?: existingUser.authorities
-                )
-            }
-
-            else -> throw ResourceNotFoundException("User not Found")
-        }
-
-        return userRepository.save(editedUser)
+        request.roles?.let { authorityService.edit(editedUser, it) }
     }
 }

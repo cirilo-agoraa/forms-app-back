@@ -1,6 +1,5 @@
 package agoraa.app.forms_back.controller
 
-import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.service.UserService
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
 import agoraa.app.forms_back.schema.user.UserEditSchema
 import agoraa.app.forms_back.schema.user.UserCreateSchema
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,14 +15,12 @@ class UserController(private val userService: UserService) {
 
     @GetMapping("/{id}")
     fun getUserById(
-        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long
     ): ResponseEntity<Any> =
-        ResponseEntity.status(HttpStatus.OK).body(userService.findById(customUserDetails, id))
+        ResponseEntity.status(HttpStatus.OK).body(userService.findById(id))
 
     @PutMapping("/{id}/edit")
     fun editUser(
-        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
         @RequestBody @Valid request: UserEditSchema,
         bindingResult: BindingResult
@@ -34,11 +30,10 @@ class UserController(private val userService: UserService) {
                 val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
             }
-            else -> ResponseEntity.status(HttpStatus.OK).body(userService.edit(customUserDetails, id, request))
+
+            else -> ResponseEntity.status(HttpStatus.OK).body(userService.edit(id, request))
         }
     }
-
-    // ADMIN ONLY
 
     @GetMapping
     fun getAllUsers(
@@ -59,6 +54,7 @@ class UserController(private val userService: UserService) {
                 val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
             }
+
             else -> ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request))
         }
     }

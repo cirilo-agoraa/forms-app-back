@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
+import agoraa.app.forms_back.dto.resource.ResourceDto
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
@@ -14,6 +15,7 @@ import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
@@ -23,7 +25,8 @@ import java.time.LocalDateTime
 @Service
 class ResourceService(
     private val resourceRepository: ResourceRepository,
-    private val resourceProductService: ResourceProductsService
+    private val resourceProductService: ResourceProductsService,
+    private val userService: UserService
 ) {
 
     private fun createCriteria(
@@ -69,6 +72,26 @@ class ResourceService(
         return isAdmin || isOwner
     }
 
+    fun createDto(resource: ResourceModel, full: Boolean = false): ResourceDto {
+        val userDto = userService.createDto(resource.user)
+        val resourceDto = ResourceDto(
+            id = resource.id,
+            user = userDto,
+            store = resource.store,
+            createdAt = resource.createdAt,
+            processed = resource.processed,
+        )
+
+        return when {
+            full -> {
+                val resourceProducts = resourceProductService.findByResourceId(resource.id)
+                resourceDto.products = resourceProducts
+                resourceDto
+            }
+            else -> resourceDto
+        }
+    }
+
     fun findById(customUserDetails: CustomUserDetails, id: Long): ResourceModel {
         val resource = resourceRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("Resource with id $id not found") }
@@ -87,6 +110,7 @@ class ResourceService(
     }
 
     fun getAll(
+        pagination: Boolean,
         page: Int,
         size: Int,
         sort: String,
@@ -94,15 +118,35 @@ class ResourceService(
         username: String?,
         store: StoresEnum?,
         createdAt: LocalDateTime?,
-        processed: Boolean?
+        processed: Boolean?,
+        full: Boolean?
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
-        val pageable = PageRequest.of(page, size, sortBy)
         val spec = createCriteria(username, store, createdAt, processed)
 
-        return resourceRepository.findAll(spec, pageable)
+        return when {
+            pagination -> {
+                val pageable = PageRequest.of(page, size, sortBy)
+                val pageResult = resourceRepository.findAll(spec, pageable)
+
+                if (full == true) {
+                    return PageImpl(pageResult.content.map { createDto(it, full) }, pageable, pageResult.totalElements)
+                }
+
+                return pageResult
+            }
+            else -> {
+                val resources = resourceRepository.findAll(spec, sortBy)
+
+                if (full == true) {
+                    return resources.map { createDto(it, full) }
+                }
+
+                resources
+            }
+        }
     }
 
     fun getAllByCurrentUser(

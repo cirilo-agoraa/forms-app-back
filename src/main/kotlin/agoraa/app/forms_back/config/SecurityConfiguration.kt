@@ -30,7 +30,7 @@ class SecurityConfiguration(
                     .requestMatchers("swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                     // users endpoints
-                    .requestMatchers("/api/users").hasRole("ADMIN")
+                    .requestMatchers("/api/users/**").hasRole("ADMIN")
 
                     // suppliers endpoints
                     .requestMatchers("/api/suppliers/create-multiple").hasRole("ADMIN")
@@ -43,7 +43,12 @@ class SecurityConfiguration(
                     // resources endpoints
                     .requestMatchers(HttpMethod.GET, "/api/resources").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/api/resources").hasAnyRole("ADMIN", "LOJA")
-                    .requestMatchers(HttpMethod.GET, "/api/resources/current-user").hasAnyRole("ADMIN", "LOJA")
+                    .requestMatchers("/api/resources/current-user").hasAnyRole("ADMIN", "LOJA")
+                    .requestMatchers("/api/resources/{id}").hasRole("ADMIN")
+                    .requestMatchers("/api/resources/{id}/edit").hasRole("ADMIN")
+
+                    // resources products endpoints
+                    .requestMatchers("/api/resource-products/**").hasRole("ADMIN")
 
                     .anyRequest().fullyAuthenticated()
             }

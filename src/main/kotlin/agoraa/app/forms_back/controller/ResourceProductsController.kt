@@ -13,13 +13,12 @@ class ResourceProductsController(private val resourceProductsService: ResourcePr
 
     @GetMapping("/by-resource/{resourceId}")
     fun getByResourceId(
-        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable resourceId: Long,
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false) code: String?,
         @RequestParam(required = false) sector: String?
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK)
-            .body(resourceProductsService.findByResourceId(customUserDetails, resourceId, name, code, sector))
+            .body(resourceProductsService.findByResourceId(resourceId, name, code, sector))
     }
 }

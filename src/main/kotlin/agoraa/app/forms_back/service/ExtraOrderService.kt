@@ -108,7 +108,6 @@ class ExtraOrderService(
     }
 
     fun findAll(
-        customUserDetails: CustomUserDetails,
         pagination: Boolean,
         convertToDTO: Boolean,
         supplierId: Long?,
@@ -124,7 +123,6 @@ class ExtraOrderService(
         sort: String,
         direction: String
     ): Any {
-        val currentUser = customUserDetails.getUserModel()
         val spec = createCriteria(
             supplierId,
             supplierName,
@@ -140,12 +138,6 @@ class ExtraOrderService(
         val sortBy = Sort.by(sortDirection, sort)
 
         var extraOrders = extraOrderRepository.findAll(spec, sortBy)
-        extraOrders = when {
-            !currentUser.authorities.any { it.authority == AuthorityTypeEnum.ROLE_ADMIN } ->
-                extraOrders.filter { it.user.username == currentUser.username }
-
-            else -> extraOrders
-        }
 
         return when {
             pagination -> {

@@ -38,6 +38,7 @@ class ProductService(
             brand = productModel.brand,
             packageQuantity = productModel.packageQuantity,
             category = productModel.category,
+            transferPackage = productModel.transferPackage
         )
 
         return if (full) {
@@ -62,7 +63,6 @@ class ProductService(
             productDto.flag5 = productModel.flag5
             productDto.averageExpiration = productModel.averageExpiration
             productDto.networkStock = productModel.networkStock
-            productDto.transferPackage = productModel.transferPackage
             productDto.promotionQuantity = productModel.promotionQuantity
             productDto.noDeliveryQuantity = productModel.noDeliveryQuantity
             productDto.averageSales30d12m = productModel.averageSales30d12m

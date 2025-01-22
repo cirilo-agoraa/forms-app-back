@@ -36,7 +36,6 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     ): ResponseEntity<Any> {
         return ResponseEntity.ok(
             extraOrderService.findAll(
-                customUserDetails,
                 pagination,
                 convertToDTO,
                 supplierId,

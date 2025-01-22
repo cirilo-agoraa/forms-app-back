@@ -72,14 +72,12 @@ class ResourceProductsService(
     }
 
     fun findByResourceId(
-        customUserDetails: CustomUserDetails,
         resourceId: Long,
-        name: String?,
-        code: String?,
-        sector: String?
+        name: String? = null,
+        code: String? = null,
+        sector: String? = null
     ): List<ResourceProductsDto> {
-        val resource = resourceService.findById(customUserDetails, resourceId)
-        val spec = createCriteria(resource.id, name, code, sector)
+        val spec = createCriteria(resourceId, name, code, sector)
 
         return resourceProductsRepository.findAll(spec).map { createDto(it) }
     }
