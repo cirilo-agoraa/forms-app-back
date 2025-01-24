@@ -39,7 +39,7 @@ class ResourceService(
         return Specification { root: Root<ResourceModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
 
-            userId.let {
+            userId?.let {
                 predicates.add(criteriaBuilder.equal(root.get<UserModel>("user").get<Long>("id"), it))
             }
 
