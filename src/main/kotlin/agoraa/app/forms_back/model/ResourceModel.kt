@@ -16,6 +16,7 @@ data class ResourceModel(
     val user: UserModel,
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     val store: StoresEnum,
 
     @Column(nullable = false)
