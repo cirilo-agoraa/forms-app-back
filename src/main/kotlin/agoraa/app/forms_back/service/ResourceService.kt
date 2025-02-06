@@ -71,7 +71,7 @@ class ResourceService(
         return isAdmin || isOwner
     }
 
-    fun createDto(resource: ResourceModel, full: Boolean = false): ResourceDto {
+    fun createDto(resource: ResourceModel, full: Boolean? = null): ResourceDto {
         val userDto = userService.createDto(resource.user)
         val resourceDto = ResourceDto(
             id = resource.id,
@@ -82,7 +82,7 @@ class ResourceService(
         )
 
         return when {
-            full -> {
+            full == true -> {
                 val resourceProducts = resourceProductService.findByResourceId(resource.id)
                 resourceDto.products = resourceProducts
                 resourceDto
@@ -103,9 +103,12 @@ class ResourceService(
 
     fun getById(
         customUserDetails: CustomUserDetails,
-        id: Long
-    ): ResourceModel {
-        return findById(customUserDetails, id)
+        id: Long,
+        full: Boolean? = null
+    ): ResourceDto {
+        val resource = findById(customUserDetails, id)
+
+        return createDto(resource, full)
     }
 
     fun getAll(

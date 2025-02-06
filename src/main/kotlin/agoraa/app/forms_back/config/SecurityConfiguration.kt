@@ -44,8 +44,8 @@ class SecurityConfiguration(
                     .requestMatchers(HttpMethod.GET, "/api/resources").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/api/resources").hasAnyRole("ADMIN", "LOJA")
                     .requestMatchers("/api/resources/current-user").hasAnyRole("ADMIN", "LOJA")
-                    .requestMatchers("/api/resources/{id}").hasRole("ADMIN")
-                    .requestMatchers("/api/resources/{id}/edit").hasRole("ADMIN")
+                    .requestMatchers("/api/resources/{id}").hasAnyRole("ADMIN", "LOJA")
+                    .requestMatchers("/api/resources/{id}/edit").hasAnyRole("ADMIN", "LOJA")
 
                     // resources products endpoints
                     .requestMatchers("/api/resource-products/**").hasRole("ADMIN")
