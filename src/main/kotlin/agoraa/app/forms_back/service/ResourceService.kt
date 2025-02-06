@@ -31,7 +31,7 @@ class ResourceService(
 
     private fun createCriteria(
         username: String? = null,
-        store: StoresEnum? = null,
+        stores: List<StoresEnum>? = null,
         createdAt: LocalDateTime? = null,
         processed: Boolean? = null,
         userId: Long? = null,
@@ -44,11 +44,11 @@ class ResourceService(
             }
 
             username?.let {
-                predicates.add(criteriaBuilder.equal(root.get<UserModel>("user").get<String>("username"), it))
+                predicates.add(criteriaBuilder.like(root.get<UserModel>("user").get("username"), "%$it%"))
             }
 
-            store?.let {
-                predicates.add(criteriaBuilder.equal(root.get<StoresEnum>("store"), it))
+            stores?.let {
+                predicates.add(root.get<StoresEnum>("store").`in`(it))
             }
 
             createdAt?.let {
@@ -58,7 +58,6 @@ class ResourceService(
             processed?.let {
                 predicates.add(criteriaBuilder.equal(root.get<Boolean>("processed"), it))
             }
-
 
             criteriaBuilder.and(*predicates.toTypedArray())
         }
@@ -116,7 +115,7 @@ class ResourceService(
         sort: String,
         direction: String,
         username: String?,
-        store: StoresEnum?,
+        stores: List<StoresEnum>?,
         createdAt: LocalDateTime?,
         processed: Boolean?,
         full: Boolean?
@@ -124,7 +123,7 @@ class ResourceService(
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
-        val spec = createCriteria(username, store, createdAt, processed)
+        val spec = createCriteria(username, stores, createdAt, processed)
 
         return when {
             pagination -> {
@@ -155,7 +154,7 @@ class ResourceService(
         size: Int,
         sort: String,
         direction: String,
-        store: StoresEnum?,
+        stores: List<StoresEnum>?,
         createdAt: LocalDateTime?,
         processed: Boolean?
     ): Any {
@@ -164,7 +163,7 @@ class ResourceService(
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
         val pageable = PageRequest.of(page, size, sortBy)
-        val spec = createCriteria(store = store, createdAt = createdAt, processed = processed, userId = currentUser.id)
+        val spec = createCriteria(stores = stores, createdAt = createdAt, processed = processed, userId = currentUser.id)
 
         return resourceRepository.findAll(spec, pageable)
     }
@@ -195,5 +194,11 @@ class ResourceService(
         )
 
         request.products?.let { resourceProductService.edit(resourceEdited, it) }
+    }
+
+    @Transactional
+    fun delete(customUserDetails: CustomUserDetails, id: Long) {
+        val resource = findById(customUserDetails, id)
+        resourceRepository.delete(resource)
     }
 }

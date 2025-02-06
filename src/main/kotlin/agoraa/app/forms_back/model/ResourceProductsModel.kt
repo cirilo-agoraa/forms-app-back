@@ -1,6 +1,8 @@
 package agoraa.app.forms_back.model
 
 import jakarta.persistence.*
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 
 @Entity
 @Table(name = "resource_products")
@@ -11,6 +13,7 @@ data class ResourceProductsModel(
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     val product: ProductModel,
 
     @ManyToOne
