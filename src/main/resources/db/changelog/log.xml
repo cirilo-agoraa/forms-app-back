@@ -381,4 +381,14 @@
         <dropColumn tableName="users" columnName="first_access"/>
     </changeSet>
 
+    <changeSet id="6" author="PedroCostaa">
+        <dropForeignKeyConstraint baseTableName="resource_products" constraintName="fk_resource_product_resource"/>
+        <addForeignKeyConstraint baseTableName="resource_products"
+                                 baseColumnNames="resource_id"
+                                 constraintName="fk_resource_product_resource"
+                                 referencedTableName="resources"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+    </changeSet>
+
 </databaseChangeLog>

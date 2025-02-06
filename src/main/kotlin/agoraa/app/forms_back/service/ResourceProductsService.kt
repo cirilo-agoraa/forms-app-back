@@ -19,7 +19,6 @@ import org.springframework.data.jpa.domain.Specification
 class ResourceProductsService(
     private val resourceProductsRepository: ResourceProductsRepository,
     private val productService: ProductService,
-    @Lazy val resourceService: ResourceService
 ) {
 
     private fun editMultiple(resourceProducts: List<ResourceProductsModel>, products: List<ResourceProductsCreateSchema>) {
