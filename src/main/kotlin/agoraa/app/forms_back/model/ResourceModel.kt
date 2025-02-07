@@ -23,5 +23,8 @@ data class ResourceModel(
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(nullable = false)
-    val processed: Boolean = false
+    val processed: Boolean = false,
+
+    @Column(nullable = true)
+    val orderNumber: Long? = null
 )

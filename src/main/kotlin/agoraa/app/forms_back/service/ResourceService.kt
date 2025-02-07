@@ -35,6 +35,8 @@ class ResourceService(
         createdAt: LocalDateTime? = null,
         processed: Boolean? = null,
         userId: Long? = null,
+        minDate: LocalDateTime? = null,
+        maxDate: LocalDateTime? = null,
     ): Specification<ResourceModel> {
         return Specification { root: Root<ResourceModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -53,6 +55,14 @@ class ResourceService(
 
             createdAt?.let {
                 predicates.add(criteriaBuilder.equal(root.get<LocalDateTime>("createdAt"), it))
+            }
+
+            minDate?.let {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), it))
+            }
+
+            maxDate?.let {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createdAt"), it))
             }
 
             processed?.let {
@@ -79,6 +89,7 @@ class ResourceService(
             store = resource.store,
             createdAt = resource.createdAt,
             processed = resource.processed,
+            orderNumber = resource.orderNumber
         )
 
         return when {
@@ -87,6 +98,7 @@ class ResourceService(
                 resourceDto.products = resourceProducts
                 resourceDto
             }
+
             else -> resourceDto
         }
     }
@@ -120,13 +132,15 @@ class ResourceService(
         username: String?,
         stores: List<StoresEnum>?,
         createdAt: LocalDateTime?,
+        maxDate: LocalDateTime?,
+        minDate: LocalDateTime?,
         processed: Boolean?,
         full: Boolean?
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
-        val spec = createCriteria(username, stores, createdAt, processed)
+        val spec = createCriteria(username, stores, createdAt, processed, minDate = minDate, maxDate = maxDate)
 
         return when {
             pagination -> {
@@ -139,6 +153,7 @@ class ResourceService(
 
                 return pageResult
             }
+
             else -> {
                 val resources = resourceRepository.findAll(spec, sortBy)
 
@@ -166,7 +181,8 @@ class ResourceService(
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
         val pageable = PageRequest.of(page, size, sortBy)
-        val spec = createCriteria(stores = stores, createdAt = createdAt, processed = processed, userId = currentUser.id)
+        val spec =
+            createCriteria(stores = stores, createdAt = createdAt, processed = processed, userId = currentUser.id)
 
         return resourceRepository.findAll(spec, pageable)
     }
@@ -192,7 +208,8 @@ class ResourceService(
         val resourceEdited = resourceRepository.saveAndFlush(
             resource.copy(
                 store = request.store ?: resource.store,
-                processed = request.processed ?: resource.processed
+                processed = request.processed ?: resource.processed,
+                orderNumber = request.orderNumber ?: resource.orderNumber
             )
         )
 

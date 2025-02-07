@@ -391,4 +391,21 @@
                                  deleteCascade="true"/>
     </changeSet>
 
+    <changeSet id="7" author="PedroCostaa">
+        <addColumn tableName="resources">
+            <column name="qtt_received" type="INT"/>
+        </addColumn>
+        <addColumn tableName="resources">
+            <column name="order_number" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="8" author="PedroCostaa">
+        <dropColumn tableName="resources" columnName="qtt_received"/>
+
+        <addColumn tableName="resource_products">
+            <column name="qtt_received" type="INT"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

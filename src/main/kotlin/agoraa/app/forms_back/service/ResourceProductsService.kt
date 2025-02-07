@@ -1,6 +1,5 @@
 package agoraa.app.forms_back.service
 
-import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.resource_products.ResourceProductsDto
 import agoraa.app.forms_back.model.ProductModel
 import agoraa.app.forms_back.model.ResourceModel
@@ -12,7 +11,6 @@ import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
 import org.springframework.stereotype.Service
-import org.springframework.context.annotation.Lazy
 import org.springframework.data.jpa.domain.Specification
 
 @Service
@@ -25,7 +23,8 @@ class ResourceProductsService(
         val editedResourceProducts = resourceProducts.map { rp ->
             val updatedProduct = products.find { it.productId == rp.product.id }
             rp.copy(
-                quantity = updatedProduct?.quantity ?: rp.quantity
+                quantity = updatedProduct?.quantity ?: rp.quantity,
+                qttReceived = updatedProduct?.qttReceived ?: rp.qttReceived
             )
         }
         resourceProductsRepository.saveAllAndFlush(editedResourceProducts)

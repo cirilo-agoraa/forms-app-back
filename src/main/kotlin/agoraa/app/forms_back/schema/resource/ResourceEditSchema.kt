@@ -6,5 +6,6 @@ import agoraa.app.forms_back.schema.resource_products.ResourceProductsCreateSche
 data class ResourceEditSchema(
     val store: StoresEnum? = null,
     val products: List<ResourceProductsCreateSchema>? = null,
-    val processed: Boolean? = null
+    val processed: Boolean? = null,
+    val orderNumber: Long? = null
 )

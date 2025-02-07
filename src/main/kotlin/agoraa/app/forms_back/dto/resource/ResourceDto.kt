@@ -13,5 +13,6 @@ data class ResourceDto(
     val store: StoresEnum,
     val createdAt: LocalDateTime,
     val processed: Boolean,
+    val orderNumber: Long? = null,
     var products: List<ResourceProductsDto>? = null
 )

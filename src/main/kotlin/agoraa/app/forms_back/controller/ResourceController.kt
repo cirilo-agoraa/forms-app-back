@@ -25,6 +25,8 @@ class ResourceController(private val resourceService: ResourceService) {
         @RequestParam(required = false) username: String?,
         @RequestParam(required = false) stores: List<StoresEnum>?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
+        @RequestParam(required = false) maxDate: LocalDateTime?,
+        @RequestParam(required = false) minDate: LocalDateTime?,
         @RequestParam(required = false) processed: Boolean?,
         @RequestParam(required = false) full: Boolean?
     ): ResponseEntity<Any> {
@@ -38,6 +40,8 @@ class ResourceController(private val resourceService: ResourceService) {
                 username,
                 stores,
                 createdAt,
+                maxDate,
+                minDate,
                 processed,
                 full
             )

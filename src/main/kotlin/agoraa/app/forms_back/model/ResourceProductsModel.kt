@@ -21,5 +21,8 @@ data class ResourceProductsModel(
     val resource: ResourceModel,
 
     @Column(nullable = false)
-    val quantity: Int
+    val quantity: Int,
+
+    @Column(nullable = true)
+    val qttReceived: Int? = null,
 )
