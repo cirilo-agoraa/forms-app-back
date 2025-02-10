@@ -6,6 +6,7 @@ import agoraa.app.forms_back.model.ResourceModel
 import agoraa.app.forms_back.model.ResourceProductsModel
 import agoraa.app.forms_back.repository.ResourceProductsRepository
 import agoraa.app.forms_back.schema.resource_products.ResourceProductsCreateSchema
+import agoraa.app.forms_back.schema.resource_products.ResourceProductsEditSchema
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
@@ -19,7 +20,7 @@ class ResourceProductsService(
     private val productService: ProductService,
 ) {
 
-    private fun editMultiple(resourceProducts: List<ResourceProductsModel>, products: List<ResourceProductsCreateSchema>) {
+    private fun editMultiple(resourceProducts: List<ResourceProductsModel>, products: List<ResourceProductsEditSchema>) {
         val editedResourceProducts = resourceProducts.map { rp ->
             val updatedProduct = products.find { it.productId == rp.product.id }
             rp.copy(
@@ -83,19 +84,19 @@ class ResourceProductsService(
         return resourceProductsRepository.findAll(spec).map { createDto(it) }
     }
 
-    fun create(resource: ResourceModel, products: List<ResourceProductsCreateSchema>) {
+    fun create(resource: ResourceModel, products: List<ResourceProductsEditSchema>) {
         val resourceProducts = products.map { p ->
             val product = productService.findById(p.productId)
             ResourceProductsModel(
                 resource = resource,
                 product = product,
-                quantity = p.quantity
+                quantity = p.quantity ?: throw IllegalArgumentException("Quantity is required"),
             )
         }
         resourceProductsRepository.saveAll(resourceProducts)
     }
 
-    fun edit(resource: ResourceModel, products: List<ResourceProductsCreateSchema>) {
+    fun edit(resource: ResourceModel, products: List<ResourceProductsEditSchema>) {
         val spec = createCriteria(resource.id)
         val resourceProducts = resourceProductsRepository.findAll(spec)
         val currentProductsSet = resourceProducts.map { it.product.id }.toSet()
