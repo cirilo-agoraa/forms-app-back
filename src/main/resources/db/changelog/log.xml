@@ -415,7 +415,7 @@
     </changeSet>
 
     <changeSet id="10" author="PedroCostaa">
-        <renameColumn tableName="resource_products" oldColumnName="qttSent" newColumnName="qtt_sent"/>
+        <renameColumn tableName="resource_products" oldColumnName="qttSent" newColumnName="qtt_sent" columnDataType="INT"/>
     </changeSet>
 
 </databaseChangeLog>
