@@ -65,7 +65,8 @@ class ResourceProductsService(
         return ResourceProductsDto(
             id = resourceProduct.id,
             product = productDto,
-            quantity = resourceProduct.quantity
+            quantity = resourceProduct.quantity,
+            qttReceived = resourceProduct.qttReceived
         )
     }
 
