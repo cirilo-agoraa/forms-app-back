@@ -6,5 +6,6 @@ data class ResourceProductsDto(
     val id: Long = 0,
     val product: ProductDto,
     val quantity: Int,
+    val qttSent: Int? = null,
     val qttReceived: Int? = null,
 )

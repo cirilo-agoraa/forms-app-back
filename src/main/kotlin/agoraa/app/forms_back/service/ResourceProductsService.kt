@@ -24,6 +24,7 @@ class ResourceProductsService(
             val updatedProduct = products.find { it.productId == rp.product.id }
             rp.copy(
                 quantity = updatedProduct?.quantity ?: rp.quantity,
+                qttSent = updatedProduct?.qttSent ?: rp.qttSent,
                 qttReceived = updatedProduct?.qttReceived ?: rp.qttReceived
             )
         }
@@ -66,6 +67,7 @@ class ResourceProductsService(
             id = resourceProduct.id,
             product = productDto,
             quantity = resourceProduct.quantity,
+            qttSent = resourceProduct.qttSent,
             qttReceived = resourceProduct.qttReceived
         )
     }

@@ -407,5 +407,11 @@
             <column name="qtt_received" type="INT"/>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="9" author="PedroCostaa">
+        <addColumn tableName="resource_products">
+            <column name="qttSent" type="INT"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
