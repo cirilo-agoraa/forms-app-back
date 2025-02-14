@@ -418,4 +418,104 @@
         <renameColumn tableName="resource_products" oldColumnName="qttSent" newColumnName="qtt_sent" columnDataType="INT"/>
     </changeSet>
 
+    <changeSet id="11" author="PedroCostaa">
+        <createTable tableName="supplier_registration">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="accepted" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cnpj" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="company_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_term" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seller_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seller_phone" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seller_email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="factory_website" type="VARCHAR(255)"/>
+            <column name="exchange" type="BOOLEAN"/>
+            <column name="exchange_physical" type="BOOLEAN"/>
+            <column name="price_table_file_path" type="VARCHAR(255)"/>
+            <column name="price_table_file_name" type="VARCHAR(255)"/>
+            <column name="catalog_file_path" type="VARCHAR(255)"/>
+            <column name="catalog_file_name" type="VARCHAR(255)"/>
+            <column name="sample_date" type="DATE"/>
+            <column name="obs" type="VARCHAR(255)"/>
+            <column name="supplier_website" type="VARCHAR(255)"/>
+            <column name="minimum_order_value" type="DOUBLE"/>
+            <column name="weekly_quotation" type="VARCHAR(255)"/>
+            <column name="investments_on_store" type="BOOLEAN"/>
+            <column name="purchase_gondola" type="BOOLEAN"/>
+            <column name="participate_in_insert" type="BOOLEAN"/>
+            <column name="birthday_party" type="BOOLEAN"/>
+            <column name="other_participation" type="BOOLEAN"/>
+            <column name="negotiate_bonus_on_first_purchase" type="BOOLEAN"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="supplier_registration"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_supplier_registration_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="12" author="PedroCostaa">
+        <createTable tableName="supplier_registration_stores">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="supplier_registration_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="delivery_time" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seller_name" type="VARCHAR(255)"/>
+            <column name="seller_phone" type="VARCHAR(255)"/>
+            <column name="order_best_day" type="VARCHAR(255)"/>
+            <column name="routine" type="VARCHAR(255)"/>
+            <column name="motive" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="supplier_registration_stores"
+                                 baseColumnNames="supplier_registration_id"
+                                 constraintName="fk_supplier_registration_stores_supplier_registration"
+                                 referencedTableName="supplier_registration"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="13" author="PedroCostaa">
+        <dropColumn tableName="supplier_registration" columnName="price_table_file_name"/>
+        <dropColumn tableName="supplier_registration" columnName="catalog_file_name"/>
+    </changeSet>
+
+    <changeSet id="14" author="PedroCostaa">
+        <dropNotNullConstraint tableName="supplier_registration" columnName="seller_name" columnDataType="VARCHAR(255)"/>
+    </changeSet>
+
 </databaseChangeLog>

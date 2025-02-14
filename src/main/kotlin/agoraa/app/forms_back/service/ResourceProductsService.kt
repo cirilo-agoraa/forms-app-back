@@ -5,7 +5,6 @@ import agoraa.app.forms_back.model.ProductModel
 import agoraa.app.forms_back.model.ResourceModel
 import agoraa.app.forms_back.model.ResourceProductsModel
 import agoraa.app.forms_back.repository.ResourceProductsRepository
-import agoraa.app.forms_back.schema.resource_products.ResourceProductsCreateSchema
 import agoraa.app.forms_back.schema.resource_products.ResourceProductsEditSchema
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
@@ -73,13 +72,10 @@ class ResourceProductsService(
         )
     }
 
-    fun findByResourceId(
+    fun findByParentId(
         resourceId: Long,
-        name: String? = null,
-        code: String? = null,
-        sector: String? = null
     ): List<ResourceProductsDto> {
-        val spec = createCriteria(resourceId, name, code, sector)
+        val spec = createCriteria(resourceId)
 
         return resourceProductsRepository.findAll(spec).map { createDto(it) }
     }

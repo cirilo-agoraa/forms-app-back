@@ -94,7 +94,7 @@ class ResourceService(
 
         return when {
             full == true -> {
-                val resourceProducts = resourceProductService.findByResourceId(resource.id)
+                val resourceProducts = resourceProductService.findByParentId(resource.id)
                 resourceDto.products = resourceProducts
                 resourceDto
             }
@@ -135,7 +135,6 @@ class ResourceService(
         maxDate: LocalDateTime?,
         minDate: LocalDateTime?,
         processed: Boolean?,
-        full: Boolean?
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
@@ -147,19 +146,11 @@ class ResourceService(
                 val pageable = PageRequest.of(page, size, sortBy)
                 val pageResult = resourceRepository.findAll(spec, pageable)
 
-                if (full == true) {
-                    return PageImpl(pageResult.content.map { createDto(it, full) }, pageable, pageResult.totalElements)
-                }
-
                 return pageResult
             }
 
             else -> {
                 val resources = resourceRepository.findAll(spec, sortBy)
-
-                if (full == true) {
-                    return resources.map { createDto(it, full) }
-                }
 
                 resources
             }

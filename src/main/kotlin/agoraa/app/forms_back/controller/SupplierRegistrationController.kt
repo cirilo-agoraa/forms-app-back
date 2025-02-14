@@ -1,84 +1,87 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.schema.resource.ResourceCreateSchema
-import agoraa.app.forms_back.schema.resource.ResourceEditSchema
-import agoraa.app.forms_back.service.ResourceService
+import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationCreateSchema
+import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationEditSchema
+import agoraa.app.forms_back.service.SupplierRegistrationService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
 @RestController
-@RequestMapping("/api/resources")
-class ResourceController(private val resourceService: ResourceService) {
+@RequestMapping(("/api/supplier-registrations"))
+class SupplierRegistrationController(private val supplierRegistrationService: SupplierRegistrationService) {
 
     @GetMapping
-    fun getAllResources(
+    fun getAllSupplierRegistrations(
         @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "10") size: Int,
         @RequestParam(required = false, defaultValue = "id") sort: String,
         @RequestParam(required = false, defaultValue = "asc") direction: String,
         @RequestParam(required = false) username: String?,
-        @RequestParam(required = false) stores: List<StoresEnum>?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
-        @RequestParam(required = false) maxDate: LocalDateTime?,
-        @RequestParam(required = false) minDate: LocalDateTime?,
-        @RequestParam(required = false) processed: Boolean?,
+        @RequestParam(required = false) accepted: Boolean?,
+        @RequestParam(required = false) type: SuppliersRegistrationTypesEnum?,
+        @RequestParam(required = false) cnpj: String?,
+        @RequestParam(required = false) companyName: String?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            resourceService.getAll(
+            supplierRegistrationService.getAll(
                 pagination,
                 page,
                 size,
                 sort,
                 direction,
                 username,
-                stores,
                 createdAt,
-                maxDate,
-                minDate,
-                processed,
+                accepted,
+                type,
+                cnpj,
             )
         )
     }
 
     @GetMapping("/current-user")
-    fun getCurrentUserResources(
+    fun getCurrentUserSupplierRegistration(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "id") sort: String,
         @RequestParam(defaultValue = "asc") direction: String,
-        @RequestParam(required = false) stores: List<StoresEnum>?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
-        @RequestParam(required = false) processed: Boolean?
+        @RequestParam(required = false) processed: Boolean?,
+        @RequestParam(required = false) type: SuppliersRegistrationTypesEnum?,
+        @RequestParam(required = false) cnpj: String?,
+        @RequestParam(required = false) companyName: String?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            resourceService.getAllByCurrentUser(
+            supplierRegistrationService.getAllByCurrentUser(
                 customUserDetails,
                 page,
                 size,
                 sort,
                 direction,
-                stores,
                 createdAt,
-                processed
+                processed,
+                type,
+                cnpj
             )
         )
     }
 
     @GetMapping("/{id}")
-    fun getResource(
+    fun getSupplierRegistration(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
         @RequestParam(required = false) full: Boolean?
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            resourceService.getById(
+            supplierRegistrationService.getById(
                 customUserDetails,
                 id,
                 full
@@ -87,26 +90,35 @@ class ResourceController(private val resourceService: ResourceService) {
     }
 
     @PostMapping
-    fun createResource(
+    fun createSupplierRegistration(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestBody request: ResourceCreateSchema
+        @RequestBody request: SupplierRegistrationCreateSchema,
+        bindingResult: BindingResult,
     ): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-            resourceService.create(
-                customUserDetails,
-                request
-            )
-        )
+        return when {
+            bindingResult.hasErrors() -> {
+                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+            }
+            else -> {
+                ResponseEntity.status(HttpStatus.CREATED).body(
+                    supplierRegistrationService.create(
+                        customUserDetails,
+                        request
+                    )
+                )
+            }
+        }
     }
 
     @PutMapping("/{id}/edit")
-    fun editResource(
+    fun editSupplierRegistration(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
-        @RequestBody request: ResourceEditSchema
+        @RequestBody request: SupplierRegistrationEditSchema
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            resourceService.edit(
+            supplierRegistrationService.edit(
                 customUserDetails,
                 id,
                 request
@@ -115,12 +127,12 @@ class ResourceController(private val resourceService: ResourceService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteResource(
+    fun deleteSupplierRegistration(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            resourceService.delete(
+            supplierRegistrationService.delete(
                 customUserDetails,
                 id,
             )
