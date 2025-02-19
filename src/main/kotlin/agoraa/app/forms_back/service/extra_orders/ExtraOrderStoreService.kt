@@ -1,9 +1,9 @@
-package agoraa.app.forms_back.service
+package agoraa.app.forms_back.service.extra_orders
 
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.model.ExtraOrderModel
-import agoraa.app.forms_back.model.ExtraOrderStoreModel
+import agoraa.app.forms_back.model.extra_orders.ExtraOrderModel
+import agoraa.app.forms_back.model.extra_orders.ExtraOrderStoreModel
 import agoraa.app.forms_back.repository.ExtraOrderStoreRepository
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery

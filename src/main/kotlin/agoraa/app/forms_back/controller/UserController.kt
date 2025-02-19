@@ -1,13 +1,13 @@
 package agoraa.app.forms_back.controller
 
+import agoraa.app.forms_back.schema.user.UserCreateSchema
+import agoraa.app.forms_back.schema.user.UserEditSchema
 import agoraa.app.forms_back.service.UserService
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
-import agoraa.app.forms_back.schema.user.UserEditSchema
-import agoraa.app.forms_back.schema.user.UserCreateSchema
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/users")

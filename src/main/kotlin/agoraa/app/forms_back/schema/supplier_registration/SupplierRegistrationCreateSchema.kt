@@ -1,17 +1,12 @@
 package agoraa.app.forms_back.schema.supplier_registration
 
-import agoraa.app.forms_back.enum.suppliers_registration.WeeklyQuotationEnum
-import agoraa.app.forms_back.schema.supplier_registration_stores.SupplierRegistrationStoresCreateSchema
-import jakarta.validation.constraints.Email
-import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotNull
-import jakarta.validation.constraints.Pattern
-import jakarta.validation.constraints.Size
+import jakarta.validation.constraints.*
 import java.time.LocalDate
 
 data class SupplierRegistrationCreateSchema(
     // COMMON
     @field:NotNull(message = "Stores cannot be null")
+    @field:Size(min = 1, message = "At least one store is required")
     val stores: List<SupplierRegistrationStoresCreateSchema>,
 
     @field:NotBlank(message = "Type cannot be blank")
@@ -43,7 +38,9 @@ data class SupplierRegistrationCreateSchema(
     val exchangePhysical: Boolean? = null,
     val priceTableFilePath: String? = null,
     val catalogFilePath: String? = null,
+    val sample: Boolean? = null,
     val sampleDate: LocalDate? = null,
+    val sampleArrivedInVix: Boolean? = null,
     val obs: String? = null,
     val investmentsOnStore: Boolean? = null,
     val purchaseGondola: Boolean? = null,
@@ -56,5 +53,5 @@ data class SupplierRegistrationCreateSchema(
     val sellerName: String? = null,
     val supplierWebsite: String? = null,
     val minimumOrderValue: Double? = null,
-    val weeklyQuotation: WeeklyQuotationEnum? = null,
+    val weeklyQuotations: List<SupplierRegistrationWeeklyQuotationsSchema>? = null,
 )

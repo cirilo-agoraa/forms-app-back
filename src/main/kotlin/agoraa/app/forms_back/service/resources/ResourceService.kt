@@ -1,21 +1,21 @@
-package agoraa.app.forms_back.service
+package agoraa.app.forms_back.service.resources
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.resource.ResourceDto
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.model.ResourceModel
 import agoraa.app.forms_back.model.UserModel
+import agoraa.app.forms_back.model.resources.ResourceModel
 import agoraa.app.forms_back.repository.ResourceRepository
 import agoraa.app.forms_back.schema.resource.ResourceCreateSchema
 import agoraa.app.forms_back.schema.resource.ResourceEditSchema
+import agoraa.app.forms_back.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
 import jakarta.transaction.Transactional
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification

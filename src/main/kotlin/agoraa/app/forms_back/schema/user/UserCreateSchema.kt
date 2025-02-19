@@ -20,5 +20,9 @@ data class UserCreateSchema(
     val password: String,
 
     @field:NotNull
-    val roles: List<String>
+    val roles: List<String>,
+
+    @field:NotNull
+    @field:Pattern(regexp = "TRESMANN_VIX|TRESMANN_STT|TRESMANN_SMJ", message = "Invalid Store")
+    val store: String
 )

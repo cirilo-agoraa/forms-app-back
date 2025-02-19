@@ -1,10 +1,11 @@
-package agoraa.app.forms_back.service
+package agoraa.app.forms_back.service.extra_orders
 
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.model.ExtraOrderModel
-import agoraa.app.forms_back.model.ExtraOrderProductModel
+import agoraa.app.forms_back.model.extra_orders.ExtraOrderModel
+import agoraa.app.forms_back.model.extra_orders.ExtraOrderProductModel
 import agoraa.app.forms_back.repository.ExtraOrderProductRepository
 import agoraa.app.forms_back.schema.extra_order_product.ExtraOrderProductCreateSchema
+import agoraa.app.forms_back.service.ProductService
 import org.springframework.stereotype.Service
 
 @Service

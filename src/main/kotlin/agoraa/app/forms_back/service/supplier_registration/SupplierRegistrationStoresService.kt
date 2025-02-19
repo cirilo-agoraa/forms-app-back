@@ -1,10 +1,11 @@
-package agoraa.app.forms_back.service
+package agoraa.app.forms_back.service.supplier_registration
 
-import agoraa.app.forms_back.dto.resource_products.ResourceProductsDto
-import agoraa.app.forms_back.dto.supplier_registration_stores.SupplierRegistrationStoresDto
-import agoraa.app.forms_back.model.*
+import agoraa.app.forms_back.dto.supplier_registration.SupplierRegistrationStoresDto
+import agoraa.app.forms_back.model.supplier_registrations.SupplierRegistrationModel
+import agoraa.app.forms_back.model.supplier_registrations.SupplierRegistrationStoresModel
 import agoraa.app.forms_back.repository.SupplierRegistrationStoresRepository
-import agoraa.app.forms_back.schema.supplier_registration_stores.SupplierRegistrationStoresCreateSchema
+import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationStoresCreateSchema
+import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationStoresEditSchema
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
@@ -19,7 +20,7 @@ class SupplierRegistrationStoresService(
 
     private fun editMultiple(
         supplierRegistrationStores: List<SupplierRegistrationStoresModel>,
-        stores: List<SupplierRegistrationStoresCreateSchema>
+        stores: List<SupplierRegistrationStoresEditSchema>
     ) {
         val editedSupplierRegistrationStores = supplierRegistrationStores.map { srs ->
             val updatedSps = stores.find { it.store == srs.store }
@@ -79,7 +80,7 @@ class SupplierRegistrationStoresService(
             SupplierRegistrationStoresModel(
                 supplierRegistration = supplierRegistration,
                 store = p.store,
-                deliveryTime = p.deliveryTime ?: throw IllegalArgumentException("Delivery time is required"),
+                deliveryTime = p.deliveryTime,
                 orderBestDay = p.orderBestDay,
                 routine = p.routine,
                 motive = p.motive,
@@ -90,14 +91,26 @@ class SupplierRegistrationStoresService(
         supplierRegistrationStoresRepository.saveAll(supplierRegistrationStores)
     }
 
-    fun edit(supplierRegistration: SupplierRegistrationModel, stores: List<SupplierRegistrationStoresCreateSchema>) {
+    fun edit(supplierRegistration: SupplierRegistrationModel, stores: List<SupplierRegistrationStoresEditSchema>) {
         val spec = createCriteria(supplierRegistration.id)
         val supplierRegistrationStores = supplierRegistrationStoresRepository.findAll(spec)
         val currentSpsSet = supplierRegistrationStores.map { it.store }.toSet()
         val newSpsSet = stores.map { it.store }.toSet()
 
         val toAdd = stores.filter { it.store !in currentSpsSet }
-        create(supplierRegistration, toAdd)
+        val newSupplierRegistrationStores = toAdd.map { p ->
+            SupplierRegistrationStoresModel(
+                supplierRegistration = supplierRegistration,
+                store = p.store,
+                deliveryTime = p.deliveryTime ?: throw IllegalArgumentException("Delivery time is required"),
+                orderBestDay = p.orderBestDay,
+                routine = p.routine,
+                motive = p.motive,
+                sellerName = p.sellerName,
+                sellerPhone = p.sellerPhone
+            )
+        }
+        supplierRegistrationStoresRepository.saveAll(newSupplierRegistrationStores)
 
         val toDelete = supplierRegistrationStores.filter { it.store !in newSpsSet }
         supplierRegistrationStoresRepository.deleteAll(toDelete)

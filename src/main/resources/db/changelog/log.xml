@@ -518,4 +518,65 @@
         <dropNotNullConstraint tableName="supplier_registration" columnName="seller_name" columnDataType="VARCHAR(255)"/>
     </changeSet>
 
+    <changeSet id="15" author="PedroCostaa">
+        <addColumn tableName="supplier_registration">
+            <column name="sample" type="BOOLEAN"/>
+            <column name="sample_arrived_in_vix" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="16" author="PedroCostaa">
+        <createTable tableName="supplier_registration_weekly_quotations">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="weekly_quotations" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="supplier_registration_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="supplier_registration_weekly_quotations"
+                                 baseColumnNames="supplier_registration_id"
+                                 constraintName="fk_supplier_registration_weekly_quotations_supplier_registration"
+                                 referencedTableName="supplier_registration"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="17" author="PedroCostaa">
+        <renameColumn tableName="supplier_registration_weekly_quotations" oldColumnName="weekly_quotations" newColumnName="weekly_quotation" columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="18" author="PedroCostaa">
+        <dropForeignKeyConstraint baseTableName="supplier_registration_stores" constraintName="fk_supplier_registration_stores_supplier_registration"/>
+        <dropForeignKeyConstraint baseTableName="supplier_registration_weekly_quotations" constraintName="fk_supplier_registration_weekly_quotations_supplier_registration"/>
+
+        <addForeignKeyConstraint baseTableName="supplier_registration_weekly_quotations"
+                                 baseColumnNames="supplier_registration_id"
+                                 constraintName="fk_supplier_registration_weekly_quotations_supplier_registration"
+                                 referencedTableName="supplier_registration"
+                                 referencedColumnNames="id"
+                                    deleteCascade="true"/>
+
+        <addForeignKeyConstraint baseTableName="supplier_registration_stores"
+                                 baseColumnNames="supplier_registration_id"
+                                 constraintName="fk_supplier_registration_stores_supplier_registration"
+                                 referencedTableName="supplier_registration"
+                                 referencedColumnNames="id"
+                                    deleteCascade="true"/>
+
+    </changeSet>
+
+    <changeSet id="19" author="PedroCostaa">
+        <addColumn tableName="users">
+            <column name="store" type="varchar(255)" defaultValue="TRESMANN_VIX">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

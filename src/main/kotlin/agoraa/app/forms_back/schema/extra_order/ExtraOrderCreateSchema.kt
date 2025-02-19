@@ -1,8 +1,8 @@
 package agoraa.app.forms_back.schema.extra_order
 
 import agoraa.app.forms_back.schema.extra_order_product.ExtraOrderProductCreateSchema
-import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 
 data class ExtraOrderCreateSchema(

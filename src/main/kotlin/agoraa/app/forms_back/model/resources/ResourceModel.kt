@@ -1,6 +1,7 @@
-package agoraa.app.forms_back.model
+package agoraa.app.forms_back.model.resources
 
 import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.model.UserModel
 import jakarta.persistence.*
 import java.time.LocalDateTime
 

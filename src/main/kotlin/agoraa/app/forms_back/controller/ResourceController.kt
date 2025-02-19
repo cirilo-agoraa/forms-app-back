@@ -4,7 +4,7 @@ import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.schema.resource.ResourceCreateSchema
 import agoraa.app.forms_back.schema.resource.ResourceEditSchema
-import agoraa.app.forms_back.service.ResourceService
+import agoraa.app.forms_back.service.resources.ResourceService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal

@@ -1,20 +1,22 @@
-package agoraa.app.forms_back.service
+package agoraa.app.forms_back.service.supplier_registration
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.supplier_registration.SupplierRegistrationDto
 import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTypesEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.model.SupplierRegistrationModel
 import agoraa.app.forms_back.model.UserModel
+import agoraa.app.forms_back.model.supplier_registrations.SupplierRegistrationModel
 import agoraa.app.forms_back.repository.SupplierRegistrationRepository
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationCreateSchema
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationEditSchema
+import agoraa.app.forms_back.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
@@ -27,6 +29,7 @@ class SupplierRegistrationService(
     private val userService: UserService,
     private val supplierRegistrationService: SupplierRegistrationStoresService,
     private val supplierRegistrationStoresService: SupplierRegistrationStoresService,
+    private val supplierRegistrationWeeklyQuotationService: SupplierRegistrationWeeklyQuotationService,
     private val supplierRegistrationRepository: SupplierRegistrationRepository
 ) {
 
@@ -36,27 +39,38 @@ class SupplierRegistrationService(
                 request.address,
                 request.factoryWebsite,
                 request.exchange,
-                request.exchangePhysical,
+                request.sample,
                 request.priceTableFilePath,
                 request.catalogFilePath,
-                request.sampleDate,
                 request.investmentsOnStore,
                 request.purchaseGondola,
                 request.participateInInsert,
                 request.birthdayParty,
                 request.otherParticipation,
-                request.negotiateBonusOnFirstPurchase
+                request.negotiateBonusOnFirstPurchase,
             )
+
             else -> listOf(
                 request.sellerName,
                 request.supplierWebsite,
                 request.minimumOrderValue,
-                request.weeklyQuotation
+                request.weeklyQuotations
             )
         }
-
         if (requiredFields.any { it == null }) {
-            throw IllegalArgumentException("Invalid payload")
+            throw IllegalArgumentException("Invalid payload first")
+        }
+        if (
+            (request.exchange == true && request.exchangePhysical == null) ||
+            (request.sample == true && request.sampleDate == null && request.sampleArrivedInVix == null)
+        ) {
+            throw IllegalArgumentException("Invalid payload second")
+        }
+
+        request.stores.forEach { store ->
+            if (request.type == "REPOSICAO" && (store.sellerName == null || store.sellerPhone == null || store.routine == null || store.orderBestDay == null || store.motive == null)) {
+                throw IllegalArgumentException("Invalid store payload for REPOSICAO type")
+            }
         }
     }
 
@@ -117,12 +131,45 @@ class SupplierRegistrationService(
             user = userDto,
             createdAt = supplierRegistration.createdAt,
             accepted = supplierRegistration.accepted,
+            type = supplierRegistration.type,
+            companyName = supplierRegistration.companyName
         )
 
         return when {
             full == true -> {
                 val supplierRegistrationStores = supplierRegistrationService.findByParentId(supplierRegistration.id)
-                supplierRegistrationDto.stores = supplierRegistrationStores
+                val supplierRegistrationWeeklyQuotations =
+                    supplierRegistrationWeeklyQuotationService.findByParentId(supplierRegistration.id)
+
+                supplierRegistrationDto.apply {
+                    cnpj = supplierRegistration.cnpj
+                    paymentTerm = supplierRegistration.paymentTerm
+                    sellerPhone = supplierRegistration.sellerPhone
+                    sellerEmail = supplierRegistration.sellerEmail
+                    sellerName = supplierRegistration.sellerName
+                    address = supplierRegistration.address
+                    factoryWebsite = supplierRegistration.factoryWebsite
+                    exchange = supplierRegistration.exchange
+                    exchangePhysical = supplierRegistration.exchangePhysical
+                    priceTableFilePath = supplierRegistration.priceTableFilePath
+                    catalogFilePath = supplierRegistration.catalogFilePath
+                    sample = supplierRegistration.sample
+                    sampleDate = supplierRegistration.sampleDate
+                    sampleArrivedInVix = supplierRegistration.sampleArrivedInVix
+                    negotiateBonusOnFirstPurchase = supplierRegistration.negotiateBonusOnFirstPurchase
+                    birthdayParty = supplierRegistration.birthdayParty
+                    investmentsOnStore = supplierRegistration.investmentsOnStore
+                    otherParticipation = supplierRegistration.otherParticipation
+                    participateInInsert = supplierRegistration.participateInInsert
+                    purchaseGondola = supplierRegistration.purchaseGondola
+                    sellerName = supplierRegistration.sellerName
+                    supplierWebsite = supplierRegistration.supplierWebsite
+                    minimumOrderValue = supplierRegistration.minimumOrderValue
+                    obs = supplierRegistration.obs
+                    weeklyQuotations = supplierRegistrationWeeklyQuotations
+                    stores = supplierRegistrationStores
+                }
+
                 supplierRegistrationDto
             }
 
@@ -172,19 +219,20 @@ class SupplierRegistrationService(
                 val pageable = PageRequest.of(page, size, sortBy)
                 val pageResult = supplierRegistrationRepository.findAll(spec, pageable)
 
-                return pageResult
+                return PageImpl(pageResult.content.map{ createDto(it) }, pageable, pageResult.totalElements)
             }
 
             else -> {
                 val supplierRegistrations = supplierRegistrationRepository.findAll(spec, sortBy)
 
-                supplierRegistrations
+                supplierRegistrations.map { createDto(it) }
             }
         }
     }
 
     fun getAllByCurrentUser(
         customUserDetails: CustomUserDetails,
+        pagination: Boolean,
         page: Int,
         size: Int,
         sort: String,
@@ -198,7 +246,6 @@ class SupplierRegistrationService(
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
-        val pageable = PageRequest.of(page, size, sortBy)
         val spec =
             createCriteria(
                 createdAt = createdAt,
@@ -208,7 +255,20 @@ class SupplierRegistrationService(
                 userId = currentUser.id
             )
 
-        return supplierRegistrationRepository.findAll(spec, pageable)
+        return when {
+            pagination -> {
+                val pageable = PageRequest.of(page, size, sortBy)
+                val pageResult = supplierRegistrationRepository.findAll(spec, pageable)
+
+                return PageImpl(pageResult.content.map{ createDto(it) }, pageable, pageResult.totalElements)
+            }
+
+            else -> {
+                val supplierRegistrations = supplierRegistrationRepository.findAll(spec, sortBy)
+
+                supplierRegistrations.map { createDto(it) }
+            }
+        }
     }
 
     @Transactional
@@ -219,7 +279,7 @@ class SupplierRegistrationService(
         val supplierRegistration = supplierRegistrationRepository.saveAndFlush(
             SupplierRegistrationModel(
                 user = currentUser,
-                companyName = request.companyName,
+                companyName = request.companyName.uppercase(),
                 paymentTerm = request.paymentTerm,
                 type = SuppliersRegistrationTypesEnum.valueOf(request.type),
                 sellerPhone = request.sellerPhone,
@@ -229,7 +289,9 @@ class SupplierRegistrationService(
                 address = request.address,
                 exchange = request.exchange,
                 factoryWebsite = request.factoryWebsite,
+                sample = request.sample,
                 sampleDate = request.sampleDate,
+                sampleArrivedInVix = request.sampleArrivedInVix,
                 negotiateBonusOnFirstPurchase = request.negotiateBonusOnFirstPurchase,
                 birthdayParty = request.birthdayParty,
                 priceTableFilePath = request.priceTableFilePath,
@@ -243,14 +305,13 @@ class SupplierRegistrationService(
                 sellerName = request.sellerName,
                 supplierWebsite = request.supplierWebsite,
                 minimumOrderValue = request.minimumOrderValue,
-                weeklyQuotation = request.weeklyQuotation,
 
                 obs = request.obs,
             )
         )
 
         supplierRegistrationStoresService.create(supplierRegistration, request.stores)
-
+        request.weeklyQuotations?.let { supplierRegistrationWeeklyQuotationService.create(supplierRegistration, it) }
     }
 
     @Transactional
@@ -259,6 +320,7 @@ class SupplierRegistrationService(
 
         val supplierRegistrationEdited = supplierRegistrationRepository.saveAndFlush(
             supplierRegistration.copy(
+                accepted = request.accepted ?: supplierRegistration.accepted,
                 sellerPhone = request.sellerPhone ?: supplierRegistration.sellerPhone,
                 sellerName = request.sellerName ?: supplierRegistration.sellerName,
                 sellerEmail = request.sellerEmail ?: supplierRegistration.sellerEmail,
@@ -275,12 +337,11 @@ class SupplierRegistrationService(
                 sampleDate = request.sampleDate ?: supplierRegistration.sampleDate,
                 birthdayParty = request.birthdayParty ?: supplierRegistration.birthdayParty,
                 address = request.address ?: supplierRegistration.address,
-                companyName = request.companyName ?: supplierRegistration.companyName,
+                companyName = request.companyName ?: supplierRegistration.companyName.uppercase(),
                 paymentTerm = request.paymentTerm ?: supplierRegistration.paymentTerm,
                 type = request.type ?: supplierRegistration.type,
                 obs = request.obs ?: supplierRegistration.obs,
                 purchaseGondola = request.purchaseGondola ?: supplierRegistration.purchaseGondola,
-                weeklyQuotation = request.weeklyQuotation ?: supplierRegistration.weeklyQuotation,
                 exchange = request.exchange ?: supplierRegistration.exchange,
                 negotiateBonusOnFirstPurchase = request.negotiateBonusOnFirstPurchase
                     ?: supplierRegistration.negotiateBonusOnFirstPurchase,
@@ -288,6 +349,7 @@ class SupplierRegistrationService(
         )
 
         request.stores?.let { supplierRegistrationStoresService.edit(supplierRegistrationEdited, it) }
+        request.weeklyQuotations?.let { supplierRegistrationWeeklyQuotationService.edit(supplierRegistrationEdited, it) }
     }
 
     @Transactional

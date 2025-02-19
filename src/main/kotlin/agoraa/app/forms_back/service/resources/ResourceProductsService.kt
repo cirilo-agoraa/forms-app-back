@@ -1,17 +1,18 @@
-package agoraa.app.forms_back.service
+package agoraa.app.forms_back.service.resources
 
 import agoraa.app.forms_back.dto.resource_products.ResourceProductsDto
 import agoraa.app.forms_back.model.ProductModel
-import agoraa.app.forms_back.model.ResourceModel
-import agoraa.app.forms_back.model.ResourceProductsModel
+import agoraa.app.forms_back.model.resources.ResourceModel
+import agoraa.app.forms_back.model.resources.ResourceProductsModel
 import agoraa.app.forms_back.repository.ResourceProductsRepository
 import agoraa.app.forms_back.schema.resource_products.ResourceProductsEditSchema
+import agoraa.app.forms_back.service.ProductService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
-import org.springframework.stereotype.Service
 import org.springframework.data.jpa.domain.Specification
+import org.springframework.stereotype.Service
 
 @Service
 class ResourceProductsService(
@@ -19,7 +20,10 @@ class ResourceProductsService(
     private val productService: ProductService,
 ) {
 
-    private fun editMultiple(resourceProducts: List<ResourceProductsModel>, products: List<ResourceProductsEditSchema>) {
+    private fun editMultiple(
+        resourceProducts: List<ResourceProductsModel>,
+        products: List<ResourceProductsEditSchema>
+    ) {
         val editedResourceProducts = resourceProducts.map { rp ->
             val updatedProduct = products.find { it.productId == rp.product.id }
             rp.copy(

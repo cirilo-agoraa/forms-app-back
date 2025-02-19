@@ -19,4 +19,4 @@ data class ExtraOrderEditSchema(
     @field:Pattern(regexp = "EXTRA|RECEBIMENTO", message = "Invalid Origin Type")
     val origin: String? = null,
 
-)
+    )

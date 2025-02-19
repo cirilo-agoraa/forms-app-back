@@ -1,0 +1,17 @@
+package agoraa.app.forms_back.dto.supplier_registration
+
+import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.enum.WeekDaysEnum
+import com.fasterxml.jackson.annotation.JsonInclude
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class SupplierRegistrationStoresDto(
+    val id: Long,
+    val store: StoresEnum,
+    val deliveryTime: Int,
+    val sellerName: String? = null,
+    val sellerPhone: String? = null,
+    val orderBestDay: WeekDaysEnum? = null,
+    val routine: String? = null,
+    val motive: String? = null,
+)

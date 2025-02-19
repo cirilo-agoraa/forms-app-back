@@ -1,12 +1,11 @@
 package agoraa.app.forms_back.schema.supplier_registration
 
 import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTypesEnum
-import agoraa.app.forms_back.enum.suppliers_registration.WeeklyQuotationEnum
-import agoraa.app.forms_back.schema.supplier_registration_stores.SupplierRegistrationStoresCreateSchema
 import java.time.LocalDate
 
 data class SupplierRegistrationEditSchema(
-    val stores: List<SupplierRegistrationStoresCreateSchema>? = null,
+    val accepted: Boolean? = null,
+    val stores: List<SupplierRegistrationStoresEditSchema>? = null,
     val type: SuppliersRegistrationTypesEnum? = null,
     val cnpj: String? = null,
     val companyName: String? = null,
@@ -24,7 +23,7 @@ data class SupplierRegistrationEditSchema(
     val obs: String? = null,
     val supplierWebsite: String? = null,
     val minimumOrderValue: Double? = null,
-    val weeklyQuotation: WeeklyQuotationEnum? = null,
+    val weeklyQuotations: List<SupplierRegistrationWeeklyQuotationsSchema>? = null,
     val investmentsOnStore: Boolean? = null,
     val purchaseGondola: Boolean? = null,
     val participateInInsert: Boolean? = null,

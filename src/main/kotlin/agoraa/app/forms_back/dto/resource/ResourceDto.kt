@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.dto.resource
 
-import agoraa.app.forms_back.dto.user.UserDto
 import agoraa.app.forms_back.dto.resource_products.ResourceProductsDto
+import agoraa.app.forms_back.dto.user.UserDto
 import agoraa.app.forms_back.enum.StoresEnum
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime

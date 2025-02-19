@@ -44,14 +44,14 @@ class AuthorityService(
         authorityRepository.saveAll(newRoles)
     }
 
-    fun delete(authority: AuthorityModel){
+    fun delete(authority: AuthorityModel) {
         authorityRepository.findById(authority.id)
             .map { authorityRepository.delete(it) }
             .orElseThrow { throw ResourceNotFoundException("Authority not found") }
 
     }
 
-    fun deleteAll(authorities: List<AuthorityModel>){
+    fun deleteAll(authorities: List<AuthorityModel>) {
         authorities.forEach { delete(it) }
     }
 }

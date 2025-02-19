@@ -1,7 +1,6 @@
 package agoraa.app.forms_back.schema.resource
 
 import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.schema.resource_products.ResourceProductsCreateSchema
 import agoraa.app.forms_back.schema.resource_products.ResourceProductsEditSchema
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern

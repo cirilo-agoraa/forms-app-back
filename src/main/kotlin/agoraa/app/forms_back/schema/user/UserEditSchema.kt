@@ -9,5 +9,7 @@ data class UserEditSchema(
     )
     val password: String? = null,
     val enabled: Boolean? = null,
-    val roles: List<String>? = null
+    val roles: List<String>? = null,
+    @field:Pattern(regexp = "TRESMANN_VIX|TRESMANN_STT|TRESMANN_SMJ", message = "Invalid Store")
+    val store: String? = null
 )

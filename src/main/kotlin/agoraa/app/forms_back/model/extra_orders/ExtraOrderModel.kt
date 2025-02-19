@@ -1,8 +1,9 @@
-package agoraa.app.forms_back.model
+package agoraa.app.forms_back.model.extra_orders
 
 import agoraa.app.forms_back.enum.extra_order.OriginEnum
 import agoraa.app.forms_back.enum.extra_order.PartialCompleteEnum
-import com.fasterxml.jackson.annotation.JsonBackReference
+import agoraa.app.forms_back.model.SupplierModel
+import agoraa.app.forms_back.model.UserModel
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import java.time.LocalDate

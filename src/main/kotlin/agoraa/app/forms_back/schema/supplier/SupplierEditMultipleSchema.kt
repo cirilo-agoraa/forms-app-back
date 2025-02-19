@@ -3,7 +3,7 @@ package agoraa.app.forms_back.schema.supplier
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 
-data class SupplierEditMultipleSchema (
+data class SupplierEditMultipleSchema(
     @field:NotBlank
     val name: String,
 

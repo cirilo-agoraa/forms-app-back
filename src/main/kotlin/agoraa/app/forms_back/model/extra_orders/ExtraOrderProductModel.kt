@@ -1,5 +1,6 @@
-package agoraa.app.forms_back.model
+package agoraa.app.forms_back.model.extra_orders
 
+import agoraa.app.forms_back.model.ProductModel
 import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 

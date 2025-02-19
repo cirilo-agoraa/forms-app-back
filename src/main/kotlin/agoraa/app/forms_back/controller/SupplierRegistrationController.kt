@@ -4,7 +4,7 @@ import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTypesEnum
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationCreateSchema
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationEditSchema
-import agoraa.app.forms_back.service.SupplierRegistrationService
+import agoraa.app.forms_back.service.supplier_registration.SupplierRegistrationService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -49,6 +49,7 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
     @GetMapping("/current-user")
     fun getCurrentUserSupplierRegistration(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
+        @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "id") sort: String,
@@ -62,6 +63,7 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
         return ResponseEntity.status(HttpStatus.OK).body(
             supplierRegistrationService.getAllByCurrentUser(
                 customUserDetails,
+                pagination,
                 page,
                 size,
                 sort,
@@ -100,6 +102,7 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
                 val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
             }
+
             else -> {
                 ResponseEntity.status(HttpStatus.CREATED).body(
                     supplierRegistrationService.create(

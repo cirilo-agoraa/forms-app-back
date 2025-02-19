@@ -1,11 +1,11 @@
-package agoraa.app.forms_back.model
+package agoraa.app.forms_back.model.supplier_registrations
 
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.enum.WeekDaysEnum
 import jakarta.persistence.*
 
 @Entity
-@Table(name="supplier_registration_store")
+@Table(name = "supplier_registration_stores")
 data class SupplierRegistrationStoresModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

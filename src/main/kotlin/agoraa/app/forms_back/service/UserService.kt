@@ -1,25 +1,23 @@
 package agoraa.app.forms_back.service
 
-import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.user.UserDto
-import agoraa.app.forms_back.enum.authority.AuthorityTypeEnum
-import agoraa.app.forms_back.exception.NotAllowedException
+import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.UserModel
 import agoraa.app.forms_back.repository.UserRepository
-import agoraa.app.forms_back.schema.user.UserEditSchema
 import agoraa.app.forms_back.schema.user.UserCreateSchema
+import agoraa.app.forms_back.schema.user.UserEditSchema
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
 import jakarta.transaction.Transactional
+import org.springframework.context.annotation.Lazy
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.context.annotation.Lazy
-import org.springframework.data.jpa.domain.Specification
 
 @Service
 class UserService(
@@ -43,6 +41,7 @@ class UserService(
         val userDto = UserDto(
             id = user.id,
             username = user.username,
+            store = user.store,
             enabled = user.enabled,
         )
 
@@ -87,7 +86,8 @@ class UserService(
         val createdUser = userRepository.saveAndFlush(
             UserModel(
                 username = request.username,
-                password = encode.encode(request.password)
+                password = encode.encode(request.password),
+                store = StoresEnum.valueOf(request.store),
             )
         )
 
@@ -101,6 +101,7 @@ class UserService(
             user.copy(
                 enabled = request.enabled ?: user.enabled,
                 password = request.password?.let { encode.encode(it) } ?: user.password,
+                store = request.store?.let { StoresEnum.valueOf(it) } ?: user.store,
             )
         )
 

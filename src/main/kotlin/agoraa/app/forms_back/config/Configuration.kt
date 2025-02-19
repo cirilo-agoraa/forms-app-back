@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.provisioning.JdbcUserDetailsManager
 import javax.sql.DataSource
 
@@ -40,7 +39,7 @@ class Configuration(
 
     @Bean
     fun jdbcUserDetailsManager(): JdbcUserDetailsManager {
-        val manager = object: JdbcUserDetailsManager() {
+        val manager = object : JdbcUserDetailsManager() {
             override fun createUserDetails(
                 username: String,
                 user: UserDetails,

@@ -1,13 +1,13 @@
-package agoraa.app.forms_back.model
+package agoraa.app.forms_back.model.supplier_registrations
 
 import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTypesEnum
-import agoraa.app.forms_back.enum.suppliers_registration.WeeklyQuotationEnum
+import agoraa.app.forms_back.model.UserModel
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
-@Table(name="supplier_registration")
+@Table(name = "supplier_registration")
 data class SupplierRegistrationModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +28,10 @@ data class SupplierRegistrationModel(
     val type: SuppliersRegistrationTypesEnum,
 
     @Column(nullable = false)
-    val cnpj: String,
+    val companyName: String,
 
     @Column(nullable = false)
-    val companyName: String,
+    val cnpj: String,
 
     @Column(nullable = false)
     val paymentTerm: String,
@@ -64,7 +64,13 @@ data class SupplierRegistrationModel(
     val catalogFilePath: String? = null,
 
     @Column(nullable = true)
+    val sample: Boolean? = null,
+
+    @Column(nullable = true)
     val sampleDate: LocalDate? = null,
+
+    @Column(nullable = true)
+    val sampleArrivedInVix: Boolean? = null,
 
     @Column(nullable = true)
     val obs: String? = null,
@@ -74,9 +80,6 @@ data class SupplierRegistrationModel(
 
     @Column(nullable = true)
     val minimumOrderValue: Double? = null,
-
-    @Column(nullable = true)
-    val weeklyQuotation: WeeklyQuotationEnum? = null,
 
     @Column(nullable = true)
     val investmentsOnStore: Boolean? = null,
