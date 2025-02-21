@@ -579,4 +579,20 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="20" author="PedroCostaa">
+        <createIndex indexName="idx_products_is_resource" tableName="products">
+            <column name="is_resource"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet id="21" author="PedroCostaa">
+        <addColumn tableName="supplier_registration_stores">
+            <column name="deliver_in_store" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <dropNotNullConstraint tableName="supplier_registration_stores" columnName="delivery_time" columnDataType="INT"/>
+    </changeSet>
+
 </databaseChangeLog>

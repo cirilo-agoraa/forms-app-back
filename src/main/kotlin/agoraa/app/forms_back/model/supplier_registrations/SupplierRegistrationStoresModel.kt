@@ -20,7 +20,10 @@ data class SupplierRegistrationStoresModel(
     val store: StoresEnum,
 
     @Column(nullable = false)
-    val deliveryTime: Int,
+    val deliverInStore: Boolean = false,
+
+    @Column(nullable = true)
+    val deliveryTime: Int? = null,
 
     @Column(nullable = true)
     val sellerName: String? = null,

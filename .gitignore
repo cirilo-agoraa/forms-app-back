@@ -1,4 +1,5 @@
 HELP.md
+!**/src/resources/credentials.json
 .env
 .gradle
 build/
@@ -39,3 +40,4 @@ out/
 
 ### Kotlin ###
 .kotlin
+/src/main/resources/credentials.json

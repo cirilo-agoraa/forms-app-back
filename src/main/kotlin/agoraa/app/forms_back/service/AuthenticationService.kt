@@ -39,6 +39,7 @@ class AuthenticationService(
         )
 
         return AuthenticationResponseSchema(
+            username = user.username,
             accessToken = accessToken,
             refreshToken = refreshToken,
             authorities = user.authorities.map { it.authority }

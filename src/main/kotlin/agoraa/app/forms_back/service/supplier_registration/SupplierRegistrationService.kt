@@ -67,8 +67,11 @@ class SupplierRegistrationService(
             throw IllegalArgumentException("Invalid payload second")
         }
 
+
         request.stores.forEach { store ->
-            if (request.type == "REPOSICAO" && (store.sellerName == null || store.sellerPhone == null || store.routine == null || store.orderBestDay == null || store.motive == null)) {
+            if (request.type == "REPOSICAO" && store.deliverInStore && (store.sellerName == null || store.sellerPhone == null || store.routine == null || store.orderBestDay == null)) {
+                throw IllegalArgumentException("Invalid store payload for REPOSICAO type")
+            } else if (request.type == "REPOSICAO" && !store.deliverInStore && store.motive == null) {
                 throw IllegalArgumentException("Invalid store payload for REPOSICAO type")
             }
         }
@@ -219,7 +222,7 @@ class SupplierRegistrationService(
                 val pageable = PageRequest.of(page, size, sortBy)
                 val pageResult = supplierRegistrationRepository.findAll(spec, pageable)
 
-                return PageImpl(pageResult.content.map{ createDto(it) }, pageable, pageResult.totalElements)
+                return PageImpl(pageResult.content.map { createDto(it) }, pageable, pageResult.totalElements)
             }
 
             else -> {
@@ -260,7 +263,7 @@ class SupplierRegistrationService(
                 val pageable = PageRequest.of(page, size, sortBy)
                 val pageResult = supplierRegistrationRepository.findAll(spec, pageable)
 
-                return PageImpl(pageResult.content.map{ createDto(it) }, pageable, pageResult.totalElements)
+                return PageImpl(pageResult.content.map { createDto(it) }, pageable, pageResult.totalElements)
             }
 
             else -> {
@@ -349,7 +352,12 @@ class SupplierRegistrationService(
         )
 
         request.stores?.let { supplierRegistrationStoresService.edit(supplierRegistrationEdited, it) }
-        request.weeklyQuotations?.let { supplierRegistrationWeeklyQuotationService.edit(supplierRegistrationEdited, it) }
+        request.weeklyQuotations?.let {
+            supplierRegistrationWeeklyQuotationService.edit(
+                supplierRegistrationEdited,
+                it
+            )
+        }
     }
 
     @Transactional

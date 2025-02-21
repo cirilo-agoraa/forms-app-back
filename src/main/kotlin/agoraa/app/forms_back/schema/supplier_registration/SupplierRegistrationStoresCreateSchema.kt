@@ -7,8 +7,9 @@ import jakarta.validation.constraints.NotNull
 data class SupplierRegistrationStoresCreateSchema(
     @field:NotNull(message = "Store cannot be null")
     val store: StoresEnum,
-    @field:NotNull(message = "Delivery time cannot be null")
-    val deliveryTime: Int,
+    @field:NotNull(message = "Deliver in store cannot be null")
+    val deliverInStore: Boolean = false,
+    val deliveryTime: Int? = null,
     val sellerName: String? = null,
     val sellerPhone: String? = null,
     val orderBestDay: WeekDaysEnum? = null,

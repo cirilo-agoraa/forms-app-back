@@ -24,6 +24,7 @@ java {
 
 repositories {
 	mavenCentral()
+	google()
 }
 
 dependencies {
@@ -38,6 +39,11 @@ dependencies {
 	implementation("org.liquibase:liquibase-core")
 	implementation("io.jsonwebtoken:jjwt-api:0.12.6")
 	implementation("javax.xml.bind:jaxb-api:2.3.0")
+
+	implementation("com.google.api-client:google-api-client:2.0.0")
+	implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
+	implementation("com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0")
+
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")

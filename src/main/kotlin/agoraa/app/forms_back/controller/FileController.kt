@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 
 @RestController
 @RequestMapping("/api/files")
@@ -15,8 +16,9 @@ class FileController(private val fileService: FileService) {
     @PostMapping("/upload")
     fun uploadFile(
         @RequestParam file: MultipartFile,
-        @RequestParam folder: String
+        @RequestParam folder: String,
+        @RequestParam mime: String
     ): ResponseEntity<Any> {
-        return ResponseEntity.ok(fileService.saveFile(file, folder))
+        return ResponseEntity.ok(fileService.saveFile(file, mime, folder))
     }
 }

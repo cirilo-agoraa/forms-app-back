@@ -8,7 +8,8 @@ import com.fasterxml.jackson.annotation.JsonInclude
 data class SupplierRegistrationStoresDto(
     val id: Long,
     val store: StoresEnum,
-    val deliveryTime: Int,
+    val deliverInStore: Boolean = false,
+    val deliveryTime: Int? = null,
     val sellerName: String? = null,
     val sellerPhone: String? = null,
     val orderBestDay: WeekDaysEnum? = null,

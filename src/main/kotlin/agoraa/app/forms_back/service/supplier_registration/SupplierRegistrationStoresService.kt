@@ -25,6 +25,7 @@ class SupplierRegistrationStoresService(
         val editedSupplierRegistrationStores = supplierRegistrationStores.map { srs ->
             val updatedSps = stores.find { it.store == srs.store }
             srs.copy(
+                deliverInStore = updatedSps?.deliverInStore ?: srs.deliverInStore,
                 deliveryTime = updatedSps?.deliveryTime ?: srs.deliveryTime,
                 orderBestDay = updatedSps?.orderBestDay ?: srs.orderBestDay,
                 routine = updatedSps?.routine ?: srs.routine,
@@ -58,6 +59,7 @@ class SupplierRegistrationStoresService(
         return SupplierRegistrationStoresDto(
             id = supplierRegistrationStores.id,
             store = supplierRegistrationStores.store,
+            deliverInStore = supplierRegistrationStores.deliverInStore,
             deliveryTime = supplierRegistrationStores.deliveryTime,
             orderBestDay = supplierRegistrationStores.orderBestDay,
             routine = supplierRegistrationStores.routine,
@@ -80,6 +82,7 @@ class SupplierRegistrationStoresService(
             SupplierRegistrationStoresModel(
                 supplierRegistration = supplierRegistration,
                 store = p.store,
+                deliverInStore = p.deliverInStore,
                 deliveryTime = p.deliveryTime,
                 orderBestDay = p.orderBestDay,
                 routine = p.routine,
@@ -94,28 +97,9 @@ class SupplierRegistrationStoresService(
     fun edit(supplierRegistration: SupplierRegistrationModel, stores: List<SupplierRegistrationStoresEditSchema>) {
         val spec = createCriteria(supplierRegistration.id)
         val supplierRegistrationStores = supplierRegistrationStoresRepository.findAll(spec)
-        val currentSpsSet = supplierRegistrationStores.map { it.store }.toSet()
-        val newSpsSet = stores.map { it.store }.toSet()
+        val editSpsSet = stores.map { it.store }.toSet()
 
-        val toAdd = stores.filter { it.store !in currentSpsSet }
-        val newSupplierRegistrationStores = toAdd.map { p ->
-            SupplierRegistrationStoresModel(
-                supplierRegistration = supplierRegistration,
-                store = p.store,
-                deliveryTime = p.deliveryTime ?: throw IllegalArgumentException("Delivery time is required"),
-                orderBestDay = p.orderBestDay,
-                routine = p.routine,
-                motive = p.motive,
-                sellerName = p.sellerName,
-                sellerPhone = p.sellerPhone
-            )
-        }
-        supplierRegistrationStoresRepository.saveAll(newSupplierRegistrationStores)
-
-        val toDelete = supplierRegistrationStores.filter { it.store !in newSpsSet }
-        supplierRegistrationStoresRepository.deleteAll(toDelete)
-
-        val toEdit = supplierRegistrationStores.filter { it.store in newSpsSet }
+        val toEdit = supplierRegistrationStores.filter { it.store in editSpsSet }
         editMultiple(toEdit, stores)
     }
 }
