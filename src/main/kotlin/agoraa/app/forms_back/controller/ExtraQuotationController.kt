@@ -1,11 +1,11 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enum.extra_order.OriginEnum
-import agoraa.app.forms_back.enum.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
-import agoraa.app.forms_back.service.extra_orders.ExtraOrderService
+import agoraa.app.forms_back.schema.extra_quotations.ExtraQuotationCreateSchema
+import agoraa.app.forms_back.schema.extra_quotations.ExtraQuotationEditSchema
+import agoraa.app.forms_back.service.extra_quotations.ExtraQuotationService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
 @RestController
-@RequestMapping("/api/extra-orders")
-class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
+@RequestMapping("/api/extra-quotations")
 
+class ExtraQuotationController(private val extraQuotationService: ExtraQuotationService) {
     @GetMapping
-    fun getExtraOrders(
+    fun getExtraQuotations(
         @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "10") size: Int,
@@ -27,11 +27,9 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
         @RequestParam(required = false) username: String?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) processed: Boolean?,
-        @RequestParam(required = false) partialComplete: PartialCompleteEnum?,
-        @RequestParam(required = false) origin: OriginEnum?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            extraOrderService.getAll(
+            extraQuotationService.getAll(
                 pagination,
                 page,
                 size,
@@ -40,14 +38,12 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
                 username,
                 createdAt,
                 processed,
-                partialComplete,
-                origin,
             )
         )
     }
 
     @GetMapping("/current-user")
-    fun getCurrentUserExtraOrders(
+    fun getCurrentUserExtraQuotations(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
         @RequestParam(defaultValue = "0") page: Int,
@@ -56,11 +52,9 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
         @RequestParam(defaultValue = "asc") direction: String,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) processed: Boolean?,
-        @RequestParam(required = false) partialComplete: PartialCompleteEnum?,
-        @RequestParam(required = false) origin: OriginEnum?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            extraOrderService.getAllByCurrentUser(
+            extraQuotationService.getAllByCurrentUser(
                 customUserDetails,
                 pagination,
                 page,
@@ -69,20 +63,18 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
                 direction,
                 createdAt,
                 processed,
-                partialComplete,
-                origin
             )
         )
     }
 
     @GetMapping("/{id}")
-    fun getExtraOrder(
+    fun getExtraQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
         @RequestParam(required = false) full: Boolean?
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            extraOrderService.getById(
+            extraQuotationService.getById(
                 customUserDetails,
                 id,
                 full
@@ -91,9 +83,9 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     }
 
     @PostMapping
-    fun createExtraOrder(
+    fun createExtraQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestBody request: ExtraOrderCreateSchema,
+        @RequestBody request: ExtraQuotationCreateSchema,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {
@@ -104,7 +96,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
 
             else -> {
                 ResponseEntity.status(HttpStatus.CREATED).body(
-                    extraOrderService.create(
+                    extraQuotationService.create(
                         customUserDetails,
                         request
                     )
@@ -114,13 +106,13 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     }
 
     @PutMapping("/{id}/edit")
-    fun editExtraOrder(
+    fun editExtraQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
-        @RequestBody request: ExtraOrderEditSchema
+        @RequestBody request: ExtraQuotationEditSchema
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            extraOrderService.edit(
+            extraQuotationService.edit(
                 customUserDetails,
                 id,
                 request
@@ -129,12 +121,12 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteExtraOrder(
+    fun deleteExtraQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            extraOrderService.delete(
+            extraQuotationService.delete(
                 customUserDetails,
                 id,
             )

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
 @RestController
-@RequestMapping(("/api/supplier-registrations"))
+@RequestMapping("/api/supplier-registrations")
 class SupplierRegistrationController(private val supplierRegistrationService: SupplierRegistrationService) {
 
     @GetMapping

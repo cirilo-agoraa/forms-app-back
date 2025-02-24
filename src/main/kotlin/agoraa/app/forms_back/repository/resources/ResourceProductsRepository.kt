@@ -1,4 +1,4 @@
-package agoraa.app.forms_back.repository
+package agoraa.app.forms_back.repository.resources
 
 import agoraa.app.forms_back.model.resources.ResourceProductsModel
 import org.springframework.data.jpa.repository.JpaRepository

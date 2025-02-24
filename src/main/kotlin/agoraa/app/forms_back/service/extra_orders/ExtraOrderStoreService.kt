@@ -1,16 +1,14 @@
 package agoraa.app.forms_back.service.extra_orders
 
-import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.dto.extra_order.ExtraOrderStoresDto
 import agoraa.app.forms_back.model.extra_orders.ExtraOrderModel
-import agoraa.app.forms_back.model.extra_orders.ExtraOrderStoreModel
-import agoraa.app.forms_back.repository.ExtraOrderStoreRepository
+import agoraa.app.forms_back.model.extra_orders.ExtraOrderStoresModel
+import agoraa.app.forms_back.repository.extra_orders.ExtraOrderStoreRepository
+import agoraa.app.forms_back.schema.extra_order.ExtraOrderStoresCreateSchema
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 
@@ -20,98 +18,62 @@ class ExtraOrderStoreService(
 ) {
 
     private fun createCriteria(
-        extraOrder: Long,
-        store: String
-    ): Specification<ExtraOrderStoreModel> {
-        return Specification { root: Root<ExtraOrderStoreModel>, query: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
+        extraOrder: Long? = null,
+    ): Specification<ExtraOrderStoresModel> {
+        return Specification { root: Root<ExtraOrderStoresModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
 
-            if (extraOrder != 0L) {
+            extraOrder?.let {
                 predicates.add(
                     criteriaBuilder.equal(
-                        root.get<ExtraOrderModel>("extraOrder").get<Long>("id"),
-                        extraOrder
+                        root.get<ExtraOrderModel>("extraOrder").get<Long>("id"), it
                     )
                 )
-            }
-
-            if (store.isNotEmpty()) {
-                predicates.add(criteriaBuilder.equal(root.get<StoresEnum>("store"), store))
             }
 
             criteriaBuilder.and(*predicates.toTypedArray())
         }
     }
 
-    fun findAll(
-        pagination: Boolean,
-        extraOrder: Long,
-        store: String,
-        page: Int,
-        size: Int,
-        sort: String,
-        direction: String
-    ): Any {
-        val spec = createCriteria(extraOrder, store)
-
-        return if (pagination) {
-            val sortDirection =
-                if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
-            val pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort))
-
-            extraOrderStoreRepository.findAll(spec, pageable)
-        } else {
-            extraOrderStoreRepository.findAll(spec)
-        }
+    fun createDto(supplierRegistrationStores: ExtraOrderStoresModel): ExtraOrderStoresDto {
+        return ExtraOrderStoresDto(
+            id = supplierRegistrationStores.id,
+            store = supplierRegistrationStores.store,
+        )
     }
 
-    fun findById(id: Long): ExtraOrderStoreModel {
-        return extraOrderStoreRepository.findById(id)
-            .orElseThrow { ResourceNotFoundException("Extra Order Store not found.") }
+    fun findByParentId(
+        supplierRegistrationId: Long,
+    ): List<ExtraOrderStoresDto> {
+        val spec = createCriteria(supplierRegistrationId)
+
+        return extraOrderStoreRepository.findAll(spec).map { createDto(it) }
     }
 
-    fun findByExtraOrderId(extraOrderId: Long): List<ExtraOrderStoreModel> {
-        return extraOrderStoreRepository.findByExtraOrderId(extraOrderId)
-    }
-
-    fun create(extraOrder: ExtraOrderModel, stores: List<String>): List<ExtraOrderStoreModel> {
-        val storesComplete = stores.map { store ->
-            ExtraOrderStoreModel(
+    fun create(extraOrder: ExtraOrderModel, stores: List<ExtraOrderStoresCreateSchema>) {
+        val extraOrderStores = stores.map { p ->
+            ExtraOrderStoresModel(
                 extraOrder = extraOrder,
-                store = StoresEnum.valueOf(store)
+                store = p.store,
             )
         }
-        return storesComplete
+        extraOrderStoreRepository.saveAll(extraOrderStores)
     }
 
-    fun delete(extraOrderStore: ExtraOrderStoreModel) {
-        val foundExtraOrderStore = extraOrderStoreRepository.findById(extraOrderStore.id)
-            .map { extraOrderStoreRepository.delete(it) }
-            .orElseThrow { ResourceNotFoundException("Extra Order Store not found.") }
-    }
+    fun edit(
+        extraOrder: ExtraOrderModel,
+        stores: List<ExtraOrderStoresCreateSchema>
+    ) {
+        val spec = createCriteria(extraOrder.id)
+        val extraOrderStores = extraOrderStoreRepository.findAll(spec)
+        val currentExtraOrderStoresSet = extraOrderStores.map { it.store }.toSet()
+        val newExtraOrderStoresSet = stores.map { it.store }.toSet()
 
-    fun deleteAll(extraOrderStores: List<ExtraOrderStoreModel>) {
-        extraOrderStores.forEach { delete(it) }
-    }
+        val toAdd = stores.filter { it.store !in currentExtraOrderStoresSet }
+        create(extraOrder, toAdd)
 
-    fun edit(extraOrder: ExtraOrderModel, stores: List<String>): MutableList<ExtraOrderStoreModel> {
-        val currentStoresSet = extraOrder.stores.map { it.store }.toSet()
-        val newStoresToSet = stores.map { StoresEnum.valueOf(it) }.toSet()
-
-        val storesToRemove = extraOrder.stores.filter { it.store !in newStoresToSet }
-        extraOrder.stores.removeAll(storesToRemove)
-        deleteAll(storesToRemove)
-
-        val storesToAdd = newStoresToSet.minus(currentStoresSet)
-        val newStores = storesToAdd.map { store ->
-            ExtraOrderStoreModel(
-                extraOrder = extraOrder,
-                store = store
-            )
-        }
-        extraOrder.stores.addAll(newStores)
-
-        return extraOrder.stores
+        val toDelete = extraOrderStores.filter { it.store !in newExtraOrderStoresSet }
+        extraOrderStoreRepository.deleteAll(toDelete)
     }
 
 }

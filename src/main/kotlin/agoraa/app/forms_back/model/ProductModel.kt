@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.model
 
+import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import jakarta.persistence.*
 import java.time.LocalDate
@@ -20,7 +21,7 @@ data class ProductModel(
     @Column(nullable = false)
     val isResource: Boolean = false,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "supplier_id", nullable = false)
     val supplier: SupplierModel,
 
@@ -38,16 +39,8 @@ data class ProductModel(
     val weight: String,
 
     @Column(nullable = false)
-    val sector: String,
-
-    @Column(nullable = true)
-    val groupName: String? = null,
-
-    @Column(nullable = true)
-    val subgroup: String? = null,
-
-    @Column(nullable = true)
-    val packageQuantity: Int? = null,
+    @Enumerated(EnumType.STRING)
+    val sector: SectorsEnum,
 
     @Column(nullable = false)
     val minimumStock: Int,
@@ -70,41 +63,29 @@ data class ProductModel(
     @Column(nullable = false)
     val averageSalesLast30Days: Float,
 
-    @Column(nullable = true)
-    val currentStock: Float? = null,
-
     @Column(nullable = false)
     val openOrder: Float,
+
+    @Column(nullable = false)
+    val exchangeQuantity: Float,
+
+    @Column(nullable = true)
+    val groupName: String? = null,
+
+    @Column(nullable = true)
+    val subgroup: String? = null,
+
+    @Column(nullable = true)
+    val packageQuantity: Int? = null,
+
+    @Column(nullable = true)
+    val currentStock: Float? = null,
 
     @Column(nullable = true)
     val expirationDate: LocalDate? = null,
 
     @Column(nullable = false)
     val lossQuantity: Float,
-
-    @Column(nullable = true)
-    val promotionType: String? = null,
-
-    @Column(nullable = true)
-    val brand: String? = null,
-
-    @Column(nullable = false)
-    val exchangeQuantity: Float,
-
-    @Column(nullable = true)
-    val flag1: String? = null,
-
-    @Column(nullable = true)
-    val flag2: String? = null,
-
-    @Column(nullable = true)
-    val flag3: String? = null,
-
-    @Column(nullable = true)
-    val flag4: String? = null,
-
-    @Column(nullable = true)
-    val flag5: String? = null,
 
     @Column(nullable = false)
     val averageExpiration: Float,
@@ -118,17 +99,11 @@ data class ProductModel(
     @Column(nullable = false)
     val promotionQuantity: Float,
 
-    @Column(nullable = true)
-    val category: String? = null,
-
     @Column(nullable = false)
     val noDeliveryQuantity: Int,
 
     @Column(nullable = false)
     val averageSales30d12m: Float,
-
-    @Column(nullable = true)
-    val highestSales: Float? = null,
 
     @Column(nullable = false)
     val dailySalesAmount: Float,
@@ -145,12 +120,6 @@ data class ProductModel(
     @Column(nullable = false)
     val excessStock: Float,
 
-    @Column(nullable = true)
-    val totalCost: Float? = null,
-
-    @Column(nullable = true)
-    val totalSales: Float? = null,
-
     @Column(nullable = false)
     val term: String,
 
@@ -159,6 +128,39 @@ data class ProductModel(
 
     @Column(nullable = false)
     val averageSales: Float,
+
+    @Column(nullable = true)
+    val promotionType: String? = null,
+
+    @Column(nullable = true)
+    val brand: String? = null,
+
+    @Column(nullable = true)
+    val flag1: String? = null,
+
+    @Column(nullable = true)
+    val flag2: String? = null,
+
+    @Column(nullable = true)
+    val flag3: String? = null,
+
+    @Column(nullable = true)
+    val flag4: String? = null,
+
+    @Column(nullable = true)
+    val flag5: String? = null,
+
+    @Column(nullable = true)
+    val category: String? = null,
+
+    @Column(nullable = true)
+    val highestSales: Float? = null,
+
+    @Column(nullable = true)
+    val totalCost: Float? = null,
+
+    @Column(nullable = true)
+    val totalSales: Float? = null,
 
     @Column(nullable = true, name = "cost_p")
     val costP: Float? = null,

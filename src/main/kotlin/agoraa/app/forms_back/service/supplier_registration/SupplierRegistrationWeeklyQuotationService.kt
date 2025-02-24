@@ -3,7 +3,7 @@ package agoraa.app.forms_back.service.supplier_registration
 import agoraa.app.forms_back.dto.supplier_registration.SupplierRegistrationWeeklyQuotationsDto
 import agoraa.app.forms_back.model.supplier_registrations.SupplierRegistrationModel
 import agoraa.app.forms_back.model.supplier_registrations.SupplierRegistrationWeeklyQuotationsModel
-import agoraa.app.forms_back.repository.SupplierRegistrationWeeklyQuotationsRepository
+import agoraa.app.forms_back.repository.supplier_registrations.SupplierRegistrationWeeklyQuotationsRepository
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationWeeklyQuotationsSchema
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery

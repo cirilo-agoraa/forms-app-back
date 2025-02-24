@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.controller
 
+import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.schema.product.ProductCreateSchema
 import agoraa.app.forms_back.service.ProductService
@@ -27,7 +28,7 @@ class ProductController(private val productService: ProductService) {
         @RequestParam(required = false) code: String?,
         @RequestParam(required = false) isResource: Boolean?,
         @RequestParam(required = false) stores: List<StoresEnum>?,
-        @RequestParam(required = false) sector: String?
+        @RequestParam(required = false) sector: SectorsEnum?
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
             .body(

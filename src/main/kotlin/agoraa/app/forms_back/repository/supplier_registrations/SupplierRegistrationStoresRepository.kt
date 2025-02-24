@@ -1,4 +1,4 @@
-package agoraa.app.forms_back.repository
+package agoraa.app.forms_back.repository.supplier_registrations
 
 import agoraa.app.forms_back.model.supplier_registrations.SupplierRegistrationStoresModel
 import org.springframework.data.jpa.repository.JpaRepository

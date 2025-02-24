@@ -236,7 +236,6 @@
         </createTable>
 
         <createTable tableName="extra_order_products">
-
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -407,7 +406,7 @@
             <column name="qtt_received" type="INT"/>
         </addColumn>
     </changeSet>
-    
+
     <changeSet id="9" author="PedroCostaa">
         <addColumn tableName="resource_products">
             <column name="qttSent" type="INT"/>
@@ -415,7 +414,8 @@
     </changeSet>
 
     <changeSet id="10" author="PedroCostaa">
-        <renameColumn tableName="resource_products" oldColumnName="qttSent" newColumnName="qtt_sent" columnDataType="INT"/>
+        <renameColumn tableName="resource_products" oldColumnName="qttSent" newColumnName="qtt_sent"
+                      columnDataType="INT"/>
     </changeSet>
 
     <changeSet id="11" author="PedroCostaa">
@@ -515,7 +515,8 @@
     </changeSet>
 
     <changeSet id="14" author="PedroCostaa">
-        <dropNotNullConstraint tableName="supplier_registration" columnName="seller_name" columnDataType="VARCHAR(255)"/>
+        <dropNotNullConstraint tableName="supplier_registration" columnName="seller_name"
+                               columnDataType="VARCHAR(255)"/>
     </changeSet>
 
     <changeSet id="15" author="PedroCostaa">
@@ -548,26 +549,29 @@
     </changeSet>
 
     <changeSet id="17" author="PedroCostaa">
-        <renameColumn tableName="supplier_registration_weekly_quotations" oldColumnName="weekly_quotations" newColumnName="weekly_quotation" columnDataType="varchar(255)"/>
+        <renameColumn tableName="supplier_registration_weekly_quotations" oldColumnName="weekly_quotations"
+                      newColumnName="weekly_quotation" columnDataType="varchar(255)"/>
     </changeSet>
 
     <changeSet id="18" author="PedroCostaa">
-        <dropForeignKeyConstraint baseTableName="supplier_registration_stores" constraintName="fk_supplier_registration_stores_supplier_registration"/>
-        <dropForeignKeyConstraint baseTableName="supplier_registration_weekly_quotations" constraintName="fk_supplier_registration_weekly_quotations_supplier_registration"/>
+        <dropForeignKeyConstraint baseTableName="supplier_registration_stores"
+                                  constraintName="fk_supplier_registration_stores_supplier_registration"/>
+        <dropForeignKeyConstraint baseTableName="supplier_registration_weekly_quotations"
+                                  constraintName="fk_supplier_registration_weekly_quotations_supplier_registration"/>
 
         <addForeignKeyConstraint baseTableName="supplier_registration_weekly_quotations"
                                  baseColumnNames="supplier_registration_id"
                                  constraintName="fk_supplier_registration_weekly_quotations_supplier_registration"
                                  referencedTableName="supplier_registration"
                                  referencedColumnNames="id"
-                                    deleteCascade="true"/>
+                                 deleteCascade="true"/>
 
         <addForeignKeyConstraint baseTableName="supplier_registration_stores"
                                  baseColumnNames="supplier_registration_id"
                                  constraintName="fk_supplier_registration_stores_supplier_registration"
                                  referencedTableName="supplier_registration"
                                  referencedColumnNames="id"
-                                    deleteCascade="true"/>
+                                 deleteCascade="true"/>
 
     </changeSet>
 
@@ -584,7 +588,7 @@
             <column name="is_resource"/>
         </createIndex>
     </changeSet>
-    
+
     <changeSet id="21" author="PedroCostaa">
         <addColumn tableName="supplier_registration_stores">
             <column name="deliver_in_store" type="BOOLEAN">
@@ -592,7 +596,131 @@
             </column>
         </addColumn>
 
-        <dropNotNullConstraint tableName="supplier_registration_stores" columnName="delivery_time" columnDataType="INT"/>
+        <dropNotNullConstraint tableName="supplier_registration_stores" columnName="delivery_time"
+                               columnDataType="INT"/>
+    </changeSet>
+
+    <changeSet id="22" author="PedroCostaa">
+        <dropTable tableName="extra_order_stores"/>
+        <dropTable tableName="extra_order_products"/>
+        <dropTable tableName="extra_orders"/>
+
+        <createTable tableName="extra_orders">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="partial_complete" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="processed" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="origin" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable tableName="extra_order_stores">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="extra_order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="extra_order_products">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extra_order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="extra_orders" baseColumnNames="user_id"
+                                 constraintName="fk_extra_orders_user" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="extra_orders" baseColumnNames="supplier_id"
+                                 constraintName="fk_extra_orders_supplier" referencedTableName="suppliers"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="extra_order_stores" baseColumnNames="extra_order_id"
+                                 constraintName="fk_extra_order_stores_extra_order" referencedTableName="extra_orders"
+                                 referencedColumnNames="id" deleteCascade="true"/>
+
+        <addForeignKeyConstraint baseTableName="extra_order_products" baseColumnNames="extra_order_id"
+                                 constraintName="fk_extra_order_products_extra_order" referencedTableName="extra_orders"
+                                 referencedColumnNames="id" deleteCascade="true"/>
+
+        <addForeignKeyConstraint baseTableName="extra_order_products" baseColumnNames="product_id"
+                                 constraintName="fk_extra_order_products_product" referencedTableName="products"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="23" author="PedroCostaa">
+        <createTable tableName="extra_quotations">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="processed" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="extra_quotation_products">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="extra_quotation_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="motive" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="extra_quotations" baseColumnNames="user_id"
+                                 constraintName="fk_extra_quotations_user" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="extra_quotation_products" baseColumnNames="extra_quotation_id"
+                                 constraintName="fk_extra_quotation_products_extra_quotation" referencedTableName="extra_quotations"
+                                 referencedColumnNames="id" deleteCascade="true"/>
+
+        <addForeignKeyConstraint baseTableName="extra_quotation_products" baseColumnNames="product_id"
+                                 constraintName="fk_extra_quotation_products_product" referencedTableName="products"
+                                 referencedColumnNames="id"/>
+
     </changeSet>
 
 </databaseChangeLog>

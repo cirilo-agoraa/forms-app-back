@@ -4,9 +4,8 @@ import agoraa.app.forms_back.enum.extra_order.OriginEnum
 import agoraa.app.forms_back.enum.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.model.SupplierModel
 import agoraa.app.forms_back.model.UserModel
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "extra_orders")
@@ -31,17 +30,9 @@ data class ExtraOrderModel(
     val processed: Boolean = false,
 
     @Column(nullable = false)
-    val dateSubmitted: LocalDate = LocalDate.now(),
+    val createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @OneToMany(mappedBy = "extraOrder", fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
-    @JsonManagedReference
-    val stores: MutableList<ExtraOrderStoreModel> = mutableListOf(),
-
-    @OneToMany(mappedBy = "extraOrder", fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
-    @JsonManagedReference
-    var products: MutableList<ExtraOrderProductModel> = mutableListOf(),
-
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    var origin: OriginEnum? = null
+    val origin: OriginEnum? = null,
 )

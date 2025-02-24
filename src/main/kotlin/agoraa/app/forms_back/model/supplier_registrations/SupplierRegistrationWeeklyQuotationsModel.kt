@@ -14,7 +14,7 @@ data class SupplierRegistrationWeeklyQuotationsModel(
     @Enumerated(EnumType.STRING)
     val weeklyQuotation: WeeklyQuotationEnum,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_registration_id", nullable = false)
     val supplierRegistration: SupplierRegistrationModel,
 )

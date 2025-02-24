@@ -7,7 +7,7 @@ import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.UserModel
 import agoraa.app.forms_back.model.resources.ResourceModel
-import agoraa.app.forms_back.repository.ResourceRepository
+import agoraa.app.forms_back.repository.resources.ResourceRepository
 import agoraa.app.forms_back.schema.resource.ResourceCreateSchema
 import agoraa.app.forms_back.schema.resource.ResourceEditSchema
 import agoraa.app.forms_back.service.UserService

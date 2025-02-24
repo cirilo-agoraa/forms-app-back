@@ -1,76 +1,103 @@
 package agoraa.app.forms_back.service.extra_orders
 
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.dto.extra_order.ExtraOrderProductsDto
 import agoraa.app.forms_back.model.extra_orders.ExtraOrderModel
-import agoraa.app.forms_back.model.extra_orders.ExtraOrderProductModel
-import agoraa.app.forms_back.repository.ExtraOrderProductRepository
-import agoraa.app.forms_back.schema.extra_order_product.ExtraOrderProductCreateSchema
-import agoraa.app.forms_back.service.ProductService
+import agoraa.app.forms_back.model.extra_orders.ExtraOrderProductsModel
+import agoraa.app.forms_back.repository.extra_orders.ExtraOrderProductRepository
+import agoraa.app.forms_back.schema.extra_order.ExtraOrderProductCreateSchema
+import agoraa.app.forms_back.schema.extra_order.ExtraOrderProductEditSchema
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.Predicate
+import jakarta.persistence.criteria.Root
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 
 @Service
 class ExtraOrderProductService(
-    private val productService: ProductService,
     private val extraOrderProductRepository: ExtraOrderProductRepository,
 ) {
-
-    fun delete(extraOrderProduct: ExtraOrderProductModel) {
-        val foundExtraOrderProduct = extraOrderProductRepository.findById(extraOrderProduct.id)
-            .map { extraOrderProductRepository.delete(it) }
-            .orElseThrow { ResourceNotFoundException("Extra Order Store not found.") }
+    private fun editMultiple(
+        extraOrderProducts: List<ExtraOrderProductsModel>,
+        products: List<ExtraOrderProductEditSchema>
+    ) {
+        val editedExtraOrderProducts = extraOrderProducts.map { extraOrderProducts ->
+            val updatedSps = products.find { it.product == extraOrderProducts.product }
+            extraOrderProducts.copy(
+                quantity = updatedSps?.quantity ?: extraOrderProducts.quantity,
+                price = updatedSps?.price ?: extraOrderProducts.price,
+            )
+        }
+        extraOrderProductRepository.saveAllAndFlush(editedExtraOrderProducts)
     }
 
-    fun deleteAll(extraOrderProducts: List<ExtraOrderProductModel>) {
-        extraOrderProducts.forEach { delete(it) }
+    private fun createCriteria(
+        extraOrder: Long? = null,
+    ): Specification<ExtraOrderProductsModel> {
+        return Specification { root: Root<ExtraOrderProductsModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+
+            extraOrder?.let {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<ExtraOrderModel>("extraOrder").get<Long>("id"), it
+                    )
+                )
+            }
+
+            criteriaBuilder.and(*predicates.toTypedArray())
+        }
     }
 
-    fun create(
-        extraOrder: ExtraOrderModel,
-        productsInfo: List<ExtraOrderProductCreateSchema>
-    ): List<ExtraOrderProductModel> {
-        val extraOrderProducts = productsInfo.map { p ->
-            val product = productService.findById(p.productId)
-            ExtraOrderProductModel(
-                product = product,
+    fun createDto(extraOrderProducts: ExtraOrderProductsModel): ExtraOrderProductsDto {
+        return ExtraOrderProductsDto(
+            id = extraOrderProducts.id,
+            product = extraOrderProducts.product,
+            quantity = extraOrderProducts.quantity,
+            price = extraOrderProducts.price,
+        )
+    }
+
+    fun findByParentId(
+        extraOrderId: Long,
+    ): List<ExtraOrderProductsDto> {
+        val spec = createCriteria(extraOrderId)
+
+        return extraOrderProductRepository.findAll(spec).map { createDto(it) }
+    }
+
+    fun create(extraOrder: ExtraOrderModel, products: List<ExtraOrderProductCreateSchema>) {
+        val extraOrderStores = products.map { p ->
+            ExtraOrderProductsModel(
                 extraOrder = extraOrder,
+                product = p.product,
+                quantity = p.quantity,
                 price = p.price,
-                quantity = p.quantity
             )
         }
-        return extraOrderProducts
+        extraOrderProductRepository.saveAll(extraOrderStores)
     }
 
-    fun edit(
-        extraOrder: ExtraOrderModel,
-        products: List<ExtraOrderProductCreateSchema>
-    ): MutableList<ExtraOrderProductModel> {
-        val currentProductsSet = extraOrder.products.map { it.product.id }.toSet()
-        val newProductsSet = products.map { it.productId }.toSet()
+    fun edit(extraOrder: ExtraOrderModel, products: List<ExtraOrderProductEditSchema>) {
+        val spec = createCriteria(extraOrder.id)
+        val extraOrderProducts = extraOrderProductRepository.findAll(spec)
+        val editExtraOrderProductsSet = products.map { it.product }.toSet()
 
-        val productsToRemove = extraOrder.products.filter { it.product.id !in newProductsSet }
-        extraOrder.products.removeAll(productsToRemove)
-        deleteAll(productsToRemove)
-
-        val productsToAdd = products.filter { it.productId !in currentProductsSet }
-        val newProducts = productsToAdd.map { productInfo ->
-            val product = productService.findById(productInfo.productId)
-
-            ExtraOrderProductModel(
-                product = product,
+        val toAdd = products.filter { it.product !in editExtraOrderProductsSet }
+        val newExtraOrderProducts = toAdd.map { p ->
+            ExtraOrderProductsModel(
                 extraOrder = extraOrder,
-                price = productInfo.price,
-                quantity = productInfo.quantity
+                product = p.product ?: throw IllegalArgumentException("Product is required"),
+                quantity = p.quantity ?: throw IllegalArgumentException("Quantity is required"),
+                price = p.price ?: throw IllegalArgumentException("Price is required"),
             )
         }
-        extraOrder.products.addAll(newProducts)
+        extraOrderProductRepository.saveAll(newExtraOrderProducts)
 
-        val productsToUpdate = extraOrder.products.filter { it.product.id in newProductsSet }
-        productsToUpdate.forEach { extraOrderProduct ->
-            val productInfo = products.find { it.productId == extraOrderProduct.product.id }!!
-            extraOrderProduct.price = productInfo.price
-            extraOrderProduct.quantity = productInfo.quantity
-        }
+        val toDelete = extraOrderProducts.filter { it.product !in editExtraOrderProductsSet }
+        extraOrderProductRepository.deleteAll(toDelete)
 
-        return extraOrder.products
+        val toEdit = extraOrderProducts.filter { it.product in editExtraOrderProductsSet }
+        editMultiple(toEdit, products)
     }
 }

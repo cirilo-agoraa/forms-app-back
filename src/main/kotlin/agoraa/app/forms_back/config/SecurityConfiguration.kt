@@ -46,8 +46,26 @@ class SecurityConfiguration(
                     .requestMatchers("/api/resources/{id}").hasAnyRole("ADMIN", "LOJA")
                     .requestMatchers("/api/resources/{id}/edit").hasAnyRole("ADMIN", "LOJA")
 
-                    // resources products endpoints
-                    .requestMatchers("/api/resource-products/**").hasRole("ADMIN")
+                    // extra orders endpoints
+                    .requestMatchers(HttpMethod.GET, "/api/extra-orders").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/extra-orders").hasAnyRole("ADMIN", "COMPRADOR", "FISCAL")
+                    .requestMatchers("/api/extra-orders/current-user").hasAnyRole("ADMIN", "COMPRADOR", "FISCAL")
+                    .requestMatchers("/api/extra-orders/{id}").hasAnyRole("ADMIN", "COMPRADOR", "FISCAL")
+                    .requestMatchers("/api/extra-orders/{id}/edit").hasAnyRole("ADMIN", "COMPRADOR", "FISCAL")
+
+                    // suppler registration endpoints
+                    .requestMatchers(HttpMethod.GET, "/api/supplier-registrations").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/supplier-registrations").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/supplier-registrations/current-user").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/supplier-registrations/{id}").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/supplier-registrations/{id}/edit").hasAnyRole("ADMIN", "COMPRADOR")
+
+                    // suppler registration endpoints
+                    .requestMatchers(HttpMethod.GET, "/api/extra-quotations").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/extra-quotations").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/extra-quotations/current-user").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/extra-quotations/{id}").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/extra-quotations/{id}/edit").hasAnyRole("ADMIN", "COMPRADOR")
 
                     .anyRequest().fullyAuthenticated()
             }

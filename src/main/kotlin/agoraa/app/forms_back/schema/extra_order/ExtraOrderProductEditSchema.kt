@@ -1,4 +1,4 @@
-package agoraa.app.forms_back.schema.extra_order_product
+package agoraa.app.forms_back.schema.extra_order
 
 import agoraa.app.forms_back.model.ProductModel
 

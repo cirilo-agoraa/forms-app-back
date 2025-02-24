@@ -1,4 +1,4 @@
-package agoraa.app.forms_back.repository
+package agoraa.app.forms_back.repository.extra_orders
 
 import agoraa.app.forms_back.model.extra_orders.ExtraOrderModel
 import org.springframework.data.jpa.repository.JpaRepository

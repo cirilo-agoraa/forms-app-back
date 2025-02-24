@@ -1,12 +1,11 @@
 package agoraa.app.forms_back.model.extra_orders
 
 import agoraa.app.forms_back.model.ProductModel
-import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "extra_order_products")
-data class ExtraOrderProductModel(
+data class ExtraOrderProductsModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
@@ -17,12 +16,11 @@ data class ExtraOrderProductModel(
 
     @ManyToOne
     @JoinColumn(name = "extra_order_id", nullable = false)
-    @JsonBackReference
     val extraOrder: ExtraOrderModel,
 
     @Column(nullable = false)
-    var price: Double,
+    val price: Double,
 
     @Column(nullable = false)
-    var quantity: Int
+    val quantity: Int
 )

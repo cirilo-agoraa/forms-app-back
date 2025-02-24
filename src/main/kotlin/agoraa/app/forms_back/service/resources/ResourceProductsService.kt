@@ -4,7 +4,7 @@ import agoraa.app.forms_back.dto.resource_products.ResourceProductsDto
 import agoraa.app.forms_back.model.ProductModel
 import agoraa.app.forms_back.model.resources.ResourceModel
 import agoraa.app.forms_back.model.resources.ResourceProductsModel
-import agoraa.app.forms_back.repository.ResourceProductsRepository
+import agoraa.app.forms_back.repository.resources.ResourceProductsRepository
 import agoraa.app.forms_back.schema.resource_products.ResourceProductsEditSchema
 import agoraa.app.forms_back.service.ProductService
 import jakarta.persistence.criteria.CriteriaBuilder

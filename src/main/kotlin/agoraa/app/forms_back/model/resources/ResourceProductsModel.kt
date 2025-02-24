@@ -14,10 +14,9 @@ data class ResourceProductsModel(
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     val product: ProductModel,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resource_id", nullable = false)
     val resource: ResourceModel,
 

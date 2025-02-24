@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.service
 
 import agoraa.app.forms_back.dto.product.ProductDto
+import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.ProductModel
@@ -25,7 +26,7 @@ class ProductService(
 ) {
 
     fun createDto(productModel: ProductModel, full: Boolean = false): ProductDto {
-        val productDto = ProductDto(
+        return ProductDto(
             id = productModel.id,
             code = productModel.code,
             name = productModel.name,
@@ -38,58 +39,53 @@ class ProductService(
             brand = productModel.brand,
             packageQuantity = productModel.packageQuantity,
             category = productModel.category,
-            transferPackage = productModel.transferPackage
+            transferPackage = productModel.transferPackage,
+            isResource = productModel.isResource,
+            weight = productModel.weight,
+            minimumStock = productModel.minimumStock,
+            salesLast30Days = productModel.salesLast30Days,
+            salesLast12Months = productModel.salesLast12Months,
+            salesLast7Days = productModel.salesLast7Days,
+            dailySales = productModel.dailySales,
+            lastCost = productModel.lastCost,
+            averageSalesLast30Days = productModel.averageSalesLast30Days,
+            currentStock = productModel.currentStock,
+            openOrder = productModel.openOrder,
+            expirationDate = productModel.expirationDate,
+            lossQuantity = productModel.lossQuantity,
+            promotionType = productModel.promotionType,
+            flag1 = productModel.flag1,
+            flag2 = productModel.flag2,
+            flag3 = productModel.flag3,
+            flag4 = productModel.flag4,
+            flag5 = productModel.flag5,
+            averageExpiration = productModel.averageExpiration,
+            networkStock = productModel.networkStock,
+            promotionQuantity = productModel.promotionQuantity,
+            noDeliveryQuantity = productModel.noDeliveryQuantity,
+            averageSales30d12m = productModel.averageSales30d12m,
+            highestSales = productModel.highestSales,
+            dailySalesAmount = productModel.dailySalesAmount,
+            daysToExpire = productModel.daysToExpire,
+            salesProjection = productModel.salesProjection,
+            inProjection = productModel.inProjection,
+            excessStock = productModel.excessStock,
+            totalCost = productModel.totalCost,
+            totalSales = productModel.totalSales,
+            term = productModel.term,
+            currentStockPerPackage = productModel.currentStockPerPackage,
+            averageSales = productModel.averageSales,
+            costP = productModel.costP,
+            salesP = productModel.salesP,
+            availableStock = productModel.availableStock,
+            stockTurnover = productModel.stockTurnover,
+            netCost = productModel.netCost,
+            salesPrice = productModel.salesPrice,
+            salesPrice2 = productModel.salesPrice2,
+            promotionPrice = productModel.promotionPrice,
+            exchangeQuantity = productModel.exchangeQuantity,
+            supplier = productModel.supplier
         )
-
-        return if (full) {
-            productDto.weight = productModel.weight
-            productDto.minimumStock = productModel.minimumStock
-            productDto.salesLast30Days = productModel.salesLast30Days
-            productDto.salesLast12Months = productModel.salesLast12Months
-            productDto.salesLast7Days = productModel.salesLast7Days
-            productDto.dailySales = productModel.dailySales
-            productDto.lastCost = productModel.lastCost
-            productDto.averageSalesLast30Days = productModel.averageSalesLast30Days
-            productDto.currentStock = productModel.currentStock
-            productDto.openOrder = productModel.openOrder
-            productDto.expirationDate = productModel.expirationDate
-            productDto.lossQuantity = productModel.lossQuantity
-            productDto.promotionType = productModel.promotionType
-            productDto.exchangeQuantity = productModel.exchangeQuantity
-            productDto.flag1 = productModel.flag1
-            productDto.flag2 = productModel.flag2
-            productDto.flag3 = productModel.flag3
-            productDto.flag4 = productModel.flag4
-            productDto.flag5 = productModel.flag5
-            productDto.averageExpiration = productModel.averageExpiration
-            productDto.networkStock = productModel.networkStock
-            productDto.promotionQuantity = productModel.promotionQuantity
-            productDto.noDeliveryQuantity = productModel.noDeliveryQuantity
-            productDto.averageSales30d12m = productModel.averageSales30d12m
-            productDto.highestSales = productModel.highestSales
-            productDto.dailySalesAmount = productModel.dailySalesAmount
-            productDto.daysToExpire = productModel.daysToExpire
-            productDto.salesProjection = productModel.salesProjection
-            productDto.inProjection = productModel.inProjection
-            productDto.excessStock = productModel.excessStock
-            productDto.totalCost = productModel.totalCost
-            productDto.totalSales = productModel.totalSales
-            productDto.term = productModel.term
-            productDto.currentStockPerPackage = productModel.currentStockPerPackage
-            productDto.averageSales = productModel.averageSales
-            productDto.costP = productModel.costP
-            productDto.salesP = productModel.salesP
-            productDto.availableStock = productModel.availableStock
-            productDto.stockTurnover = productModel.stockTurnover
-            productDto.netCost = productModel.netCost
-            productDto.salesPrice = productModel.salesPrice
-            productDto.salesPrice2 = productModel.salesPrice2
-            productDto.promotionPrice = productModel.promotionPrice
-            productDto.supplier = productModel.supplier
-            productDto
-        } else {
-            productDto
-        }
     }
 
     private fun createCriteria(
@@ -100,7 +96,7 @@ class ProductService(
         code: String? = null,
         stores: List<StoresEnum>? = null,
         isResource: Boolean? = null,
-        sector: String? = null
+        sector: SectorsEnum? = null
     ): Specification<ProductModel> {
         return Specification { root: Root<ProductModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -134,7 +130,7 @@ class ProductService(
             }
 
             sector?.let {
-                predicates.add(criteriaBuilder.equal(root.get<String>("sector"), it))
+                predicates.add(criteriaBuilder.equal(root.get<SectorsEnum>("sector"), it))
             }
 
             criteriaBuilder.and(*predicates.toTypedArray())
@@ -154,7 +150,7 @@ class ProductService(
         code: String?,
         isResource: Boolean?,
         stores: List<StoresEnum>?,
-        sector: String?
+        sector: SectorsEnum?
     ): Any {
         val spec =
             createCriteria(outOfMix, supplierId, supplierName, name, code, stores, isResource = isResource, sector)
@@ -211,7 +207,7 @@ class ProductService(
                     store = StoresEnum.valueOf(product.store),
                     outOfMix = product.outOfMix,
                     weight = product.weight,
-                    sector = product.sector,
+                    sector = SectorsEnum.valueOf(product.sector),
                     groupName = product.group,
                     subgroup = product.subgroup,
                     packageQuantity = product.packageQuantity,
@@ -283,7 +279,7 @@ class ProductService(
                     store = store,
                     outOfMix = product.outOfMix,
                     weight = product.weight,
-                    sector = product.sector,
+                    sector = SectorsEnum.valueOf(product.sector),
                     groupName = product.group,
                     subgroup = product.subgroup,
                     packageQuantity = product.packageQuantity,
@@ -346,7 +342,7 @@ class ProductService(
                     store = StoresEnum.valueOf(product.store),
                     outOfMix = product.outOfMix,
                     weight = product.weight,
-                    sector = product.sector,
+                    sector = SectorsEnum.valueOf(product.sector),
                     groupName = product.group,
                     subgroup = product.subgroup,
                     packageQuantity = product.packageQuantity,
