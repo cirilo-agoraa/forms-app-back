@@ -23,16 +23,10 @@ data class SupplierRegistrationCreateSchema(
     @field:NotBlank(message = "Payment term cannot be blank")
     val paymentTerm: String,
 
-    @field:NotBlank(message = "Seller phone cannot be blank")
-    @field:Size(min = 11, message = "Seller phone must have 10 characters")
-    val sellerPhone: String,
-
-    @field:NotBlank(message = "Seller email cannot be blank")
-    @field:Email(message = "Invalid email")
-    val sellerEmail: String,
+    val sellerPhone: String? = null,
+    val sellerEmail: String? = null,
 
     // REPOSICAO
-    val address: String? = null,
     val factoryWebsite: String? = null,
     val exchange: Boolean? = null,
     val exchangePhysical: Boolean? = null,

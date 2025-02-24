@@ -723,4 +723,17 @@
 
     </changeSet>
 
+    <changeSet id="24" author="PedroCostaa" runInTransaction="true">
+        <renameTable oldTableName="supplier_registration" newTableName="supplier_registrations"/>
+        <dropColumn tableName="supplier_registrations" columnName="address"/>
+        <addColumn tableName="supplier_registration_stores">
+            <column name="seller_email" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="25" author="PedroCostaa">
+        <dropNotNullConstraint tableName="supplier_registrations" columnName="seller_phone" columnDataType="varchar(255)"/>
+        <dropNotNullConstraint tableName="supplier_registrations" columnName="seller_email" columnDataType="varchar(255)"/>
+    </changeSet>
+
 </databaseChangeLog>

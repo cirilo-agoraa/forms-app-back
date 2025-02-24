@@ -13,7 +13,6 @@ data class SupplierRegistrationEditSchema(
     val sellerName: String? = null,
     val sellerPhone: String? = null,
     val sellerEmail: String? = null,
-    val address: String? = null,
     val factoryWebsite: String? = null,
     val exchange: Boolean? = null,
     val exchangePhysical: Boolean? = null,

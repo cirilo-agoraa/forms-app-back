@@ -7,7 +7,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "supplier_registration")
+@Table(name = "supplier_registrations")
 data class SupplierRegistrationModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,17 +36,14 @@ data class SupplierRegistrationModel(
     @Column(nullable = false)
     val paymentTerm: String,
 
-    @Column(nullable = false)
-    val sellerPhone: String,
+    @Column(nullable = true)
+    val sellerEmail: String? = null,
 
-    @Column(nullable = false)
-    val sellerEmail: String,
+    @Column(nullable = true)
+    val sellerPhone: String? = null,
 
     @Column(nullable = true)
     val sellerName: String? = null,
-
-    @Column(nullable = true)
-    val address: String? = null,
 
     @Column(nullable = true)
     val factoryWebsite: String? = null,

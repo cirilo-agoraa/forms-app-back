@@ -32,6 +32,9 @@ data class SupplierRegistrationStoresModel(
     val sellerPhone: String? = null,
 
     @Column(nullable = true)
+    val sellerEmail: String? = null,
+
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     val orderBestDay: WeekDaysEnum? = null,
 

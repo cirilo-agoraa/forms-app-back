@@ -31,7 +31,8 @@ class SupplierRegistrationStoresService(
                 routine = updatedSps?.routine ?: srs.routine,
                 motive = updatedSps?.motive ?: srs.motive,
                 sellerName = updatedSps?.sellerName ?: srs.sellerName,
-                sellerPhone = updatedSps?.sellerPhone ?: srs.sellerPhone
+                sellerPhone = updatedSps?.sellerPhone ?: srs.sellerPhone,
+                sellerEmail = updatedSps?.sellerEmail ?: srs.sellerEmail
             )
         }
         supplierRegistrationStoresRepository.saveAllAndFlush(editedSupplierRegistrationStores)
@@ -66,6 +67,7 @@ class SupplierRegistrationStoresService(
             motive = supplierRegistrationStores.motive,
             sellerName = supplierRegistrationStores.sellerName,
             sellerPhone = supplierRegistrationStores.sellerPhone,
+            sellerEmail = supplierRegistrationStores.sellerEmail
         )
     }
 
@@ -88,7 +90,8 @@ class SupplierRegistrationStoresService(
                 routine = p.routine,
                 motive = p.motive,
                 sellerName = p.sellerName,
-                sellerPhone = p.sellerPhone
+                sellerPhone = p.sellerPhone,
+                sellerEmail = p.sellerEmail
             )
         }
         supplierRegistrationStoresRepository.saveAll(supplierRegistrationStores)

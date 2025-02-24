@@ -36,7 +36,6 @@ class SupplierRegistrationService(
     private fun validateSchema(request: SupplierRegistrationCreateSchema) {
         val requiredFields = when (request.type) {
             "REPOSICAO" -> listOf(
-                request.address,
                 request.factoryWebsite,
                 request.exchange,
                 request.sample,
@@ -69,7 +68,7 @@ class SupplierRegistrationService(
 
 
         request.stores.forEach { store ->
-            if (request.type == "REPOSICAO" && store.deliverInStore && (store.sellerName == null || store.sellerPhone == null || store.routine == null || store.orderBestDay == null)) {
+            if (request.type == "REPOSICAO" && store.deliverInStore && (store.sellerName == null || store.sellerPhone == null || store.sellerEmail == null || store.routine == null || store.orderBestDay == null)) {
                 throw IllegalArgumentException("Invalid store payload for REPOSICAO type")
             } else if (request.type == "REPOSICAO" && !store.deliverInStore && store.motive == null) {
                 throw IllegalArgumentException("Invalid store payload for REPOSICAO type")
@@ -150,7 +149,6 @@ class SupplierRegistrationService(
                     sellerPhone = supplierRegistration.sellerPhone
                     sellerEmail = supplierRegistration.sellerEmail
                     sellerName = supplierRegistration.sellerName
-                    address = supplierRegistration.address
                     factoryWebsite = supplierRegistration.factoryWebsite
                     exchange = supplierRegistration.exchange
                     exchangePhysical = supplierRegistration.exchangePhysical
@@ -289,7 +287,6 @@ class SupplierRegistrationService(
                 sellerEmail = request.sellerEmail,
                 cnpj = request.cnpj,
 
-                address = request.address,
                 exchange = request.exchange,
                 factoryWebsite = request.factoryWebsite,
                 sample = request.sample,
@@ -339,7 +336,6 @@ class SupplierRegistrationService(
                 factoryWebsite = request.factoryWebsite ?: supplierRegistration.factoryWebsite,
                 sampleDate = request.sampleDate ?: supplierRegistration.sampleDate,
                 birthdayParty = request.birthdayParty ?: supplierRegistration.birthdayParty,
-                address = request.address ?: supplierRegistration.address,
                 companyName = request.companyName ?: supplierRegistration.companyName.uppercase(),
                 paymentTerm = request.paymentTerm ?: supplierRegistration.paymentTerm,
                 type = request.type ?: supplierRegistration.type,

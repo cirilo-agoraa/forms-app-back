@@ -11,6 +11,7 @@ data class SupplierRegistrationStoresEditSchema(
     val deliveryTime: Int? = null,
     val sellerName: String? = null,
     val sellerPhone: String? = null,
+    val sellerEmail: String? = null,
     val orderBestDay: WeekDaysEnum? = null,
     val routine: String? = null,
     val motive: String? = null,

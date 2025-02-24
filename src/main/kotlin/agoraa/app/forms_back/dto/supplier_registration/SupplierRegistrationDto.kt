@@ -21,7 +21,6 @@ data class SupplierRegistrationDto(
     var sellerPhone: String? = null,
     var sellerEmail: String? = null,
     var sellerName: String? = null,
-    var address: String? = null,
     var factoryWebsite: String? = null,
     var exchange: Boolean? = null,
     var exchangePhysical: Boolean? = null,
