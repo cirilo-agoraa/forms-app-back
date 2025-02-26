@@ -28,21 +28,24 @@ class AuthenticationService(
             )
         )
 
-        val user = jdbcUserDetailsManager.loadUserByUsername(authRequest.email)
+        val userDetails = jdbcUserDetailsManager.loadUserByUsername(authRequest.email)
+        val userModel = userService.findByUsername(authRequest.email)
+
         val accessToken = tokenService.generateAccessToken(
-            userDetails = user,
+            userDetails = userDetails,
             expirationDate = Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration),
         )
         val refreshToken = tokenService.generateRefreshToken(
-            userDetails = user,
+            userDetails = userDetails,
             expirationDate = Date(System.currentTimeMillis() + jwtProperties.refreshTokenExpiration),
         )
 
         return AuthenticationResponseSchema(
-            username = user.username,
+            username = userDetails.username,
+            store = userModel.store,
             accessToken = accessToken,
             refreshToken = refreshToken,
-            authorities = user.authorities.map { it.authority }
+            authorities = userDetails.authorities.map { it.authority }
         )
     }
 
