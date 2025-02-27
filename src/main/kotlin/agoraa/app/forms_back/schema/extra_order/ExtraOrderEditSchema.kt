@@ -1,7 +1,6 @@
 package agoraa.app.forms_back.schema.extra_order
 
-import agoraa.app.forms_back.model.SupplierModel
-import jakarta.validation.constraints.Pattern
+import agoraa.app.forms_back.model.suppliers.SupplierModel
 
 data class ExtraOrderEditSchema(
     val supplier: SupplierModel? = null,

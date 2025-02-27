@@ -3,7 +3,7 @@ package agoraa.app.forms_back.dto.extra_order
 import agoraa.app.forms_back.dto.user.UserDto
 import agoraa.app.forms_back.enum.extra_order.OriginEnum
 import agoraa.app.forms_back.enum.extra_order.PartialCompleteEnum
-import agoraa.app.forms_back.model.SupplierModel
+import agoraa.app.forms_back.model.suppliers.SupplierModel
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 
