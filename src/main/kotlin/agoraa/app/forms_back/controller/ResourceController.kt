@@ -17,6 +17,7 @@ class ResourceController(private val resourceService: ResourceService) {
 
     @GetMapping
     fun getAllResources(
+        @RequestParam(required = false, defaultValue = "false") full: Boolean,
         @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "10") size: Int,
@@ -31,6 +32,7 @@ class ResourceController(private val resourceService: ResourceService) {
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             resourceService.getAll(
+                full,
                 pagination,
                 page,
                 size,
@@ -75,7 +77,7 @@ class ResourceController(private val resourceService: ResourceService) {
     fun getResource(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
-        @RequestParam(required = false) full: Boolean?
+        @RequestParam(required = false, defaultValue = "false") full: Boolean
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             resourceService.getById(
