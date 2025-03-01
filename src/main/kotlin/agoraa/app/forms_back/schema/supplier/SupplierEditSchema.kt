@@ -1,19 +1,20 @@
 package agoraa.app.forms_back.schema.supplier
 
-import jakarta.validation.constraints.Pattern
+import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
 
 data class SupplierEditSchema(
-    val name: String?,
-
-    @field:Pattern(regexp = "ATIVO|INATIVO|COTACAO")
-    val status: String? = null,
-
-    val orders: Int?,
-    val ordersNotDelivered: Int?,
-    val ordersNotDeliveredPercentage: Float?,
-    val totalValue: Float?,
-    val valueReceived: Float?,
-    val valueReceivedPercentage: Float?,
-    val averageValueReceived: Float?,
-    val minValueReceived: Float?
+    val name: String? = null,
+    val orderMinValue: Float? = null,
+    val score: Int? = null,
+    val exchange: Boolean? = null,
+    val stores: List<SupplierStoresEditSchema>? = null,
+    val status: SupplierStatusEnum? = null,
+    val orders: Int? = null,
+    val ordersNotDelivered: Int? = null,
+    val ordersNotDeliveredPercentage: Float? = null,
+    val totalValue: Float? = null,
+    val valueReceived: Float? = null,
+    val valueReceivedPercentage: Float? = null,
+    val averageValueReceived: Float? = null,
+    val minValueReceived: Float? = null,
 )

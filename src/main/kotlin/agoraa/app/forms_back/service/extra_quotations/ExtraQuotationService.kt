@@ -69,7 +69,7 @@ class ExtraQuotationService(
         return isAdmin || isOwner
     }
 
-    fun createDto(extraQuotation: ExtraQuotationModel, full: Boolean? = null): ExtraQuotationDto {
+    fun createDto(extraQuotation: ExtraQuotationModel, full: Boolean = false): ExtraQuotationDto {
         val userDto = userService.createDto(extraQuotation.user)
         val extraQuotationDto = ExtraQuotationDto(
             id = extraQuotation.id,
@@ -79,7 +79,7 @@ class ExtraQuotationService(
         )
 
         return when {
-            full == true -> {
+            full -> {
                 val extraQuotationProducts = extraQuotationProductsService.findByParentId(extraQuotation.id)
 
                 extraQuotationDto.products = extraQuotationProducts
@@ -103,10 +103,9 @@ class ExtraQuotationService(
     fun getById(
         customUserDetails: CustomUserDetails,
         id: Long,
-        full: Boolean? = null
     ): ExtraQuotationDto {
         val extraQuotation = findById(customUserDetails, id)
-        return createDto(extraQuotation, full)
+        return createDto(extraQuotation)
     }
 
     fun getAll(

@@ -8,6 +8,7 @@ import agoraa.app.forms_back.model.ProductModel
 import agoraa.app.forms_back.model.suppliers.SupplierModel
 import agoraa.app.forms_back.repository.ProductRepository
 import agoraa.app.forms_back.schema.product.ProductCreateSchema
+import agoraa.app.forms_back.service.suppliers.SupplierService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate

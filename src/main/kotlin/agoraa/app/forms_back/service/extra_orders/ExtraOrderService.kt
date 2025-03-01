@@ -87,7 +87,7 @@ class ExtraOrderService(
         return isAdmin || isOwner
     }
 
-    fun createDto(extraOrder: ExtraOrderModel, full: Boolean? = null): ExtraOrderDto {
+    fun createDto(extraOrder: ExtraOrderModel, full: Boolean = false): ExtraOrderDto {
         val userDto = userService.createDto(extraOrder.user)
         val extraOrderDto = ExtraOrderDto(
             id = extraOrder.id,
@@ -100,7 +100,7 @@ class ExtraOrderService(
         )
 
         return when {
-            full == true -> {
+            full -> {
                 val extraOrderStores = extraOrderStoresService.findByParentId(extraOrder.id)
                 val extraOrderProducts =
                     extraOrderStoresProductsService.findByParentId(extraOrder.id)
@@ -128,11 +128,10 @@ class ExtraOrderService(
     fun getById(
         customUserDetails: CustomUserDetails,
         id: Long,
-        full: Boolean? = null
     ): ExtraOrderDto {
         val extraOrder = findById(customUserDetails, id)
 
-        return createDto(extraOrder, full)
+        return createDto(extraOrder)
     }
 
     fun getAll(

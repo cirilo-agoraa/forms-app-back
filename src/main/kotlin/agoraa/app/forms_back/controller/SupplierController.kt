@@ -1,11 +1,13 @@
 package agoraa.app.forms_back.controller
 
+import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
 import agoraa.app.forms_back.schema.supplier.SupplierCreateSchema
-import agoraa.app.forms_back.service.SupplierService
-import jakarta.validation.Valid
+import agoraa.app.forms_back.schema.supplier.SupplierEditSchema
+import agoraa.app.forms_back.service.suppliers.SupplierService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 
@@ -15,27 +17,31 @@ class SupplierController(private val supplierService: SupplierService) {
 
     @GetMapping
     fun getAllSuppliers(
-        @RequestParam(defaultValue = "true") pagination: Boolean,
-        @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") size: Int,
-        @RequestParam(defaultValue = "id") sort: String,
-        @RequestParam(defaultValue = "asc") direction: String,
-        @RequestParam name: String?,
-        @RequestParam status: List<SupplierStatusEnum>?,
+        @RequestParam(required = false, defaultValue = "false") full: Boolean,
+        @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
+        @RequestParam(required = false, defaultValue = "0") page: Int,
+        @RequestParam(required = false, defaultValue = "10") size: Int,
+        @RequestParam(required = false, defaultValue = "id") sort: String,
+        @RequestParam(required = false, defaultValue = "asc") direction: String,
+        @RequestParam(required = false) name: String?,
+        @RequestParam(required = false) exchange: Boolean?,
+        @RequestParam(required = false) status: List<SupplierStatusEnum>?,
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
-            .body(supplierService.getAll(pagination, page, size, sort, direction, name, status))
+            .body(supplierService.getAll(full, pagination, page, size, sort, direction, name, exchange, status))
 
     @GetMapping("/{id}")
     fun getSupplierById(
+        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK).body(supplierService.getById(id))
 
-    @PostMapping("/create-multiple")
-    fun createSuppliers(
-        @RequestBody @Valid request: List<SupplierCreateSchema>,
-        bindingResult: BindingResult
+    @PostMapping
+    fun createSupplier(
+        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
+        @RequestBody request: SupplierCreateSchema,
+        bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {
             bindingResult.hasErrors() -> {
@@ -43,24 +49,20 @@ class SupplierController(private val supplierService: SupplierService) {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
             }
 
-            else -> ResponseEntity.status(HttpStatus.CREATED)
-                .body(supplierService.createMultiple(request))
+            else -> {
+                ResponseEntity.status(HttpStatus.CREATED).body(supplierService.create(request))
+            }
         }
     }
 
-    @PutMapping("/edit-or-create-multiple")
-    fun editOrCreateSuppliers(
-        @RequestBody @Valid request: List<SupplierCreateSchema>,
-        bindingResult: BindingResult
+    @PutMapping("/{id}/edit")
+    fun editSupplier(
+        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
+        @PathVariable id: Long,
+        @RequestBody request: SupplierEditSchema
     ): ResponseEntity<Any> {
-        return when {
-            bindingResult.hasErrors() -> {
-                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
-            }
-
-            else -> ResponseEntity.status(HttpStatus.OK)
-                .body(supplierService.editOrCreateMultipleByName(request))
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+            supplierService.edit(id, request)
+        )
     }
 }

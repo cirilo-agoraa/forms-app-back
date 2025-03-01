@@ -126,7 +126,7 @@ class SupplierRegistrationService(
         return isAdmin || isOwner
     }
 
-    fun createDto(supplierRegistration: SupplierRegistrationModel, full: Boolean? = null): SupplierRegistrationDto {
+    fun createDto(supplierRegistration: SupplierRegistrationModel, full: Boolean = false): SupplierRegistrationDto {
         val userDto = userService.createDto(supplierRegistration.user)
         val supplierRegistrationDto = SupplierRegistrationDto(
             id = supplierRegistration.id,
@@ -138,7 +138,7 @@ class SupplierRegistrationService(
         )
 
         return when {
-            full == true -> {
+            full -> {
                 val supplierRegistrationStores = supplierRegistrationService.findByParentId(supplierRegistration.id)
                 val supplierRegistrationWeeklyQuotations =
                     supplierRegistrationWeeklyQuotationService.findByParentId(supplierRegistration.id)
@@ -191,11 +191,10 @@ class SupplierRegistrationService(
     fun getById(
         customUserDetails: CustomUserDetails,
         id: Long,
-        full: Boolean? = null
     ): SupplierRegistrationDto {
         val supplierRegistration = findById(customUserDetails, id)
 
-        return createDto(supplierRegistration, full)
+        return createDto(supplierRegistration)
     }
 
     fun getAll(

@@ -79,13 +79,11 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     fun getExtraOrder(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
-        @RequestParam(required = false) full: Boolean?
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             extraOrderService.getById(
                 customUserDetails,
                 id,
-                full
             )
         )
     }

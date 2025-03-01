@@ -736,4 +736,61 @@
         <dropNotNullConstraint tableName="supplier_registrations" columnName="seller_email" columnDataType="varchar(255)"/>
     </changeSet>
 
+    <changeSet id="26" author="" runInTransaction="true" >
+        <addColumn tableName="suppliers">
+            <column name="order_min_value" type="INT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="score" type="INT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="exchange" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <createTable tableName="supplier_stores">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="supplier_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="store" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="order_term" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="order_day" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="frequency" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="stock" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="open_order" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="order_mean_delivery_time" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="supplier_stores" baseColumnNames="supplier_id" constraintName="fk_supplier_stores_supplier" referencedTableName="suppliers"
+                                 referencedColumnNames="id" deleteCascade="true"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -1,4 +1,4 @@
-package agoraa.app.forms_back.model
+package agoraa.app.forms_back.model.suppliers
 
 import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
 import jakarta.persistence.*
@@ -17,27 +17,36 @@ data class SupplierModel(
     @Enumerated(EnumType.STRING)
     val status: SupplierStatusEnum,
 
-    @Column
+    @Column(nullable = false)
+    val orderMinValue: Float,
+
+    @Column(nullable = false)
+    val score: Int,
+
+    @Column(nullable = false)
+    val exchange: Boolean,
+
+    @Column(nullable = true)
     val orders: Int?,
 
-    @Column
+    @Column(nullable = true)
     val ordersNotDelivered: Int?,
 
-    @Column
+    @Column(nullable = true)
     val ordersNotDeliveredPercentage: Float?,
 
-    @Column
+    @Column(nullable = true)
     val totalValue: Float?,
 
-    @Column
+    @Column(nullable = true)
     val valueReceived: Float?,
 
-    @Column
+    @Column(nullable = true)
     val valueReceivedPercentage: Float?,
 
-    @Column
+    @Column(nullable = true)
     val averageValueReceived: Float?,
 
-    @Column
+    @Column(nullable = true)
     val minValueReceived: Float?,
 )

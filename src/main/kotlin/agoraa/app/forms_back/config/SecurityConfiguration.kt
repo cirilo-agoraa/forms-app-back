@@ -32,8 +32,8 @@ class SecurityConfiguration(
                     .requestMatchers("/api/users/**").hasRole("ADMIN")
 
                     // suppliers endpoints
-                    .requestMatchers("/api/suppliers/create-multiple").hasRole("ADMIN")
-                    .requestMatchers("/api/suppliers/edit-or-create-multiple").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/suppliers").hasRole("ADMIN")
+                    .requestMatchers("/api/suppliers/{id}/edit").hasRole("ADMIN")
 
                     // products endpoints
                     .requestMatchers("/api/products/create-multiple").hasRole("ADMIN")
