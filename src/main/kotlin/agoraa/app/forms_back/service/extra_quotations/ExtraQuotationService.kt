@@ -51,7 +51,7 @@ class ExtraQuotationService(
             }
 
             processed?.let {
-                predicates.add(criteriaBuilder.equal(root.get<Boolean>("accepted"), it))
+                predicates.add(criteriaBuilder.equal(root.get<Boolean>("processed"), it))
             }
 
             criteriaBuilder.and(*predicates.toTypedArray())

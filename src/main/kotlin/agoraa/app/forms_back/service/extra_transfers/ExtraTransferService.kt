@@ -54,7 +54,7 @@ class ExtraTransferService(
             }
 
             processed?.let {
-                predicates.add(criteriaBuilder.equal(root.get<Boolean>("accepted"), it))
+                predicates.add(criteriaBuilder.equal(root.get<Boolean>("processed"), it))
             }
 
             originStore?.let {
