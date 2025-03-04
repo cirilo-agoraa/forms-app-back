@@ -128,10 +128,11 @@ class ExtraOrderService(
     fun getById(
         customUserDetails: CustomUserDetails,
         id: Long,
+        full: Boolean = false
     ): ExtraOrderDto {
         val extraOrder = findById(customUserDetails, id)
 
-        return createDto(extraOrder)
+        return createDto(extraOrder, full)
     }
 
     fun getAll(

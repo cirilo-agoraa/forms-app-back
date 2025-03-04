@@ -109,10 +109,10 @@ class SupplierService(
         }
     }
 
-    fun getById(id: Long): SupplierDto {
+    fun getById(id: Long, full: Boolean = false): SupplierDto {
         val supplier = findById(id)
 
-        return createDto(supplier, true)
+        return createDto(supplier, full)
     }
 
     fun findByName(name: String): SupplierModel {

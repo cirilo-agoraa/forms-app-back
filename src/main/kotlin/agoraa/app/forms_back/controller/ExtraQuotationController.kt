@@ -71,11 +71,13 @@ class ExtraQuotationController(private val extraQuotationService: ExtraQuotation
     fun getExtraQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
+        @RequestParam(required = false, defaultValue = "false") full: Boolean
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             extraQuotationService.getById(
                 customUserDetails,
                 id,
+                full
             )
         )
     }

@@ -34,8 +34,9 @@ class SupplierController(private val supplierService: SupplierService) {
     fun getSupplierById(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
+        @RequestParam(required = false, defaultValue = "false") full: Boolean
     ): ResponseEntity<Any> =
-        ResponseEntity.status(HttpStatus.OK).body(supplierService.getById(id))
+        ResponseEntity.status(HttpStatus.OK).body(supplierService.getById(id, full))
 
     @PostMapping
     fun createSupplier(

@@ -46,11 +46,11 @@ class ExtraQuotationProductsService(private val extraQuotationProductsRepository
         }
     }
 
-    fun createDto(extraOrderProducts: ExtraQuotationProductsModel): ExtraQuotationProductsDto {
+    fun createDto(extraQuotationProducts: ExtraQuotationProductsModel): ExtraQuotationProductsDto {
         return ExtraQuotationProductsDto(
-            id = extraOrderProducts.id,
-            product = extraOrderProducts.product,
-            motive = extraOrderProducts.motive,
+            id = extraQuotationProducts.id,
+            product = extraQuotationProducts.product,
+            motive = extraQuotationProducts.motive,
         )
     }
 

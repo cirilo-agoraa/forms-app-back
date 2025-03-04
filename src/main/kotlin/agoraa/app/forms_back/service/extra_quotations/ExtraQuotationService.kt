@@ -103,9 +103,10 @@ class ExtraQuotationService(
     fun getById(
         customUserDetails: CustomUserDetails,
         id: Long,
+        full: Boolean = false
     ): ExtraQuotationDto {
         val extraQuotation = findById(customUserDetails, id)
-        return createDto(extraQuotation)
+        return createDto(extraQuotation, full)
     }
 
     fun getAll(

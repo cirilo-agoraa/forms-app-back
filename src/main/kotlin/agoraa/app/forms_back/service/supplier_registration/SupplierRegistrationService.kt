@@ -191,10 +191,11 @@ class SupplierRegistrationService(
     fun getById(
         customUserDetails: CustomUserDetails,
         id: Long,
+        full: Boolean = false
     ): SupplierRegistrationDto {
         val supplierRegistration = findById(customUserDetails, id)
 
-        return createDto(supplierRegistration)
+        return createDto(supplierRegistration, full)
     }
 
     fun getAll(

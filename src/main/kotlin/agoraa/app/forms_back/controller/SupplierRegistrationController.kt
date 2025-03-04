@@ -80,11 +80,13 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
     fun getSupplierRegistration(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
+        @RequestParam(required = false, defaultValue = "false") full: Boolean
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             supplierRegistrationService.getById(
                 customUserDetails,
                 id,
+                full
             )
         )
     }
