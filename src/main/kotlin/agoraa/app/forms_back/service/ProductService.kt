@@ -97,7 +97,8 @@ class ProductService(
         code: String? = null,
         stores: List<StoresEnum>? = null,
         isResource: Boolean? = null,
-        sector: SectorsEnum? = null
+        sector: SectorsEnum? = null,
+        codes: List<String>? = null,
     ): Specification<ProductModel> {
         return Specification { root: Root<ProductModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -134,6 +135,10 @@ class ProductService(
                 predicates.add(criteriaBuilder.equal(root.get<SectorsEnum>("sector"), it))
             }
 
+            codes?.let {
+                predicates.add(root.get<String>("code").`in`(it))
+            }
+
             criteriaBuilder.and(*predicates.toTypedArray())
         }
     }
@@ -149,12 +154,13 @@ class ProductService(
         supplierName: String?,
         name: String?,
         code: String?,
+        codes: List<String>?,
         isResource: Boolean?,
         stores: List<StoresEnum>?,
         sector: SectorsEnum?
     ): Any {
         val spec =
-            createCriteria(outOfMix, supplierId, supplierName, name, code, stores, isResource = isResource, sector)
+            createCriteria(outOfMix, supplierId, supplierName, name, code, stores, isResource = isResource, sector, codes)
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)

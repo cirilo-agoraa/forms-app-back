@@ -26,6 +26,7 @@ class ProductController(private val productService: ProductService) {
         @RequestParam(required = false) supplierName: String?,
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false) code: String?,
+        @RequestParam(required = false) codes: List<String>?,
         @RequestParam(required = false) isResource: Boolean?,
         @RequestParam(required = false) stores: List<StoresEnum>?,
         @RequestParam(required = false) sector: SectorsEnum?
@@ -43,6 +44,7 @@ class ProductController(private val productService: ProductService) {
                     supplierName,
                     name,
                     code,
+                    codes,
                     isResource,
                     stores,
                     sector
