@@ -16,6 +16,7 @@ import java.time.LocalDateTime
 class ResourceMipController(private val resourceMipService: ResourceMipService) {
     @GetMapping
     fun getResourceMips(
+        @RequestParam(required = false, defaultValue = "false") full: Boolean,
         @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "10") size: Int,
@@ -27,6 +28,7 @@ class ResourceMipController(private val resourceMipService: ResourceMipService) 
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             resourceMipService.getAll(
+                full,
                 pagination,
                 page,
                 size,

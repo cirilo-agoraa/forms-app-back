@@ -109,6 +109,7 @@ class ResourceMipService(
     }
 
     fun getAll(
+        full: Boolean,
         pagination: Boolean,
         page: Int,
         size: Int,
@@ -133,7 +134,7 @@ class ResourceMipService(
             else -> {
                 val resourceMips = resourceMipRepository.findAll(spec, sortBy)
 
-                resourceMips.map { createDto(it) }
+                resourceMips.map { createDto(it, full) }
             }
         }
     }
