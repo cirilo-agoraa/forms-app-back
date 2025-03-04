@@ -60,12 +60,26 @@ class SecurityConfiguration(
                     .requestMatchers("/api/supplier-registrations/{id}").hasAnyRole("ADMIN", "COMPRADOR")
                     .requestMatchers("/api/supplier-registrations/{id}/edit").hasAnyRole("ADMIN", "COMPRADOR")
 
-                    // suppler registration endpoints
+                    // extra quotation endpoints
                     .requestMatchers(HttpMethod.GET, "/api/extra-quotations").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/api/extra-quotations").hasAnyRole("ADMIN", "COMPRADOR")
                     .requestMatchers("/api/extra-quotations/current-user").hasAnyRole("ADMIN", "COMPRADOR")
                     .requestMatchers("/api/extra-quotations/{id}").hasAnyRole("ADMIN", "COMPRADOR")
                     .requestMatchers("/api/extra-quotations/{id}/edit").hasAnyRole("ADMIN", "COMPRADOR")
+
+                    // extra transfers endpoints
+                    .requestMatchers(HttpMethod.GET, "/api/extra-transfers").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/extra-transfers").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/extra-transfers/current-user").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/extra-transfers/{id}").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/extra-transfers/{id}/edit").hasAnyRole("ADMIN", "COMPRADOR")
+
+                    // resource mip endpoints
+                    .requestMatchers(HttpMethod.GET, "/api/extra-quotations").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/extra-quotations").hasAnyRole("ADMIN", "LOJA")
+                    .requestMatchers("/api/extra-quotations/current-user").hasAnyRole("ADMIN", "LOJA")
+                    .requestMatchers("/api/extra-quotations/{id}").hasAnyRole("ADMIN", "LOJA")
+                    .requestMatchers("/api/extra-quotations/{id}/edit").hasAnyRole("ADMIN", "LOJA")
 
                     .anyRequest().fullyAuthenticated()
             }
