@@ -19,6 +19,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
 
     @GetMapping
     fun getExtraOrders(
+        @RequestParam(required = false, defaultValue = "false") full: Boolean,
         @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "10") size: Int,
@@ -32,6 +33,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             extraOrderService.getAll(
+                full,
                 pagination,
                 page,
                 size,

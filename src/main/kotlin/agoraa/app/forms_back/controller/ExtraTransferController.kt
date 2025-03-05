@@ -16,6 +16,7 @@ import java.time.LocalDateTime
 class ExtraTransferController(private val extraTransferService: ExtraTransferService) {
     @GetMapping
     fun getExtraTransfers(
+        @RequestParam(required = false, defaultValue = "false") full: Boolean,
         @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "10") size: Int,
@@ -27,6 +28,7 @@ class ExtraTransferController(private val extraTransferService: ExtraTransferSer
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             extraTransferService.getAll(
+                full,
                 pagination,
                 page,
                 size,

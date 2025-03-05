@@ -136,6 +136,7 @@ class ExtraOrderService(
     }
 
     fun getAll(
+        full: Boolean,
         pagination: Boolean,
         page: Int,
         size: Int,
@@ -163,7 +164,7 @@ class ExtraOrderService(
             else -> {
                 val extraorders = extraOrderRepository.findAll(spec, sortBy)
 
-                extraorders.map { createDto(it) }
+                extraorders.map { createDto(it, full) }
             }
         }
     }

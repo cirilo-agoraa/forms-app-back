@@ -123,6 +123,7 @@ class ExtraTransferService(
     }
 
     fun getAll(
+        full: Boolean,
         pagination: Boolean,
         page: Int,
         size: Int,
@@ -147,7 +148,7 @@ class ExtraTransferService(
             else -> {
                 val extraTransfers = extraTransferRepository.findAll(spec, sortBy)
 
-                extraTransfers.map { createDto(it) }
+                extraTransfers.map { createDto(it, full) }
             }
         }
     }
