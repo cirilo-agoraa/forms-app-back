@@ -6,6 +6,7 @@ import agoraa.app.forms_back.enum.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
 import agoraa.app.forms_back.service.extra_orders.ExtraOrderService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -95,7 +96,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     @PostMapping
     fun createExtraOrder(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestBody request: ExtraOrderCreateSchema,
+        @Valid @RequestBody request: ExtraOrderCreateSchema,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {

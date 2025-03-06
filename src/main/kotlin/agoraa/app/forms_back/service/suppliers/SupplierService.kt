@@ -6,6 +6,7 @@ import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.suppliers.SupplierModel
 import agoraa.app.forms_back.repository.suppliers.SupplierRepository
 import agoraa.app.forms_back.schema.supplier.SupplierCreateSchema
+import agoraa.app.forms_back.schema.supplier.SupplierEditOrCreateSchema
 import agoraa.app.forms_back.schema.supplier.SupplierEditSchema
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 class SupplierService(
@@ -115,9 +117,8 @@ class SupplierService(
         return createDto(supplier, full)
     }
 
-    fun findByName(name: String): SupplierModel {
+    fun findByName(name: String): Optional<SupplierModel> {
         return supplierRepository.findByName(name)
-            .orElseThrow { throw ResourceNotFoundException("Supplier not Found") }
     }
 
     @Transactional
@@ -167,5 +168,53 @@ class SupplierService(
         )
 
         request.stores?.let { supplierStoresService.edit(editedSupplier, it) }
+    }
+
+    @Transactional
+    fun editOrCreateMultiple(request: List<SupplierEditOrCreateSchema>) {
+        request.forEach { supp ->
+            val supplier = findByName(supp.name).orElse(null)
+
+            if (supplier != null) {
+                val editedSupplier = supplierRepository.saveAndFlush(
+                    supplier.copy(
+                        status = supp.status ?: supplier.status,
+                        exchange = supp.exchange ?: supplier.exchange,
+                        score = supp.score ?: supplier.score,
+                        orderMinValue = supp.orderMinValue ?: supplier.orderMinValue,
+                        orders = supp.orders ?: supplier.orders,
+                        ordersNotDelivered = supp.ordersNotDelivered ?: supplier.ordersNotDelivered,
+                        ordersNotDeliveredPercentage = supp.ordersNotDeliveredPercentage
+                            ?: supplier.ordersNotDeliveredPercentage,
+                        totalValue = supp.totalValue ?: supplier.totalValue,
+                        valueReceived = supp.valueReceived ?: supplier.valueReceived,
+                        valueReceivedPercentage = supp.valueReceivedPercentage ?: supplier.valueReceivedPercentage,
+                        averageValueReceived = supp.averageValueReceived ?: supplier.averageValueReceived,
+                        minValueReceived = supp.minValueReceived ?: supplier.minValueReceived
+                    )
+                )
+                supp.stores?.let { supplierStoresService.edit(editedSupplier, it) }
+            }
+            else {
+                val newSupplier = supplierRepository.saveAndFlush(
+                    SupplierModel(
+                        name = supp.name,
+                        status = supp.status ?: throw IllegalArgumentException("status is required"),
+                        exchange = supp.exchange ?: throw IllegalArgumentException("status is required"),
+                        score = supp.score ?: throw IllegalArgumentException("status is required"),
+                        orderMinValue = supp.orderMinValue ?: throw IllegalArgumentException("status is required"),
+                        orders = supp.orders,
+                        ordersNotDelivered = supp.ordersNotDelivered,
+                        ordersNotDeliveredPercentage = supp.ordersNotDeliveredPercentage,
+                        totalValue = supp.totalValue,
+                        valueReceived = supp.valueReceived,
+                        valueReceivedPercentage = supp.valueReceivedPercentage,
+                        averageValueReceived = supp.averageValueReceived,
+                        minValueReceived = supp.minValueReceived
+                    )
+                )
+                supp.stores?.let { supplierStoresService.edit(newSupplier, it) }
+            }
+        }
     }
 }

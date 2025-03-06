@@ -5,6 +5,7 @@ import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTy
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationCreateSchema
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationEditSchema
 import agoraa.app.forms_back.service.supplier_registration.SupplierRegistrationService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -94,7 +95,7 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
     @PostMapping
     fun createSupplierRegistration(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestBody request: SupplierRegistrationCreateSchema,
+        @Valid @RequestBody request: SupplierRegistrationCreateSchema,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {

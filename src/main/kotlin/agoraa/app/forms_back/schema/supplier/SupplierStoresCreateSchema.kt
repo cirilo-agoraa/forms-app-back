@@ -15,7 +15,10 @@ data class SupplierStoresCreateSchema(
     val frequency: Int,
 
     @field:NotNull(message = "Stock cannot be null")
-    val stock: Int,
+    val stock: Float,
+
+    @field:NotNull(message = "Exchange Stock cannot be null")
+    val exchangeStock: Float,
 
     @field:NotNull(message = "Open order cannot be null")
     val openOrder: Boolean,

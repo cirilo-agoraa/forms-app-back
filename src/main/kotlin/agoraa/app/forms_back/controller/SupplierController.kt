@@ -1,13 +1,13 @@
 package agoraa.app.forms_back.controller
 
-import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
 import agoraa.app.forms_back.schema.supplier.SupplierCreateSchema
+import agoraa.app.forms_back.schema.supplier.SupplierEditOrCreateSchema
 import agoraa.app.forms_back.schema.supplier.SupplierEditSchema
 import agoraa.app.forms_back.service.suppliers.SupplierService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 
@@ -32,7 +32,6 @@ class SupplierController(private val supplierService: SupplierService) {
 
     @GetMapping("/{id}")
     fun getSupplierById(
-        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
         @RequestParam(required = false, defaultValue = "false") full: Boolean
     ): ResponseEntity<Any> =
@@ -40,8 +39,7 @@ class SupplierController(private val supplierService: SupplierService) {
 
     @PostMapping
     fun createSupplier(
-        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestBody request: SupplierCreateSchema,
+        @Valid @RequestBody request: SupplierCreateSchema,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {
@@ -58,12 +56,29 @@ class SupplierController(private val supplierService: SupplierService) {
 
     @PutMapping("/{id}/edit")
     fun editSupplier(
-        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
         @RequestBody request: SupplierEditSchema
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             supplierService.edit(id, request)
         )
+    }
+
+    @PutMapping("/edit-or-create-multiple")
+    fun editOrCreateMultipleSuppliers(
+        @Valid request: List<SupplierEditOrCreateSchema>,
+        bindingResult: BindingResult
+    ): ResponseEntity<Any> {
+        return when {
+            bindingResult.hasErrors() -> {
+                val errors = bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
+            }
+
+            else -> {
+                supplierService.editOrCreateMultiple(request)
+                ResponseEntity.status(HttpStatus.OK).body("Products created or edited successfully")
+            }
+        }
     }
 }

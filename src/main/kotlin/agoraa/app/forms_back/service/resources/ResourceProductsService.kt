@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.service.resources
 
 import agoraa.app.forms_back.dto.resource_products.ResourceProductsDto
-import agoraa.app.forms_back.model.ProductModel
+import agoraa.app.forms_back.model.products.ProductModel
 import agoraa.app.forms_back.model.resources.ResourceModel
 import agoraa.app.forms_back.model.resources.ResourceProductsModel
 import agoraa.app.forms_back.repository.resources.ResourceProductsRepository

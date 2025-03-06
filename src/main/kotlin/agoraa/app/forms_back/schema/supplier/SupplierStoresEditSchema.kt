@@ -10,7 +10,8 @@ data class SupplierStoresEditSchema(
 
     val orderDay: WeekDaysEnum? = null,
     val frequency: Int? = null,
-    val stock: Int? = null,
+    val stock: Float? = null,
+    val exchangeStock: Float? = null,
     val openOrder: Boolean? = null,
     val orderTerm: Int? = null,
     val orderMeanDeliveryTime: Float? = null,

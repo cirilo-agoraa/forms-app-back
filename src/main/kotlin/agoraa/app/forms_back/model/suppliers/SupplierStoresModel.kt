@@ -27,7 +27,10 @@ data class SupplierStoresModel(
     val frequency: Int,
 
     @Column(nullable = false)
-    val stock: Int,
+    val stock: Float,
+
+    @Column(nullable = false)
+    val exchangeStock: Float,
 
     @Column(nullable = false)
     val openOrder: Boolean,

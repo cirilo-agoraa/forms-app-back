@@ -1,9 +1,7 @@
 package agoraa.app.forms_back.model.resources
 
-import agoraa.app.forms_back.model.ProductModel
+import agoraa.app.forms_back.model.products.ProductModel
 import jakarta.persistence.*
-import org.hibernate.annotations.OnDelete
-import org.hibernate.annotations.OnDeleteAction
 
 @Entity
 @Table(name = "resource_products")

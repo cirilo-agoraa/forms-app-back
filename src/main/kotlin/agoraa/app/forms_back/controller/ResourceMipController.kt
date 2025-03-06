@@ -4,6 +4,7 @@ import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.schema.resource_mips.ResourceMipCreateSchema
 import agoraa.app.forms_back.schema.resource_mips.ResourceMipEditSchema
 import agoraa.app.forms_back.service.resource_mips.ResourceMipService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -84,7 +85,7 @@ class ResourceMipController(private val resourceMipService: ResourceMipService) 
     @PostMapping
     fun createExtraQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestBody request: ResourceMipCreateSchema,
+        @Valid @RequestBody request: ResourceMipCreateSchema,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {

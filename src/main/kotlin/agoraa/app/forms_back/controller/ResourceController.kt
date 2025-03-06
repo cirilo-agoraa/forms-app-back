@@ -5,6 +5,7 @@ import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.schema.resource.ResourceCreateSchema
 import agoraa.app.forms_back.schema.resource.ResourceEditSchema
 import agoraa.app.forms_back.service.resources.ResourceService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -91,7 +92,7 @@ class ResourceController(private val resourceService: ResourceService) {
     @PostMapping
     fun createResource(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestBody request: ResourceCreateSchema
+        @Valid @RequestBody request: ResourceCreateSchema
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.CREATED).body(
             resourceService.create(

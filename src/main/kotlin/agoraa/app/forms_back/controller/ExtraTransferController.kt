@@ -4,6 +4,7 @@ import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.schema.extra_transfers.ExtraTransferCreateSchema
 import agoraa.app.forms_back.schema.extra_transfers.ExtraTransferEditSchema
 import agoraa.app.forms_back.service.extra_transfers.ExtraTransferService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -84,7 +85,7 @@ class ExtraTransferController(private val extraTransferService: ExtraTransferSer
     @PostMapping
     fun createExtraTransfer(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestBody request: ExtraTransferCreateSchema,
+        @Valid @RequestBody request: ExtraTransferCreateSchema,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {

@@ -1,5 +1,7 @@
 package agoraa.app.forms_back.schema.product
 
+import agoraa.app.forms_back.enum.SectorsEnum
+import agoraa.app.forms_back.enum.StoresEnum
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
@@ -7,11 +9,9 @@ import java.time.LocalDate
 
 data class ProductCreateSchema(
     @field:NotNull(message = "Product code is required")
-    @field:Size(max = 255)
     val code: String,
 
     @field:NotBlank(message = "Product name is required")
-    @field:Size(max = 255)
     val name: String,
 
     @field:NotBlank(message = "Supplier name is required")
@@ -21,8 +21,7 @@ data class ProductCreateSchema(
     val barcode: String,
 
     @field:NotBlank(message = "Store name is required")
-    @field:Size(max = 255)
-    val store: String,
+    val store: StoresEnum,
 
     @field:NotNull(message = "Out of mix is required")
     val outOfMix: Boolean,
@@ -31,10 +30,9 @@ data class ProductCreateSchema(
     val weight: String,
 
     @field:NotBlank(message = "Product sector is required")
-    @field:Size(max = 100)
-    val sector: String,
+    val sector: SectorsEnum,
 
-    val group: String? = null,
+    val groupName: String? = null,
 
     val subgroup: String? = null,
 

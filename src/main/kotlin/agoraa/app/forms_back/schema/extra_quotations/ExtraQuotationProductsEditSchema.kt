@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.schema.extra_quotations
 
-import agoraa.app.forms_back.model.ProductModel
+import agoraa.app.forms_back.model.products.ProductModel
 
 data class ExtraQuotationProductsEditSchema(
     val product: ProductModel? = null,

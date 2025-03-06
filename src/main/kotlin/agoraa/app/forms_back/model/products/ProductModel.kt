@@ -1,4 +1,4 @@
-package agoraa.app.forms_back.model
+package agoraa.app.forms_back.model.products
 
 import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum

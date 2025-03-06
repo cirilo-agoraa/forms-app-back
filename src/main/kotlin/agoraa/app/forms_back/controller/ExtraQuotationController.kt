@@ -6,6 +6,7 @@ import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
 import agoraa.app.forms_back.schema.extra_quotations.ExtraQuotationCreateSchema
 import agoraa.app.forms_back.schema.extra_quotations.ExtraQuotationEditSchema
 import agoraa.app.forms_back.service.extra_quotations.ExtraQuotationService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -85,7 +86,7 @@ class ExtraQuotationController(private val extraQuotationService: ExtraQuotation
     @PostMapping
     fun createExtraQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @RequestBody request: ExtraQuotationCreateSchema,
+        @Valid @RequestBody request: ExtraQuotationCreateSchema,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {

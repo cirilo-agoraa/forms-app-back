@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.dto.extra_transfers
 
-import agoraa.app.forms_back.model.ProductModel
+import agoraa.app.forms_back.model.products.ProductModel
 
 data class ExtraTransferProductsDto(
     val id: Long,

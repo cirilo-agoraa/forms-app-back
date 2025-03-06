@@ -3,6 +3,8 @@ package agoraa.app.forms_back.controller
 import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.schema.product.ProductCreateSchema
+import agoraa.app.forms_back.schema.product.ProductEditOrCreateSchema
+import agoraa.app.forms_back.schema.product.ProductEditSchema
 import agoraa.app.forms_back.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -57,12 +59,10 @@ class ProductController(private val productService: ProductService) {
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK).body(productService.returnById(id))
 
-    // ADMIN ONLY
-
-    @PostMapping("/create-multiple")
-    fun createProducts(
-        @RequestBody @Valid request: List<ProductCreateSchema>,
-        bindingResult: BindingResult
+    @PostMapping
+    fun createProduct(
+        @Valid @RequestBody request: ProductCreateSchema,
+        bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {
             bindingResult.hasErrors() -> {
@@ -70,13 +70,26 @@ class ProductController(private val productService: ProductService) {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
             }
 
-            else -> ResponseEntity.status(HttpStatus.CREATED).body(productService.createMultiple(request))
+            else -> {
+                ResponseEntity.status(HttpStatus.CREATED).body(productService.create(request))
+            }
         }
     }
 
+    @PutMapping("/{id}/edit")
+    fun editProduct(
+        @PathVariable id: Long,
+        @RequestBody request: ProductEditSchema
+    ): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            productService.edit(id, request)
+        )
+    }
+
+
     @PutMapping("/edit-or-create-multiple")
-    fun editOrCreateProducts(
-        @RequestBody @Valid request: List<ProductCreateSchema>,
+    fun editOrCreateMultipleProducts(
+        @Valid request: List<ProductEditOrCreateSchema>,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {
@@ -85,8 +98,10 @@ class ProductController(private val productService: ProductService) {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors)
             }
 
-            else -> ResponseEntity.status(HttpStatus.OK)
-                .body(productService.editOrCreateMultipleByCodeAndStore(request))
+            else -> {
+                productService.editOrCreateMultiple(request)
+                ResponseEntity.status(HttpStatus.OK).body("Products created or edited successfully")
+            }
         }
     }
 }

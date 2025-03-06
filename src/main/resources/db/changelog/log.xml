@@ -891,4 +891,13 @@
         <renameTable oldTableName="extra_transfers_products" newTableName="extra_transfer_products"/>
     </changeSet>
 
+    <changeSet id="30" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="supplier_stores">
+            <column name="exchange_stock" defaultValue="0.0" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <modifyDataType tableName="supplier_stores" columnName="stock" newDataType="FLOAT"/>
+    </changeSet>
+
 </databaseChangeLog>
