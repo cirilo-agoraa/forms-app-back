@@ -17,8 +17,8 @@ data class SupplierModel(
     @Enumerated(EnumType.STRING)
     val status: SupplierStatusEnum,
 
-    @Column(nullable = false)
-    val orderMinValue: Float,
+    @Column
+    val orderMinValue: Float? = null,
 
     @Column(nullable = false)
     val score: Int,

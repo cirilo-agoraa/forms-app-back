@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.schema.supplier_registration
 
 import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.enum.WeekDaysEnum
+import agoraa.app.forms_back.enum.OrderDaysEnum
 import jakarta.validation.constraints.NotNull
 
 data class SupplierRegistrationStoresCreateSchema(
@@ -13,7 +13,7 @@ data class SupplierRegistrationStoresCreateSchema(
     val sellerName: String? = null,
     val sellerPhone: String? = null,
     val sellerEmail: String? = null,
-    val orderBestDay: WeekDaysEnum? = null,
+    val orderBestDay: OrderDaysEnum? = null,
     val routine: String? = null,
     val motive: String? = null,
 )

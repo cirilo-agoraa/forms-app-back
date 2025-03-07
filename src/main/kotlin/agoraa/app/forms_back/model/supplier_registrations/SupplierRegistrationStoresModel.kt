@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.model.supplier_registrations
 
 import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.enum.WeekDaysEnum
+import agoraa.app.forms_back.enum.OrderDaysEnum
 import jakarta.persistence.*
 
 @Entity
@@ -36,7 +36,7 @@ data class SupplierRegistrationStoresModel(
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    val orderBestDay: WeekDaysEnum? = null,
+    val orderBestDay: OrderDaysEnum? = null,
 
     @Column(nullable = true)
     val routine: String? = null,

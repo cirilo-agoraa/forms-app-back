@@ -1,15 +1,12 @@
 package agoraa.app.forms_back.schema.supplier
 
 import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.enum.WeekDaysEnum
+import agoraa.app.forms_back.enum.OrderDaysEnum
 import jakarta.validation.constraints.NotNull
 
 data class SupplierStoresCreateSchema(
     @field:NotNull(message = "Store cannot be null")
     val store: StoresEnum,
-
-    @field:NotNull(message = "Order day cannot be null")
-    val orderDay: WeekDaysEnum,
 
     @field:NotNull(message = "Frequency cannot be null")
     val frequency: Int,
@@ -28,4 +25,6 @@ data class SupplierStoresCreateSchema(
 
     @field:NotNull(message = "Order mean delivery time cannot be null")
     val orderMeanDeliveryTime: Float,
+
+    val orderDay: OrderDaysEnum? = null,
 )

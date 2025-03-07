@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.model.suppliers
 
 import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.enum.WeekDaysEnum
+import agoraa.app.forms_back.enum.OrderDaysEnum
 import jakarta.persistence.*
 
 @Entity
@@ -20,10 +20,6 @@ data class SupplierStoresModel(
     val store: StoresEnum,
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    val orderDay: WeekDaysEnum,
-
-    @Column(nullable = false)
     val frequency: Int,
 
     @Column(nullable = false)
@@ -40,4 +36,8 @@ data class SupplierStoresModel(
 
     @Column(nullable = false)
     val orderMeanDeliveryTime: Float,
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    val orderDay: OrderDaysEnum? = null,
 )

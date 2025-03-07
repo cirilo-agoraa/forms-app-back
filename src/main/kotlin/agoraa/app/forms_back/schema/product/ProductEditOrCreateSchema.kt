@@ -2,14 +2,14 @@ package agoraa.app.forms_back.schema.product
 
 import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum
-import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
 
 data class ProductEditOrCreateSchema(
-    @field:NotBlank(message = "Product code is required")
+    @field:NotNull(message = "Product code is required")
     val code: String,
 
-    @field:NotBlank(message = "Store name is required")
+    @field:NotNull(message = "Store name is required")
     val store: StoresEnum,
 
     val supplier: String? = null,

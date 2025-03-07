@@ -1,12 +1,12 @@
 package agoraa.app.forms_back.dto.suppliers
 
 import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.enum.WeekDaysEnum
+import agoraa.app.forms_back.enum.OrderDaysEnum
 
 data class SupplierStoresDto(
     val id: Long,
     val store: StoresEnum,
-    val orderDay: WeekDaysEnum,
+    val orderDay: OrderDaysEnum? = null,
     val frequency: Int,
     val stock: Float,
     val exchangeStock: Float,

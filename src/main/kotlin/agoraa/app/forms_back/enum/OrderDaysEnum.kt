@@ -1,11 +1,13 @@
 package agoraa.app.forms_back.enum
 
-enum class WeekDaysEnum {
+enum class OrderDaysEnum {
     DOMINGO,
     SEGUNDA,
     TERCA,
     QUARTA,
     QUINTA,
     SEXTA,
-    SABADO
+    SABADO,
+    CENTRALIZADO,
+    REPOSICAO
 }

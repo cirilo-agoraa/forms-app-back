@@ -66,7 +66,7 @@ class SupplierController(private val supplierService: SupplierService) {
 
     @PutMapping("/edit-or-create-multiple")
     fun editOrCreateMultipleSuppliers(
-        @Valid request: List<SupplierEditOrCreateSchema>,
+        @Valid @RequestBody request: List<SupplierEditOrCreateSchema>,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {

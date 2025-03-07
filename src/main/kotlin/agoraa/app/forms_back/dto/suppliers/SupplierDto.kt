@@ -8,7 +8,7 @@ data class SupplierDto(
     val id: Long,
     val name: String,
     val status: SupplierStatusEnum,
-    val orderMinValue: Float,
+    val orderMinValue: Float? = null,
     val score: Int,
     val exchange: Boolean,
     val orders: Int?,

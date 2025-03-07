@@ -12,4 +12,7 @@ enum class SectorsEnum {
     BEBIDAS,
     PET_SHOP,
     LIMPEZA,
+    HORTIFRUTI,
+    NATAL,
+    MERCAPP_CASA_DE_CARNES
 }

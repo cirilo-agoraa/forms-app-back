@@ -900,4 +900,12 @@
         <modifyDataType tableName="supplier_stores" columnName="stock" newDataType="FLOAT"/>
     </changeSet>
 
+    <changeSet id="31" author="PedroCostaa" runInTransaction="true">
+        <dropNotNullConstraint tableName="supplier_stores" columnName="order_day" columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="32" author="PedroCostaa" runInTransaction="true">
+        <dropNotNullConstraint tableName="suppliers" columnName="order_min_value" columnDataType="FLOAT"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -86,10 +86,9 @@ class ProductController(private val productService: ProductService) {
         )
     }
 
-
     @PutMapping("/edit-or-create-multiple")
     fun editOrCreateMultipleProducts(
-        @Valid request: List<ProductEditOrCreateSchema>,
+        @Valid @RequestBody request: List<ProductEditOrCreateSchema>,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {

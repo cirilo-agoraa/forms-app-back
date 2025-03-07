@@ -1,23 +1,23 @@
 package agoraa.app.forms_back.schema.supplier
 
 import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
-import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 
 data class SupplierEditOrCreateSchema(
-    @field:NotBlank(message = "Name is required")
+    @field:NotNull(message = "Name is required")
     val name: String,
 
-    val status: SupplierStatusEnum? = null,
-    val orderMinValue: Float? = null,
-    val score: Int? = null,
-    val exchange: Boolean? = null,
-    val stores: List<SupplierStoresEditSchema>? = null,
-    val orders: Int? = null,
-    val ordersNotDelivered: Int? = null,
-    val ordersNotDeliveredPercentage: Float? = null,
-    val totalValue: Float? = null,
-    val valueReceived: Float? = null,
-    val valueReceivedPercentage: Float? = null,
-    val averageValueReceived: Float? = null,
-    val minValueReceived: Float? = null,
+    val status: SupplierStatusEnum?,
+    val orderMinValue: Float?,
+    val score: Int?,
+    val exchange: Boolean?,
+    val stores: List<SupplierStoresEditSchema>?,
+    val orders: Int?,
+    val ordersNotDelivered: Int?,
+    val ordersNotDeliveredPercentage: Float?,
+    val totalValue: Float?,
+    val valueReceived: Float?,
+    val valueReceivedPercentage: Float?,
+    val averageValueReceived: Float?,
+    val minValueReceived: Float?,
 )

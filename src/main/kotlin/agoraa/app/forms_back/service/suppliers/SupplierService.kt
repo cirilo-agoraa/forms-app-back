@@ -200,9 +200,9 @@ class SupplierService(
                     SupplierModel(
                         name = supp.name,
                         status = supp.status ?: throw IllegalArgumentException("status is required"),
-                        exchange = supp.exchange ?: throw IllegalArgumentException("status is required"),
-                        score = supp.score ?: throw IllegalArgumentException("status is required"),
-                        orderMinValue = supp.orderMinValue ?: throw IllegalArgumentException("status is required"),
+                        exchange = supp.exchange ?: false,
+                        score = supp.score ?: 0,
+                        orderMinValue = supp.orderMinValue,
                         orders = supp.orders,
                         ordersNotDelivered = supp.ordersNotDelivered,
                         ordersNotDeliveredPercentage = supp.ordersNotDeliveredPercentage,

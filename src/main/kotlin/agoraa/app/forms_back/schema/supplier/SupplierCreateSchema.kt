@@ -15,9 +15,6 @@ data class SupplierCreateSchema(
     @field:Pattern(regexp = "ATIVO|INATIVO|COTACAO", message = "Invalid status")
     val status: SupplierStatusEnum,
 
-    @field:NotNull(message = "Order min value is required")
-    val orderMinValue: Float,
-
     @field:NotNull(message = "Order max value is required")
     val score: Int,
 
@@ -27,6 +24,8 @@ data class SupplierCreateSchema(
     @field:NotNull(message = "Supplier must have at least one store")
     @field:Min(value = 1, message = "Supplier must have at least one store")
     val stores: List<SupplierStoresCreateSchema>,
+
+    val orderMinValue: Float?,
 
     val orders: Int?,
     val ordersNotDelivered: Int?,
