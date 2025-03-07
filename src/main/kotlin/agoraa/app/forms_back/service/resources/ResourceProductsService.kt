@@ -5,7 +5,8 @@ import agoraa.app.forms_back.model.products.ProductModel
 import agoraa.app.forms_back.model.resources.ResourceModel
 import agoraa.app.forms_back.model.resources.ResourceProductsModel
 import agoraa.app.forms_back.repository.resources.ResourceProductsRepository
-import agoraa.app.forms_back.schema.resource_products.ResourceProductsEditSchema
+import agoraa.app.forms_back.schema.resources.ResourceProductsCreateSchema
+import agoraa.app.forms_back.schema.resources.ResourceProductsEditSchema
 import agoraa.app.forms_back.service.ProductService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
@@ -84,13 +85,13 @@ class ResourceProductsService(
         return resourceProductsRepository.findAll(spec).map { createDto(it) }
     }
 
-    fun create(resource: ResourceModel, products: List<ResourceProductsEditSchema>) {
+    fun create(resource: ResourceModel, products: List<ResourceProductsCreateSchema>) {
         val resourceProducts = products.map { p ->
             val product = productService.findById(p.productId)
             ResourceProductsModel(
                 resource = resource,
                 product = product,
-                quantity = p.quantity ?: throw IllegalArgumentException("Quantity is required"),
+                quantity = p.quantity,
             )
         }
         resourceProductsRepository.saveAll(resourceProducts)
@@ -103,7 +104,15 @@ class ResourceProductsService(
         val newProductsSet = products.map { it.productId }.toSet()
 
         val toAdd = products.filter { it.productId !in currentProductsSet }
-        create(resource, toAdd)
+        val newResourceProducts = toAdd.map { i ->
+            val product = productService.findById(i.productId)
+            ResourceProductsModel(
+                resource = resource,
+                product = product,
+                quantity = i.quantity ?: throw IllegalArgumentException("Quantity is required"),
+            )
+        }
+        resourceProductsRepository.saveAll(newResourceProducts)
 
         val toDelete = resourceProducts.filter { it.product.id !in newProductsSet }
         resourceProductsRepository.deleteAll(toDelete)

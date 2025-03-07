@@ -8,8 +8,8 @@ import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.UserModel
 import agoraa.app.forms_back.model.resources.ResourceModel
 import agoraa.app.forms_back.repository.resources.ResourceRepository
-import agoraa.app.forms_back.schema.resource.ResourceCreateSchema
-import agoraa.app.forms_back.schema.resource.ResourceEditSchema
+import agoraa.app.forms_back.schema.resources.ResourceCreateSchema
+import agoraa.app.forms_back.schema.resources.ResourceEditSchema
 import agoraa.app.forms_back.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery

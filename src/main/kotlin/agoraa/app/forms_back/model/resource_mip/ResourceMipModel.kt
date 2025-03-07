@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.model.resource_mip
 
+import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.model.UserModel
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -20,4 +21,8 @@ data class ResourceMipModel(
 
     @Column(nullable = false)
     val processed: Boolean = false,
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    val store: StoresEnum
 )

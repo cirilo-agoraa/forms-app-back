@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.dto.supplier_registration
 
-import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.enum.OrderDaysEnum
+import agoraa.app.forms_back.enum.StoresEnum
 import com.fasterxml.jackson.annotation.JsonInclude
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

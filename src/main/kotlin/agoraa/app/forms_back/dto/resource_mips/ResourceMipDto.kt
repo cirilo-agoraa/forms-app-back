@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.dto.resource_mips
 
 import agoraa.app.forms_back.dto.user.UserDto
+import agoraa.app.forms_back.enum.StoresEnum
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 
@@ -10,5 +11,6 @@ data class ResourceMipDto(
     val user: UserDto,
     val createdAt: LocalDateTime,
     val processed: Boolean,
-    var items: List<ResourceMipItemsDto>? = null,
+    val store: StoresEnum,
+    var items: List<ResourceMipProductsDto>? = null,
 )

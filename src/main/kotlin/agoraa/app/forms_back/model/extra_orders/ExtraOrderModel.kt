@@ -2,8 +2,8 @@ package agoraa.app.forms_back.model.extra_orders
 
 import agoraa.app.forms_back.enum.extra_order.OriginEnum
 import agoraa.app.forms_back.enum.extra_order.PartialCompleteEnum
-import agoraa.app.forms_back.model.suppliers.SupplierModel
 import agoraa.app.forms_back.model.UserModel
+import agoraa.app.forms_back.model.suppliers.SupplierModel
 import jakarta.persistence.*
 import java.time.LocalDateTime
 

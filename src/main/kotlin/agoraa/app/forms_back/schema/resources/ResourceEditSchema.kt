@@ -1,7 +1,6 @@
-package agoraa.app.forms_back.schema.resource
+package agoraa.app.forms_back.schema.resources
 
 import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.schema.resource_products.ResourceProductsEditSchema
 
 data class ResourceEditSchema(
     val store: StoresEnum? = null,

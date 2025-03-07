@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.schema.supplier
 
-import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.enum.OrderDaysEnum
+import agoraa.app.forms_back.enum.StoresEnum
 import jakarta.validation.constraints.NotNull
 
 data class SupplierStoresEditSchema(

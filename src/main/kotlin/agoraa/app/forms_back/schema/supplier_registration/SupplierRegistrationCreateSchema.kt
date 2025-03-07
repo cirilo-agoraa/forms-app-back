@@ -1,6 +1,9 @@
 package agoraa.app.forms_back.schema.supplier_registration
 
-import jakarta.validation.constraints.*
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Pattern
+import jakarta.validation.constraints.Size
 import java.time.LocalDate
 
 data class SupplierRegistrationCreateSchema(

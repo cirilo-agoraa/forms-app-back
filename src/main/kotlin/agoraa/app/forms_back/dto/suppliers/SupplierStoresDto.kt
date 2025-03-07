@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.dto.suppliers
 
-import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.enum.OrderDaysEnum
+import agoraa.app.forms_back.enum.StoresEnum
 
 data class SupplierStoresDto(
     val id: Long,

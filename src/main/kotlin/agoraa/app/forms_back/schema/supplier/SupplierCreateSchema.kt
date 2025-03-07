@@ -1,7 +1,6 @@
 package agoraa.app.forms_back.schema.supplier
 
 import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
-import jakarta.persistence.Column
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull

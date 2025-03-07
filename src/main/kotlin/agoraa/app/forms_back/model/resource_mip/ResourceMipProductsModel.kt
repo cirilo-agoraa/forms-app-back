@@ -1,11 +1,11 @@
 package agoraa.app.forms_back.model.resource_mip
 
-import agoraa.app.forms_back.enum.MipsCategoriesEnum
+import agoraa.app.forms_back.model.products.ProductModel
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "resource_mip_items")
-data class ResourceMipItemsModel(
+@Table(name = "resource_mip_products")
+data class ResourceMipProductsModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
@@ -14,9 +14,9 @@ data class ResourceMipItemsModel(
     @JoinColumn(name = "resource_mip_id", nullable = false)
     val resourceMip: ResourceMipModel,
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    val category: MipsCategoriesEnum,
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    val product: ProductModel,
 
     @Column(nullable = false)
     val quantity: Int

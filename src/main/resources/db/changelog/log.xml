@@ -908,4 +908,22 @@
         <dropNotNullConstraint tableName="suppliers" columnName="order_min_value" columnDataType="FLOAT"/>
     </changeSet>
 
+    <changeSet id="33" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="resource_mips">
+            <column name="store" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <dropColumn tableName="resource_mip_items" columnName="category"/>
+        <addColumn tableName="resource_mip_items">
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="resource_mip_items" baseColumnNames="product_id" constraintName="fk_resource_mip_items_product" referencedTableName="products"
+                                 referencedColumnNames="id"/>
+        <renameTable oldTableName="resource_mip_items" newTableName="resource_mip_products"/>
+    </changeSet>
+
 </databaseChangeLog>

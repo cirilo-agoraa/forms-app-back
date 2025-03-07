@@ -2,6 +2,7 @@ package agoraa.app.forms_back.service.resource_mips
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.resource_mips.ResourceMipDto
+import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.UserModel
@@ -25,13 +26,14 @@ import java.time.LocalDateTime
 @Service
 class ResourceMipService(
     private val resourceMipRepository: ResourceMipRepository,
-    private val resourceMipItemsService: ResourceMipItemsService,
+    private val resourceMipProductsService: ResourceMipProductsService,
     private val userService: UserService
 ) {
     private fun createCriteria(
         username: String? = null,
         createdAt: LocalDateTime? = null,
         processed: Boolean? = null,
+        stores: List<StoresEnum>? = null,
         userId: Long? = null,
     ): Specification<ResourceMipModel> {
         return Specification { root: Root<ResourceMipModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
@@ -43,6 +45,10 @@ class ResourceMipService(
 
             username?.let {
                 predicates.add(criteriaBuilder.like(root.get<UserModel>("user").get("username"), "%$it%"))
+            }
+
+            stores?.let {
+                predicates.add(root.get<StoresEnum>("store").`in`(it))
             }
 
             createdAt?.let {
@@ -73,13 +79,14 @@ class ResourceMipService(
         val resourceMipDto = ResourceMipDto(
             id = resourceMip.id,
             user = userDto,
+            store = resourceMip.store,
             createdAt = resourceMip.createdAt,
             processed = resourceMip.processed,
         )
 
         return when {
             full -> {
-                val resourceMipItems = resourceMipItemsService.findByParentId(resourceMip.id)
+                val resourceMipItems = resourceMipProductsService.findByParentId(resourceMip.id)
 
                 resourceMipDto.items = resourceMipItems
                 resourceMipDto
@@ -182,10 +189,11 @@ class ResourceMipService(
         val resourceMip = resourceMipRepository.saveAndFlush(
             ResourceMipModel(
                 user = currentUser,
+                store = request.store,
             )
         )
 
-        resourceMipItemsService.create(resourceMip, request.items)
+        resourceMipProductsService.create(resourceMip, request.items)
     }
 
     @Transactional
@@ -199,7 +207,7 @@ class ResourceMipService(
         )
 
         request.items?.let {
-            resourceMipItemsService.edit(resourceMipEdit, it)
+            resourceMipProductsService.edit(resourceMipEdit, it)
         }
     }
 

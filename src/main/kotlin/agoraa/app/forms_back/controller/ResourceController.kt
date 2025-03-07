@@ -2,8 +2,8 @@ package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.schema.resource.ResourceCreateSchema
-import agoraa.app.forms_back.schema.resource.ResourceEditSchema
+import agoraa.app.forms_back.schema.resources.ResourceCreateSchema
+import agoraa.app.forms_back.schema.resources.ResourceEditSchema
 import agoraa.app.forms_back.service.resources.ResourceService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus

@@ -94,9 +94,10 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
     fun edit(supplier: SupplierModel, stores: List<SupplierStoresEditSchema>) {
         val spec = createCriteria(supplier.id)
         val supplierStores = supplierStoresRepository.findAll(spec)
+        val currentSupplierStores = supplierStores.map { it.store }.toSet()
         val editSpsSet = stores.map { it.store }.toSet()
 
-        val toAdd = stores.filter { it.store !in editSpsSet }
+        val toAdd = stores.filter { it.store !in currentSupplierStores }
         val newSupplierStores = toAdd.map { p ->
             SupplierStoresModel(
                 supplier = supplier,
