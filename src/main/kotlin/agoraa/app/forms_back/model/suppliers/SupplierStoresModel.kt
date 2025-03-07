@@ -29,7 +29,7 @@ data class SupplierStoresModel(
     val exchangeStock: Float,
 
     @Column(nullable = false)
-    val openOrder: Boolean,
+    val openOrder: Int,
 
     @Column(nullable = false)
     val orderTerm: Int,

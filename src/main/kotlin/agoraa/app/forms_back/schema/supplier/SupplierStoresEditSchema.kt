@@ -12,7 +12,7 @@ data class SupplierStoresEditSchema(
     val frequency: Int? = null,
     val stock: Float? = null,
     val exchangeStock: Float? = null,
-    val openOrder: Boolean? = null,
+    val openOrder: Int? = null,
     val orderTerm: Int? = null,
     val orderMeanDeliveryTime: Float? = null,
 )

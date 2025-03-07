@@ -10,7 +10,7 @@ data class SupplierStoresDto(
     val frequency: Int,
     val stock: Float,
     val exchangeStock: Float,
-    val openOrder: Boolean,
+    val openOrder: Int,
     val orderTerm: Int,
     val orderMeanDeliveryTime: Float,
 )

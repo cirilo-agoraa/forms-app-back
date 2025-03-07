@@ -18,7 +18,7 @@ data class SupplierStoresCreateSchema(
     val exchangeStock: Float,
 
     @field:NotNull(message = "Open order cannot be null")
-    val openOrder: Boolean,
+    val openOrder: Int,
 
     @field:NotNull(message = "Order term cannot be null")
     val orderTerm: Int,

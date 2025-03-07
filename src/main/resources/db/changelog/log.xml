@@ -925,5 +925,9 @@
                                  referencedColumnNames="id"/>
         <renameTable oldTableName="resource_mip_items" newTableName="resource_mip_products"/>
     </changeSet>
+    
+    <changeSet id="34" author="PedroCostaa" runInTransaction="true">
+        <modifyDataType tableName="supplier_stores" columnName="open_order" newDataType="INT"/>
+    </changeSet>
 
 </databaseChangeLog>

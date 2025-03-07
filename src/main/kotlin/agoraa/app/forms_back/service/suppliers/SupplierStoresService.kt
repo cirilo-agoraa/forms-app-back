@@ -102,7 +102,7 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
             SupplierStoresModel(
                 supplier = supplier,
                 store = p.store,
-                orderDay = p.orderDay ?: throw IllegalArgumentException("orderDay is required"),
+                orderDay = p.orderDay,
                 frequency = p.frequency ?: throw IllegalArgumentException("frequency is required"),
                 stock = p.stock ?: throw IllegalArgumentException("stock is required"),
                 exchangeStock = p.exchangeStock ?: throw IllegalArgumentException("exchangeStock is required"),
