@@ -37,7 +37,7 @@ data class SupplierStoresModel(
     @Column(nullable = false)
     val orderMeanDeliveryTime: Float,
 
-    @Column
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     val orderDay: OrderDaysEnum? = null,
 )

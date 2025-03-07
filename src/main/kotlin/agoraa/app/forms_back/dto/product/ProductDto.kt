@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.dto.product
 
+import agoraa.app.forms_back.enum.MipsCategoriesEnum
 import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.model.suppliers.SupplierModel
@@ -11,7 +12,7 @@ data class ProductDto(
     val id: Long,
     val code: String,
     val name: String,
-    val supplier: SupplierModel,
+    var supplier: SupplierModel? = null,
     val isResource: Boolean,
     val barcode: String,
     val store: StoresEnum,
@@ -66,4 +67,5 @@ data class ProductDto(
     val salesPrice: Float? = null,
     val salesPrice2: Float? = null,
     val promotionPrice: Float? = null,
+    val mipCategory: MipsCategoriesEnum? = null
 )

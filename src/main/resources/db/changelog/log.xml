@@ -930,4 +930,11 @@
         <modifyDataType tableName="supplier_stores" columnName="open_order" newDataType="INT"/>
     </changeSet>
 
+    <changeSet id="35" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="products">
+            <column name="mip_category" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+
 </databaseChangeLog>

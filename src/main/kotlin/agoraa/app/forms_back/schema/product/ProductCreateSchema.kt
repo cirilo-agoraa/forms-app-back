@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.schema.product
 
+import agoraa.app.forms_back.enum.MipsCategoriesEnum
 import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import jakarta.validation.constraints.NotBlank
@@ -150,5 +151,8 @@ data class ProductCreateSchema(
 
     val salesPrice2: Float? = null,
 
-    val promotionPrice: Float? = null
+    val promotionPrice: Float? = null,
+
+    val mipCategory: MipsCategoriesEnum? = null
+
 )

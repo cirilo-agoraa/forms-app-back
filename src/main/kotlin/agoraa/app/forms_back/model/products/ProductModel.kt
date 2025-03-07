@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.model.products
 
+import agoraa.app.forms_back.enum.MipsCategoriesEnum
 import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.model.suppliers.SupplierModel
@@ -185,5 +186,9 @@ data class ProductModel(
     val salesPrice2: Float? = null,
 
     @Column(nullable = true)
-    val promotionPrice: Float? = null
+    val promotionPrice: Float? = null,
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    val mipCategory: MipsCategoriesEnum? = null
 )

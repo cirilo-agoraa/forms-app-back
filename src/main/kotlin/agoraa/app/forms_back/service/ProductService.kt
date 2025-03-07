@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.service
 
 import agoraa.app.forms_back.dto.product.ProductDto
+import agoraa.app.forms_back.enum.MipsCategoriesEnum
 import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import agoraa.app.forms_back.exception.ResourceNotFoundException
@@ -88,7 +89,8 @@ class ProductService(
             salesPrice2 = productModel.salesPrice2,
             promotionPrice = productModel.promotionPrice,
             exchangeQuantity = productModel.exchangeQuantity,
-            supplier = productModel.supplier
+            supplier = productModel.supplier,
+            mipCategory = productModel.mipCategory,
         )
     }
 
@@ -102,6 +104,7 @@ class ProductService(
         isResource: Boolean? = null,
         sector: SectorsEnum? = null,
         codes: List<String>? = null,
+        mipCategories: List<MipsCategoriesEnum>? = null,
     ): Specification<ProductModel> {
         return Specification { root: Root<ProductModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -128,6 +131,10 @@ class ProductService(
 
             stores?.let {
                 predicates.add(root.get<StoresEnum>("store").`in`(it))
+            }
+
+            mipCategories?.let {
+                predicates.add(root.get<MipsCategoriesEnum>("mipCategory").`in`(it))
             }
 
             isResource?.let {
@@ -160,7 +167,8 @@ class ProductService(
         codes: List<String>?,
         isResource: Boolean?,
         stores: List<StoresEnum>?,
-        sector: SectorsEnum?
+        sector: SectorsEnum?,
+        mipCategories: List<MipsCategoriesEnum>?
     ): Any {
         val spec =
             createCriteria(
@@ -172,7 +180,8 @@ class ProductService(
                 stores,
                 isResource = isResource,
                 sector,
-                codes
+                codes,
+                mipCategories
             )
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
@@ -275,6 +284,7 @@ class ProductService(
                 salesPrice = request.salesPrice,
                 salesPrice2 = request.salesPrice2,
                 promotionPrice = request.promotionPrice,
+                mipCategory = request.mipCategory
             )
         )
     }
@@ -345,6 +355,7 @@ class ProductService(
                 salesPrice = request.salesPrice ?: product.salesPrice,
                 salesPrice2 = request.salesPrice2 ?: product.salesPrice2,
                 promotionPrice = request.promotionPrice ?: product.promotionPrice,
+                mipCategory = request.mipCategory ?: product.mipCategory
             )
         )
     }
@@ -413,6 +424,7 @@ class ProductService(
                 salesPrice = p.salesPrice ?: product.salesPrice,
                 salesPrice2 = p.salesPrice2 ?: product.salesPrice2,
                 promotionPrice = p.promotionPrice ?: product.promotionPrice,
+                mipCategory = p.mipCategory ?: product.mipCategory
             )
                 ?: ProductModel(
                     code = p.code,
@@ -485,6 +497,7 @@ class ProductService(
                     salesPrice = p.salesPrice,
                     salesPrice2 = p.salesPrice2,
                     promotionPrice = p.promotionPrice,
+                    mipCategory = p.mipCategory
                 )
         }
         productRepository.saveAll(products)
