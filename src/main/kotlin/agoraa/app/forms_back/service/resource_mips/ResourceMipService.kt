@@ -88,7 +88,7 @@ class ResourceMipService(
             full -> {
                 val resourceMipItems = resourceMipProductsService.findByParentId(resourceMip.id)
 
-                resourceMipDto.items = resourceMipItems
+                resourceMipDto.products = resourceMipItems
                 resourceMipDto
             }
 
@@ -193,7 +193,7 @@ class ResourceMipService(
             )
         )
 
-        resourceMipProductsService.create(resourceMip, request.items)
+        resourceMipProductsService.create(resourceMip, request.products)
     }
 
     @Transactional

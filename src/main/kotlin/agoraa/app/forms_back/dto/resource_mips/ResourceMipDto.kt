@@ -12,5 +12,5 @@ data class ResourceMipDto(
     val createdAt: LocalDateTime,
     val processed: Boolean,
     val store: StoresEnum,
-    var items: List<ResourceMipProductsDto>? = null,
+    var products: List<ResourceMipProductsDto>? = null,
 )

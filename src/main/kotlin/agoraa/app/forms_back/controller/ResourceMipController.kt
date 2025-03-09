@@ -83,7 +83,7 @@ class ResourceMipController(private val resourceMipService: ResourceMipService) 
     }
 
     @PostMapping
-    fun createExtraQuotation(
+    fun createResourceMip(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @Valid @RequestBody request: ResourceMipCreateSchema,
         bindingResult: BindingResult,
