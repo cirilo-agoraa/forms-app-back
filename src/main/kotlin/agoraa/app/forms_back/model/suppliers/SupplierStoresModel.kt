@@ -3,6 +3,7 @@ package agoraa.app.forms_back.model.suppliers
 import agoraa.app.forms_back.enum.OrderDaysEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import jakarta.persistence.*
+import java.time.LocalDate
 
 @Entity
 @Table(name = "supplier_stores")
@@ -36,6 +37,12 @@ data class SupplierStoresModel(
 
     @Column(nullable = false)
     val orderMeanDeliveryTime: Float,
+
+    @Column(nullable = true)
+    val nextOrder: LocalDate? = null,
+
+    @Column(nullable = true)
+    val openOrderExpectedDelivery: LocalDate? = null,
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)

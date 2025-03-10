@@ -3,6 +3,7 @@ package agoraa.app.forms_back.schema.supplier
 import agoraa.app.forms_back.enum.OrderDaysEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import jakarta.validation.constraints.NotNull
+import java.time.LocalDate
 
 data class SupplierStoresEditSchema(
     @field:NotNull(message = "Store cannot be null")
@@ -15,4 +16,6 @@ data class SupplierStoresEditSchema(
     val openOrder: Int? = null,
     val orderTerm: Int? = null,
     val orderMeanDeliveryTime: Float? = null,
+    val nextOrder: LocalDate? = null,
+    val openOrderExpectedDelivery: LocalDate? = null,
 )

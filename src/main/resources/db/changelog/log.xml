@@ -936,5 +936,15 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="36" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="supplier_stores">
+            <column name="next_order" type="DATE"/>
+        </addColumn>
+
+        <addColumn tableName="supplier_stores">
+            <column name="open_order_expected_delivery" type="DATE"/>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>

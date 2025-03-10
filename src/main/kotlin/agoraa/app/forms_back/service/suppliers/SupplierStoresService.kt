@@ -63,6 +63,8 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
             orderMeanDeliveryTime = supplierStores.orderMeanDeliveryTime,
             frequency = supplierStores.frequency,
             orderTerm = supplierStores.orderTerm,
+            nextOrder = supplierStores.nextOrder,
+            openOrderExpectedDelivery = supplierStores.openOrderExpectedDelivery,
         )
     }
 
@@ -86,6 +88,8 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
                 openOrder = p.openOrder,
                 orderTerm = p.orderTerm,
                 orderMeanDeliveryTime = p.orderMeanDeliveryTime,
+                nextOrder = p.nextOrder,
+                openOrderExpectedDelivery = p.openOrderExpectedDelivery,
             )
         }
         supplierStoresRepository.saveAll(supplierStores)
@@ -109,6 +113,8 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
                 openOrder = p.openOrder ?: throw IllegalArgumentException("openOrder is required"),
                 orderTerm = p.orderTerm ?: throw IllegalArgumentException("orderTerm is required"),
                 orderMeanDeliveryTime = p.orderMeanDeliveryTime ?: throw IllegalArgumentException("orderMeanDeliveryTime is required"),
+                nextOrder = p.nextOrder,
+                openOrderExpectedDelivery = p.openOrderExpectedDelivery,
             )
         }
         supplierStoresRepository.saveAll(newSupplierStores)
