@@ -28,6 +28,9 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
                 frequency = updatedSs?.frequency ?: srs.frequency,
                 openOrder = updatedSs?.openOrder ?: srs.openOrder,
                 orderDay = updatedSs?.orderDay ?: srs.orderDay,
+                nextOrder = updatedSs?.nextOrder ?: srs.nextOrder,
+                openOrderExpectedDelivery = updatedSs?.openOrderExpectedDelivery ?: srs.openOrderExpectedDelivery,
+                exchangeStock = updatedSs?.exchangeStock ?: srs.exchangeStock,
             )
         }
 
