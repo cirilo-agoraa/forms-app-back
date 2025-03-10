@@ -4,6 +4,7 @@ import agoraa.app.forms_back.enum.OrderDaysEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class SupplierStoresCreateSchema(
     @field:NotNull(message = "Store cannot be null")
@@ -28,6 +29,6 @@ data class SupplierStoresCreateSchema(
     val orderMeanDeliveryTime: Float,
 
     val orderDay: OrderDaysEnum? = null,
-    val nextOrder: LocalDate? = null,
-    val openOrderExpectedDelivery: LocalDate? = null,
+    val nextOrder: LocalDateTime? = null,
+    val openOrderExpectedDelivery: LocalDateTime? = null,
 )

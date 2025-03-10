@@ -4,6 +4,7 @@ import agoraa.app.forms_back.enum.OrderDaysEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import jakarta.persistence.*
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "supplier_stores")
@@ -39,10 +40,10 @@ data class SupplierStoresModel(
     val orderMeanDeliveryTime: Float,
 
     @Column(nullable = true)
-    val nextOrder: LocalDate? = null,
+    val nextOrder: LocalDateTime? = null,
 
     @Column(nullable = true)
-    val openOrderExpectedDelivery: LocalDate? = null,
+    val openOrderExpectedDelivery: LocalDateTime? = null,
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)

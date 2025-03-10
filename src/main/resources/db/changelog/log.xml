@@ -946,5 +946,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="37" author="PedroCostaa">
+        <modifyDataType tableName="supplier_stores" columnName="next_order" newDataType="DATETIME"/>
+        <modifyDataType tableName="supplier_stores" columnName="open_order_expected_delivery" newDataType="DATETIME"/>
+    </changeSet>
+
 
 </databaseChangeLog>
