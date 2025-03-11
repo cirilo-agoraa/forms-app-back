@@ -11,7 +11,7 @@ data class SupplierEditOrCreateSchema(
     val orderMinValue: Float?,
     val score: Int?,
     val exchange: Boolean?,
-    val stores: List<SupplierStoresEditSchema>?,
+    val stores: List<SupplierStoresSchema>?,
     val orders: Int?,
     val ordersNotDelivered: Int?,
     val ordersNotDeliveredPercentage: Float?,

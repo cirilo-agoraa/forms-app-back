@@ -7,7 +7,7 @@ data class SupplierEditSchema(
     val orderMinValue: Float? = null,
     val score: Int? = null,
     val exchange: Boolean? = null,
-    val stores: List<SupplierStoresEditSchema>? = null,
+    val stores: List<SupplierStoresSchema>? = null,
     val status: SupplierStatusEnum? = null,
     val orders: Int? = null,
     val ordersNotDelivered: Int? = null,

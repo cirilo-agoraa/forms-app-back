@@ -141,7 +141,7 @@ class SupplierService(
 
         val createdSupplier = supplierRepository.saveAndFlush(supplier)
 
-        supplierStoresService.create(createdSupplier, request.stores)
+        supplierStoresService.createMultiple(createdSupplier, request.stores)
     }
 
     @Transactional
@@ -167,7 +167,7 @@ class SupplierService(
             )
         )
 
-        request.stores?.let { supplierStoresService.edit(editedSupplier, it) }
+        request.stores?.let { supplierStoresService.editOrCreateMultiple(editedSupplier, it) }
     }
 
     @Transactional
@@ -193,7 +193,7 @@ class SupplierService(
                         minValueReceived = supp.minValueReceived ?: supplier.minValueReceived
                     )
                 )
-                supp.stores?.let { supplierStoresService.edit(editedSupplier, it) }
+                supp.stores?.let { supplierStoresService.editOrCreateMultiple(editedSupplier, it) }
             }
             else {
                 val newSupplier = supplierRepository.saveAndFlush(
@@ -213,7 +213,7 @@ class SupplierService(
                         minValueReceived = supp.minValueReceived
                     )
                 )
-                supp.stores?.let { supplierStoresService.edit(newSupplier, it) }
+                supp.stores?.let { supplierStoresService.editOrCreateMultiple(newSupplier, it) }
             }
         }
     }

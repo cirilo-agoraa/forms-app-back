@@ -4,8 +4,7 @@ import agoraa.app.forms_back.dto.suppliers.SupplierStoresDto
 import agoraa.app.forms_back.model.suppliers.SupplierModel
 import agoraa.app.forms_back.model.suppliers.SupplierStoresModel
 import agoraa.app.forms_back.repository.suppliers.SupplierStoresRepository
-import agoraa.app.forms_back.schema.supplier.SupplierStoresCreateSchema
-import agoraa.app.forms_back.schema.supplier.SupplierStoresEditSchema
+import agoraa.app.forms_back.schema.supplier.SupplierStoresSchema
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
@@ -15,29 +14,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class SupplierStoresService(private val supplierStoresRepository: SupplierStoresRepository) {
-    private fun editMultiple(
-        supplierStores: List<SupplierStoresModel>,
-        stores: List<SupplierStoresEditSchema>
-    ) {
-        val editedSupplierStores = supplierStores.map { srs ->
-            val updatedSs = stores.find { it.store == srs.store }
-            srs.copy(
-                orderMeanDeliveryTime = updatedSs?.orderMeanDeliveryTime?.get() ?: srs.orderMeanDeliveryTime,
-                orderTerm = updatedSs?.orderTerm?.get() ?: srs.orderTerm,
-                stock = updatedSs?.stock?.get() ?: srs.stock,
-                frequency = updatedSs?.frequency?.get() ?: srs.frequency,
-                openOrder = updatedSs?.openOrder?.get() ?: srs.openOrder,
-                orderDay = updatedSs?.orderDay?.get() ?: srs.orderDay,
-                nextOrder = updatedSs?.nextOrder?.get() ?: srs.nextOrder,
-                openOrderExpectedDelivery = updatedSs?.openOrderExpectedDelivery?.get() ?: srs.openOrderExpectedDelivery,
-                openOrderRealDelivery = updatedSs?.openOrderExpectedDelivery?.get() ?: srs.openOrderRealDelivery,
-                exchangeStock = updatedSs?.exchangeStock?.get() ?: srs.exchangeStock,
-            )
-        }
-
-        supplierStoresRepository.saveAllAndFlush(editedSupplierStores)
-    }
-
     private fun createCriteria(
         supplierId: Long? = null,
     ): Specification<SupplierStoresModel> {
@@ -81,7 +57,7 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
         return supplierStoresRepository.findAll(spec).map { createDto(it) }
     }
 
-    fun create(supplier: SupplierModel, stores: List<SupplierStoresCreateSchema>) {
+    fun createMultiple(supplier: SupplierModel, stores: List<SupplierStoresSchema>) {
         val supplierStores = stores.map { p ->
             SupplierStoresModel(
                 supplier = supplier,
@@ -101,32 +77,32 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
         supplierStoresRepository.saveAll(supplierStores)
     }
 
-    fun edit(supplier: SupplierModel, stores: List<SupplierStoresEditSchema>) {
+    fun editOrCreateMultiple(supplier: SupplierModel, stores: List<SupplierStoresSchema>) {
         val spec = createCriteria(supplier.id)
         val supplierStores = supplierStoresRepository.findAll(spec)
         val currentSupplierStores = supplierStores.map { it.store }.toSet()
         val editSpsSet = stores.map { it.store }.toSet()
 
         val toAdd = stores.filter { it.store !in currentSupplierStores }
-        val newSupplierStores = toAdd.map { p ->
-            SupplierStoresModel(
-                supplier = supplier,
-                store = p.store,
-                orderDay = p.orderDay?.get(),
-                frequency = p.frequency?.get() ?: throw IllegalArgumentException("frequency is required"),
-                stock = p.stock?.get() ?: throw IllegalArgumentException("stock is required"),
-                exchangeStock = p.exchangeStock?.get() ?: throw IllegalArgumentException("exchangeStock is required"),
-                openOrder = p.openOrder?.get() ?: throw IllegalArgumentException("openOrder is required"),
-                orderTerm = p.orderTerm?.get() ?: throw IllegalArgumentException("orderTerm is required"),
-                orderMeanDeliveryTime = p.orderMeanDeliveryTime?.get() ?: throw IllegalArgumentException("orderMeanDeliveryTime is required"),
-                nextOrder = p.nextOrder?.get(),
-                openOrderExpectedDelivery = p.openOrderExpectedDelivery?.get(),
-                openOrderRealDelivery = p.openOrderRealDelivery?.get(),
-            )
-        }
-        supplierStoresRepository.saveAll(newSupplierStores)
+        createMultiple(supplier, toAdd)
 
         val toEdit = supplierStores.filter { it.store in editSpsSet }
-        editMultiple(toEdit, stores)
+        val editedSupplierStores = toEdit.map { srs ->
+            val updatedSs = stores.find { it.store == srs.store }!!
+            srs.copy(
+                orderMeanDeliveryTime = updatedSs.orderMeanDeliveryTime,
+                orderTerm = updatedSs.orderTerm,
+                stock = updatedSs.stock,
+                frequency = updatedSs.frequency,
+                openOrder = updatedSs.openOrder,
+                exchangeStock = updatedSs.exchangeStock,
+                orderDay = updatedSs.orderDay,
+                nextOrder = updatedSs.nextOrder,
+                openOrderExpectedDelivery = updatedSs.openOrderExpectedDelivery,
+                openOrderRealDelivery = updatedSs.openOrderExpectedDelivery,
+            )
+        }
+
+        supplierStoresRepository.saveAllAndFlush(editedSupplierStores)
     }
 }

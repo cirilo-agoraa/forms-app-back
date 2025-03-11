@@ -22,7 +22,7 @@ data class SupplierCreateSchema(
 
     @field:NotNull(message = "Supplier must have at least one store")
     @field:Min(value = 1, message = "Supplier must have at least one store")
-    val stores: List<SupplierStoresCreateSchema>,
+    val stores: List<SupplierStoresSchema>,
 
     val orderMinValue: Float?,
 
