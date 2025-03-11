@@ -99,7 +99,7 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
                 orderDay = updatedSs.orderDay,
                 nextOrder = updatedSs.nextOrder,
                 openOrderExpectedDelivery = updatedSs.openOrderExpectedDelivery,
-                openOrderRealDelivery = updatedSs.openOrderExpectedDelivery,
+                openOrderRealDelivery = updatedSs.openOrderRealDelivery,
             )
         }
 
