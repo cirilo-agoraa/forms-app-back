@@ -3,7 +3,6 @@ package agoraa.app.forms_back.model.suppliers
 import agoraa.app.forms_back.enum.OrderDaysEnum
 import agoraa.app.forms_back.enum.StoresEnum
 import jakarta.persistence.*
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
@@ -44,6 +43,9 @@ data class SupplierStoresModel(
 
     @Column(nullable = true)
     val openOrderExpectedDelivery: LocalDateTime? = null,
+
+    @Column(nullable = true)
+    val openOrderRealDelivery: LocalDateTime? = null,
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)

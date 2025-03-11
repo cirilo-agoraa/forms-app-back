@@ -22,15 +22,16 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
         val editedSupplierStores = supplierStores.map { srs ->
             val updatedSs = stores.find { it.store == srs.store }
             srs.copy(
-                orderMeanDeliveryTime = updatedSs?.orderMeanDeliveryTime ?: srs.orderMeanDeliveryTime,
-                orderTerm = updatedSs?.orderTerm ?: srs.orderTerm,
-                stock = updatedSs?.stock ?: srs.stock,
-                frequency = updatedSs?.frequency ?: srs.frequency,
-                openOrder = updatedSs?.openOrder ?: srs.openOrder,
-                orderDay = updatedSs?.orderDay ?: srs.orderDay,
-                nextOrder = updatedSs?.nextOrder ?: srs.nextOrder,
-                openOrderExpectedDelivery = updatedSs?.openOrderExpectedDelivery ?: srs.openOrderExpectedDelivery,
-                exchangeStock = updatedSs?.exchangeStock ?: srs.exchangeStock,
+                orderMeanDeliveryTime = updatedSs?.orderMeanDeliveryTime?.get() ?: srs.orderMeanDeliveryTime,
+                orderTerm = updatedSs?.orderTerm?.get() ?: srs.orderTerm,
+                stock = updatedSs?.stock?.get() ?: srs.stock,
+                frequency = updatedSs?.frequency?.get() ?: srs.frequency,
+                openOrder = updatedSs?.openOrder?.get() ?: srs.openOrder,
+                orderDay = updatedSs?.orderDay?.get() ?: srs.orderDay,
+                nextOrder = updatedSs?.nextOrder?.get() ?: srs.nextOrder,
+                openOrderExpectedDelivery = updatedSs?.openOrderExpectedDelivery?.get() ?: srs.openOrderExpectedDelivery,
+                openOrderRealDelivery = updatedSs?.openOrderExpectedDelivery?.get() ?: srs.openOrderRealDelivery,
+                exchangeStock = updatedSs?.exchangeStock?.get() ?: srs.exchangeStock,
             )
         }
 
@@ -68,6 +69,7 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
             orderTerm = supplierStores.orderTerm,
             nextOrder = supplierStores.nextOrder,
             openOrderExpectedDelivery = supplierStores.openOrderExpectedDelivery,
+            openOrderRealDelivery = supplierStores.openOrderRealDelivery,
         )
     }
 
@@ -92,6 +94,7 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
                 orderTerm = p.orderTerm,
                 orderMeanDeliveryTime = p.orderMeanDeliveryTime,
                 nextOrder = p.nextOrder,
+                openOrderRealDelivery = p.openOrderRealDelivery,
                 openOrderExpectedDelivery = p.openOrderExpectedDelivery,
             )
         }
@@ -109,15 +112,16 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
             SupplierStoresModel(
                 supplier = supplier,
                 store = p.store,
-                orderDay = p.orderDay,
-                frequency = p.frequency ?: throw IllegalArgumentException("frequency is required"),
-                stock = p.stock ?: throw IllegalArgumentException("stock is required"),
-                exchangeStock = p.exchangeStock ?: throw IllegalArgumentException("exchangeStock is required"),
-                openOrder = p.openOrder ?: throw IllegalArgumentException("openOrder is required"),
-                orderTerm = p.orderTerm ?: throw IllegalArgumentException("orderTerm is required"),
-                orderMeanDeliveryTime = p.orderMeanDeliveryTime ?: throw IllegalArgumentException("orderMeanDeliveryTime is required"),
-                nextOrder = p.nextOrder,
-                openOrderExpectedDelivery = p.openOrderExpectedDelivery,
+                orderDay = p.orderDay?.get(),
+                frequency = p.frequency?.get() ?: throw IllegalArgumentException("frequency is required"),
+                stock = p.stock?.get() ?: throw IllegalArgumentException("stock is required"),
+                exchangeStock = p.exchangeStock?.get() ?: throw IllegalArgumentException("exchangeStock is required"),
+                openOrder = p.openOrder?.get() ?: throw IllegalArgumentException("openOrder is required"),
+                orderTerm = p.orderTerm?.get() ?: throw IllegalArgumentException("orderTerm is required"),
+                orderMeanDeliveryTime = p.orderMeanDeliveryTime?.get() ?: throw IllegalArgumentException("orderMeanDeliveryTime is required"),
+                nextOrder = p.nextOrder?.get(),
+                openOrderExpectedDelivery = p.openOrderExpectedDelivery?.get(),
+                openOrderRealDelivery = p.openOrderRealDelivery?.get(),
             )
         }
         supplierStoresRepository.saveAll(newSupplierStores)

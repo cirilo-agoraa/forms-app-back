@@ -31,4 +31,5 @@ data class SupplierStoresCreateSchema(
     val orderDay: OrderDaysEnum? = null,
     val nextOrder: LocalDateTime? = null,
     val openOrderExpectedDelivery: LocalDateTime? = null,
+    val openOrderRealDelivery: LocalDateTime? = null,
 )

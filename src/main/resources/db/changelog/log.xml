@@ -951,5 +951,11 @@
         <modifyDataType tableName="supplier_stores" columnName="open_order_expected_delivery" newDataType="DATETIME"/>
     </changeSet>
 
+    <changeSet id="38" author="PedroCostaa">
+        <addColumn tableName="supplier_stores">
+            <column name="open_order_real_delivery" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>
