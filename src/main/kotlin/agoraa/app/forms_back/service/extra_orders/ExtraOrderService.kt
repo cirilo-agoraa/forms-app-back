@@ -157,15 +157,16 @@ class ExtraOrderService(
             }
 
             else -> {
-                val extraorders = extraOrderRepository.findAll(spec, sortBy)
+                val extraOrders = extraOrderRepository.findAll(spec, sortBy)
 
-                extraorders.map { createDto(it, full) }
+                extraOrders.map { createDto(it, full) }
             }
         }
     }
 
     fun getAllByCurrentUser(
         customUserDetails: CustomUserDetails,
+        full: Boolean,
         pagination: Boolean,
         page: Int,
         size: Int,
@@ -200,7 +201,7 @@ class ExtraOrderService(
             else -> {
                 val extraOrders = extraOrderRepository.findAll(spec, sortBy)
 
-                extraOrders.map { createDto(it) }
+                extraOrders.map { createDto(it, full) }
             }
         }
     }

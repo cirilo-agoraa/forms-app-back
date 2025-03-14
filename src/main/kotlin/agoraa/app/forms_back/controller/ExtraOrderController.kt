@@ -52,6 +52,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
     @GetMapping("/current-user")
     fun getCurrentUserExtraOrders(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
+        @RequestParam(required = false, defaultValue = "false") full: Boolean,
         @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
@@ -65,6 +66,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
         return ResponseEntity.status(HttpStatus.OK).body(
             extraOrderService.getAllByCurrentUser(
                 customUserDetails,
+                full,
                 pagination,
                 page,
                 size,
