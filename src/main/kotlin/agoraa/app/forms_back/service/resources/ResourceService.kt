@@ -92,15 +92,12 @@ class ResourceService(
             orderNumber = resource.orderNumber
         )
 
-        return when {
-            full -> {
-                val resourceProducts = resourceProductService.findByParentId(resource.id)
-                resourceDto.products = resourceProducts
-                resourceDto
-            }
-
-            else -> resourceDto
+        if (full) {
+            val resourceProducts = resourceProductService.findByParentId(resource.id)
+            resourceDto.products = resourceProducts
         }
+
+        return resourceDto
     }
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): ResourceModel {

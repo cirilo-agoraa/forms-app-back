@@ -137,45 +137,41 @@ class SupplierRegistrationService(
             companyName = supplierRegistration.companyName
         )
 
-        return when {
-            full -> {
-                val supplierRegistrationStores = supplierRegistrationService.findByParentId(supplierRegistration.id)
-                val supplierRegistrationWeeklyQuotations =
-                    supplierRegistrationWeeklyQuotationService.findByParentId(supplierRegistration.id)
+        if (full) {
+            val supplierRegistrationStores = supplierRegistrationService.findByParentId(supplierRegistration.id)
+            val supplierRegistrationWeeklyQuotations =
+                supplierRegistrationWeeklyQuotationService.findByParentId(supplierRegistration.id)
 
-                supplierRegistrationDto.apply {
-                    cnpj = supplierRegistration.cnpj
-                    paymentTerm = supplierRegistration.paymentTerm
-                    sellerPhone = supplierRegistration.sellerPhone
-                    sellerEmail = supplierRegistration.sellerEmail
-                    sellerName = supplierRegistration.sellerName
-                    factoryWebsite = supplierRegistration.factoryWebsite
-                    exchange = supplierRegistration.exchange
-                    exchangePhysical = supplierRegistration.exchangePhysical
-                    priceTableFilePath = supplierRegistration.priceTableFilePath
-                    catalogFilePath = supplierRegistration.catalogFilePath
-                    sample = supplierRegistration.sample
-                    sampleDate = supplierRegistration.sampleDate
-                    sampleArrivedInVix = supplierRegistration.sampleArrivedInVix
-                    negotiateBonusOnFirstPurchase = supplierRegistration.negotiateBonusOnFirstPurchase
-                    birthdayParty = supplierRegistration.birthdayParty
-                    investmentsOnStore = supplierRegistration.investmentsOnStore
-                    otherParticipation = supplierRegistration.otherParticipation
-                    participateInInsert = supplierRegistration.participateInInsert
-                    purchaseGondola = supplierRegistration.purchaseGondola
-                    sellerName = supplierRegistration.sellerName
-                    supplierWebsite = supplierRegistration.supplierWebsite
-                    minimumOrderValue = supplierRegistration.minimumOrderValue
-                    obs = supplierRegistration.obs
-                    weeklyQuotations = supplierRegistrationWeeklyQuotations
-                    stores = supplierRegistrationStores
-                }
-
-                supplierRegistrationDto
+            supplierRegistrationDto.apply {
+                cnpj = supplierRegistration.cnpj
+                paymentTerm = supplierRegistration.paymentTerm
+                sellerPhone = supplierRegistration.sellerPhone
+                sellerEmail = supplierRegistration.sellerEmail
+                sellerName = supplierRegistration.sellerName
+                factoryWebsite = supplierRegistration.factoryWebsite
+                exchange = supplierRegistration.exchange
+                exchangePhysical = supplierRegistration.exchangePhysical
+                priceTableFilePath = supplierRegistration.priceTableFilePath
+                catalogFilePath = supplierRegistration.catalogFilePath
+                sample = supplierRegistration.sample
+                sampleDate = supplierRegistration.sampleDate
+                sampleArrivedInVix = supplierRegistration.sampleArrivedInVix
+                negotiateBonusOnFirstPurchase = supplierRegistration.negotiateBonusOnFirstPurchase
+                birthdayParty = supplierRegistration.birthdayParty
+                investmentsOnStore = supplierRegistration.investmentsOnStore
+                otherParticipation = supplierRegistration.otherParticipation
+                participateInInsert = supplierRegistration.participateInInsert
+                purchaseGondola = supplierRegistration.purchaseGondola
+                sellerName = supplierRegistration.sellerName
+                supplierWebsite = supplierRegistration.supplierWebsite
+                minimumOrderValue = supplierRegistration.minimumOrderValue
+                obs = supplierRegistration.obs
+                weeklyQuotations = supplierRegistrationWeeklyQuotations
+                stores = supplierRegistrationStores
             }
-
-            else -> supplierRegistrationDto
         }
+
+        return supplierRegistrationDto
     }
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): SupplierRegistrationModel {

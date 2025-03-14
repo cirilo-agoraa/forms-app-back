@@ -19,6 +19,7 @@ class ProductController(private val productService: ProductService) {
 
     @GetMapping
     fun getAllProducts(
+        @RequestParam(defaultValue = "false") full: Boolean,
         @RequestParam(defaultValue = "true") pagination: Boolean,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
@@ -38,6 +39,7 @@ class ProductController(private val productService: ProductService) {
         ResponseEntity.status(HttpStatus.OK)
             .body(
                 productService.getAll(
+                    full,
                     pagination,
                     page,
                     size,

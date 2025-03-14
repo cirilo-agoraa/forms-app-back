@@ -99,20 +99,15 @@ class ExtraOrderService(
             origin = extraOrder.origin,
         )
 
-        return when {
-            full -> {
-                val extraOrderStores = extraOrderStoresService.findByParentId(extraOrder.id)
-                val extraOrderProducts =
-                    extraOrderStoresProductsService.findByParentId(extraOrder.id)
+        if (full) {
+            val extraOrderStores = extraOrderStoresService.findByParentId(extraOrder.id)
+            val extraOrderProducts = extraOrderStoresProductsService.findByParentId(extraOrder.id)
 
-                extraOrderDto.products = extraOrderProducts
-                extraOrderDto.stores = extraOrderStores
-
-                extraOrderDto
-            }
-
-            else -> extraOrderDto
+            extraOrderDto.products = extraOrderProducts
+            extraOrderDto.stores = extraOrderStores
         }
+
+        return extraOrderDto
     }
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): ExtraOrderModel {

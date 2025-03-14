@@ -194,8 +194,7 @@ class SupplierService(
                     )
                 )
                 supp.stores?.let { supplierStoresService.editOrCreateMultiple(editedSupplier, it) }
-            }
-            else {
+            } else {
                 val newSupplier = supplierRepository.saveAndFlush(
                     SupplierModel(
                         name = supp.name,

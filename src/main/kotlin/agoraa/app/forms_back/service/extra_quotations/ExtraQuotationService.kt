@@ -78,16 +78,13 @@ class ExtraQuotationService(
             processed = extraQuotation.processed,
         )
 
-        return when {
-            full -> {
-                val extraQuotationProducts = extraQuotationProductsService.findByParentId(extraQuotation.id)
+        if (full) {
+            val extraQuotationProducts = extraQuotationProductsService.findByParentId(extraQuotation.id)
 
-                extraQuotationDto.products = extraQuotationProducts
-                extraQuotationDto
-            }
-
-            else -> extraQuotationDto
+            extraQuotationDto.products = extraQuotationProducts
         }
+
+        return extraQuotationDto
     }
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): ExtraQuotationModel {

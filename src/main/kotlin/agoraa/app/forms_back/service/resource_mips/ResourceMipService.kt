@@ -84,16 +84,13 @@ class ResourceMipService(
             processed = resourceMip.processed,
         )
 
-        return when {
-            full -> {
-                val resourceMipItems = resourceMipProductsService.findByParentId(resourceMip.id)
+        if (full) {
+            val resourceMipItems = resourceMipProductsService.findByParentId(resourceMip.id)
 
-                resourceMipDto.products = resourceMipItems
-                resourceMipDto
-            }
-
-            else -> resourceMipDto
+            resourceMipDto.products = resourceMipItems
         }
+
+        return resourceMipDto
     }
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): ResourceMipModel {

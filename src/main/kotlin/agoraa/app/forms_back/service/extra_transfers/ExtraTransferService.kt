@@ -91,16 +91,13 @@ class ExtraTransferService(
             destinyStore = extraTransfer.destinyStore,
         )
 
-        return when {
-            full -> {
-                val extraTransferProducts = extraTransferProductsService.findByParentId(extraTransfer.id)
+        if (full) {
+            val extraTransferProducts = extraTransferProductsService.findByParentId(extraTransfer.id)
 
-                extraTransferDto.products = extraTransferProducts
-                extraTransferDto
-            }
-
-            else -> extraTransferDto
+            extraTransferDto.products = extraTransferProducts
         }
+
+        return extraTransferDto
     }
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): ExtraTransferModel {

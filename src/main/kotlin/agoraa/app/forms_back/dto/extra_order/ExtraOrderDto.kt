@@ -7,7 +7,7 @@ import agoraa.app.forms_back.model.suppliers.SupplierModel
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 data class ExtraOrderDto(
     val id: Long,
     val user: UserDto,
@@ -17,5 +17,5 @@ data class ExtraOrderDto(
     val partialComplete: PartialCompleteEnum,
     val origin: OriginEnum? = null,
     var stores: List<ExtraOrderStoresDto>? = null,
-    var products: List<ExtraOrderProductsDto>? = null,
+    var products: List<ExtraOrderProductsDto>? = null
 )

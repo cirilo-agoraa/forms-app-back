@@ -7,7 +7,6 @@ import agoraa.app.forms_back.model.suppliers.SupplierModel
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDate
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class ProductDto(
     val id: Long,
     val code: String,

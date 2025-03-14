@@ -31,7 +31,7 @@ class ProductService(
 ) {
 
     fun createDto(productModel: ProductModel, full: Boolean = false): ProductDto {
-        return ProductDto(
+        val productDto =  ProductDto(
             id = productModel.id,
             code = productModel.code,
             name = productModel.name,
@@ -89,9 +89,11 @@ class ProductService(
             salesPrice2 = productModel.salesPrice2,
             promotionPrice = productModel.promotionPrice,
             exchangeQuantity = productModel.exchangeQuantity,
-            supplier = productModel.supplier,
             mipCategory = productModel.mipCategory,
+            supplier = productModel.supplier
         )
+
+        return productDto
     }
 
     private fun createCriteria(
@@ -154,6 +156,7 @@ class ProductService(
     }
 
     fun getAll(
+        full: Boolean,
         pagination: Boolean,
         page: Int,
         size: Int,
