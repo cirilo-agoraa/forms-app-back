@@ -22,10 +22,10 @@ spring:
     password: ${MY_PASSWORD}
 
   jpa:
+    show-sql: true
     open-in-view: false
     hibernate:
-      ddl-auto: none
-    database-platform: org.hibernate.dialect.MariaDBDialect
+      format_sql: true
 
   liquibase:
     enabled: true
@@ -34,7 +34,8 @@ spring:
 logging:
   level:
     org.springframework.web: DEBUG
-    org.hibernate: ERROR
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 jwt:
   key: ${JWT_KEY}
