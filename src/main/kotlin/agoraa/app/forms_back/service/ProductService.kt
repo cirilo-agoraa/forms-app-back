@@ -216,8 +216,9 @@ class ProductService(
             .orElseThrow { ResourceNotFoundException("Product not found") }
     }
 
-    fun findByCodeAndStore(code: String, store: StoresEnum): Optional<ProductModel> {
+    fun findByCodeAndStore(code: String, store: StoresEnum): ProductModel {
         return productRepository.findByCodeAndStore(code, store)
+            .orElseThrow { ResourceNotFoundException("Product not found") }
     }
 
     fun returnById(id: Long): ProductDto {
@@ -366,70 +367,72 @@ class ProductService(
     @Transactional
     fun editOrCreateMultiple(request: List<ProductEditOrCreateSchema>) {
         val products = request.map { p ->
-            val product = findByCodeAndStore(p.code, p.store).orElse(null)
             val supplier = p.supplier?.let { supplier ->
                 supplierService.findByName(supplier)
                     .orElseThrow { ResourceNotFoundException("Supplier not found") }
             }
 
-            product?.copy(
-                name = p.name ?: product.name,
-                supplier = supplier ?: product.supplier,
-                barcode = p.barcode ?: product.barcode,
-                outOfMix = p.outOfMix ?: product.outOfMix,
-                weight = p.weight ?: product.weight,
-                sector = p.sector ?: product.sector,
-                groupName = p.groupName ?: product.groupName,
-                subgroup = p.subgroup ?: product.subgroup,
-                packageQuantity = p.packageQuantity ?: product.packageQuantity,
-                minimumStock = p.minimumStock ?: product.minimumStock,
-                salesLast30Days = p.salesLast30Days ?: product.salesLast30Days,
-                salesLast12Months = p.salesLast12Months ?: product.salesLast12Months,
-                salesLast7Days = p.salesLast7Days ?: product.salesLast7Days,
-                dailySales = p.dailySales ?: product.dailySales,
-                lastCost = p.lastCost ?: product.lastCost,
-                averageSalesLast30Days = p.averageSalesLast30Days ?: product.averageSalesLast30Days,
-                currentStock = p.currentStock ?: product.currentStock,
-                openOrder = p.openOrder ?: product.openOrder,
-                expirationDate = p.expirationDate ?: product.expirationDate,
-                lossQuantity = p.lossQuantity ?: product.lossQuantity,
-                promotionType = p.promotionType ?: product.promotionType,
-                brand = p.brand ?: product.brand,
-                exchangeQuantity = p.exchangeQuantity ?: product.exchangeQuantity,
-                flag1 = p.flag1 ?: product.flag1,
-                flag2 = p.flag2 ?: product.flag2,
-                flag3 = p.flag3 ?: product.flag3,
-                flag4 = p.flag4 ?: product.flag4,
-                flag5 = p.flag5 ?: product.flag5,
-                averageExpiration = p.averageExpiration ?: product.averageExpiration,
-                networkStock = p.networkStock ?: product.networkStock,
-                transferPackage = p.transferPackage ?: product.transferPackage,
-                promotionQuantity = p.promotionQuantity ?: product.promotionQuantity,
-                category = p.category ?: product.category,
-                noDeliveryQuantity = p.noDeliveryQuantity ?: product.noDeliveryQuantity,
-                averageSales30d12m = p.averageSales30d12m ?: product.averageSales30d12m,
-                highestSales = p.highestSales ?: product.highestSales,
-                dailySalesAmount = p.dailySalesAmount ?: product.dailySalesAmount,
-                daysToExpire = p.daysToExpire ?: product.daysToExpire,
-                salesProjection = p.salesProjection ?: product.salesProjection,
-                inProjection = p.inProjection ?: product.inProjection,
-                excessStock = p.excessStock ?: product.excessStock,
-                totalCost = p.totalCost ?: product.totalCost,
-                totalSales = p.totalSales ?: product.totalSales,
-                term = p.term ?: product.term,
-                currentStockPerPackage = p.currentStockPerPackage ?: product.currentStockPerPackage,
-                averageSales = p.averageSales ?: product.averageSales,
-                costP = p.costP ?: product.costP,
-                salesP = p.salesP ?: product.salesP,
-                availableStock = p.availableStock ?: product.availableStock,
-                stockTurnover = p.stockTurnover ?: product.stockTurnover,
-                netCost = p.netCost ?: product.netCost,
-                salesPrice = p.salesPrice ?: product.salesPrice,
-                salesPrice2 = p.salesPrice2 ?: product.salesPrice2,
-                promotionPrice = p.promotionPrice ?: product.promotionPrice,
-                mipCategory = p.mipCategory ?: product.mipCategory
-            )
-                ?: ProductModel(
+            try {
+                val product = findByCodeAndStore(p.code, p.store)
+                product.copy(
+                    name = p.name ?: product.name,
+                    supplier = supplier ?: product.supplier,
+                    barcode = p.barcode ?: product.barcode,
+                    outOfMix = p.outOfMix ?: product.outOfMix,
+                    weight = p.weight ?: product.weight,
+                    sector = p.sector ?: product.sector,
+                    groupName = p.groupName ?: product.groupName,
+                    subgroup = p.subgroup ?: product.subgroup,
+                    packageQuantity = p.packageQuantity ?: product.packageQuantity,
+                    minimumStock = p.minimumStock ?: product.minimumStock,
+                    salesLast30Days = p.salesLast30Days ?: product.salesLast30Days,
+                    salesLast12Months = p.salesLast12Months ?: product.salesLast12Months,
+                    salesLast7Days = p.salesLast7Days ?: product.salesLast7Days,
+                    dailySales = p.dailySales ?: product.dailySales,
+                    lastCost = p.lastCost ?: product.lastCost,
+                    averageSalesLast30Days = p.averageSalesLast30Days ?: product.averageSalesLast30Days,
+                    currentStock = p.currentStock ?: product.currentStock,
+                    openOrder = p.openOrder ?: product.openOrder,
+                    expirationDate = p.expirationDate ?: product.expirationDate,
+                    lossQuantity = p.lossQuantity ?: product.lossQuantity,
+                    promotionType = p.promotionType ?: product.promotionType,
+                    brand = p.brand ?: product.brand,
+                    exchangeQuantity = p.exchangeQuantity ?: product.exchangeQuantity,
+                    flag1 = p.flag1 ?: product.flag1,
+                    flag2 = p.flag2 ?: product.flag2,
+                    flag3 = p.flag3 ?: product.flag3,
+                    flag4 = p.flag4 ?: product.flag4,
+                    flag5 = p.flag5 ?: product.flag5,
+                    averageExpiration = p.averageExpiration ?: product.averageExpiration,
+                    networkStock = p.networkStock ?: product.networkStock,
+                    transferPackage = p.transferPackage ?: product.transferPackage,
+                    promotionQuantity = p.promotionQuantity ?: product.promotionQuantity,
+                    category = p.category ?: product.category,
+                    noDeliveryQuantity = p.noDeliveryQuantity ?: product.noDeliveryQuantity,
+                    averageSales30d12m = p.averageSales30d12m ?: product.averageSales30d12m,
+                    highestSales = p.highestSales ?: product.highestSales,
+                    dailySalesAmount = p.dailySalesAmount ?: product.dailySalesAmount,
+                    daysToExpire = p.daysToExpire ?: product.daysToExpire,
+                    salesProjection = p.salesProjection ?: product.salesProjection,
+                    inProjection = p.inProjection ?: product.inProjection,
+                    excessStock = p.excessStock ?: product.excessStock,
+                    totalCost = p.totalCost ?: product.totalCost,
+                    totalSales = p.totalSales ?: product.totalSales,
+                    term = p.term ?: product.term,
+                    currentStockPerPackage = p.currentStockPerPackage ?: product.currentStockPerPackage,
+                    averageSales = p.averageSales ?: product.averageSales,
+                    costP = p.costP ?: product.costP,
+                    salesP = p.salesP ?: product.salesP,
+                    availableStock = p.availableStock ?: product.availableStock,
+                    stockTurnover = p.stockTurnover ?: product.stockTurnover,
+                    netCost = p.netCost ?: product.netCost,
+                    salesPrice = p.salesPrice ?: product.salesPrice,
+                    salesPrice2 = p.salesPrice2 ?: product.salesPrice2,
+                    promotionPrice = p.promotionPrice ?: product.promotionPrice,
+                    mipCategory = p.mipCategory ?: product.mipCategory
+                )
+            } catch (e: ResourceNotFoundException) {
+                ProductModel(
                     code = p.code,
                     store = p.store,
                     name = p.name ?: throw IllegalArgumentException("name is required"),
@@ -502,6 +505,7 @@ class ProductService(
                     promotionPrice = p.promotionPrice,
                     mipCategory = p.mipCategory
                 )
+            }
         }
         productRepository.saveAll(products)
     }
