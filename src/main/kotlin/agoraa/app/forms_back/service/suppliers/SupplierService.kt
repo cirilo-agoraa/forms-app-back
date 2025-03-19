@@ -5,9 +5,7 @@ import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.suppliers.SupplierModel
 import agoraa.app.forms_back.repository.suppliers.SupplierRepository
-import agoraa.app.forms_back.schema.supplier.SupplierCreateSchema
-import agoraa.app.forms_back.schema.supplier.SupplierEditOrCreateSchema
-import agoraa.app.forms_back.schema.supplier.SupplierEditSchema
+import agoraa.app.forms_back.schema.supplier.SupplierSchema
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
@@ -27,9 +25,10 @@ class SupplierService(
 ) {
 
     private fun createCriteria(
-        name: String?,
-        exchange: Boolean?,
-        status: List<SupplierStatusEnum>?
+        name: String? = null,
+        exchange: Boolean? = null,
+        status: List<SupplierStatusEnum>? = null,
+        names: List<String>? = null
     ): Specification<SupplierModel> {
         return Specification { root: Root<SupplierModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -44,6 +43,10 @@ class SupplierService(
 
             status?.let {
                 predicates.add(root.get<SupplierStatusEnum>("status").`in`(it))
+            }
+
+            names?.let {
+                predicates.add(root.get<String>("name").`in`(it))
             }
 
             criteriaBuilder.and(*predicates.toTypedArray())
@@ -81,6 +84,11 @@ class SupplierService(
             .orElseThrow { throw ResourceNotFoundException("Supplier not Found") }
     }
 
+    fun getAll(names: List<String>?): List<SupplierModel> {
+        val spec = createCriteria(names = names)
+        return supplierRepository.findAll(spec)
+    }
+
     fun getAll(
         full: Boolean,
         pagination: Boolean,
@@ -90,9 +98,10 @@ class SupplierService(
         direction: String,
         name: String?,
         exchange: Boolean?,
-        status: List<SupplierStatusEnum>?
+        status: List<SupplierStatusEnum>?,
+        names: List<String>?
     ): Any {
-        val spec = createCriteria(name, exchange, status)
+        val spec = createCriteria(name, exchange, status, names)
         val sortDirection = if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
 
@@ -122,98 +131,94 @@ class SupplierService(
     }
 
     @Transactional
-    fun create(request: SupplierCreateSchema) {
-        val supplier = SupplierModel(
-            name = request.name,
-            status = request.status,
-            exchange = request.exchange,
-            score = request.score,
-            orderMinValue = request.orderMinValue,
-            orders = request.orders,
-            ordersNotDelivered = request.ordersNotDelivered,
-            ordersNotDeliveredPercentage = request.ordersNotDeliveredPercentage,
-            totalValue = request.totalValue,
-            valueReceived = request.valueReceived,
-            valueReceivedPercentage = request.valueReceivedPercentage,
-            averageValueReceived = request.averageValueReceived,
-            minValueReceived = request.minValueReceived
+    fun create(request: SupplierSchema) {
+        val supplier = supplierRepository.saveAndFlush(
+            SupplierModel(
+                name = request.name,
+                status = request.status,
+                exchange = request.exchange,
+                score = request.score,
+                orderMinValue = request.orderMinValue,
+                orders = request.orders,
+                ordersNotDelivered = request.ordersNotDelivered,
+                ordersNotDeliveredPercentage = request.ordersNotDeliveredPercentage,
+                totalValue = request.totalValue,
+                valueReceived = request.valueReceived,
+                valueReceivedPercentage = request.valueReceivedPercentage,
+                averageValueReceived = request.averageValueReceived,
+                minValueReceived = request.minValueReceived
+            )
         )
-
-        val createdSupplier = supplierRepository.saveAndFlush(supplier)
-
-        supplierStoresService.createMultiple(createdSupplier, request.stores)
+        supplierStoresService.createMultiple(supplier, request.stores)
     }
 
     @Transactional
-    fun edit(id: Long, request: SupplierEditSchema) {
+    fun edit(id: Long, request: SupplierSchema) {
         val supplier = findById(id)
 
         val editedSupplier = supplierRepository.saveAndFlush(
             supplier.copy(
-                name = request.name ?: supplier.name,
-                status = request.status ?: supplier.status,
-                exchange = request.exchange ?: supplier.exchange,
-                score = request.score ?: supplier.score,
-                orderMinValue = request.orderMinValue ?: supplier.orderMinValue,
-                orders = request.orders ?: supplier.orders,
-                ordersNotDelivered = request.ordersNotDelivered ?: supplier.ordersNotDelivered,
-                ordersNotDeliveredPercentage = request.ordersNotDeliveredPercentage
-                    ?: supplier.ordersNotDeliveredPercentage,
-                totalValue = request.totalValue ?: supplier.totalValue,
-                valueReceived = request.valueReceived ?: supplier.valueReceived,
-                valueReceivedPercentage = request.valueReceivedPercentage ?: supplier.valueReceivedPercentage,
-                averageValueReceived = request.averageValueReceived ?: supplier.averageValueReceived,
-                minValueReceived = request.minValueReceived ?: supplier.minValueReceived
+                name = request.name,
+                status = request.status,
+                exchange = request.exchange,
+                score = request.score,
+                orderMinValue = request.orderMinValue,
+                orders = request.orders,
+                ordersNotDelivered = request.ordersNotDelivered,
+                ordersNotDeliveredPercentage = request.ordersNotDeliveredPercentage,
+                totalValue = request.totalValue,
+                valueReceived = request.valueReceived,
+                valueReceivedPercentage = request.valueReceivedPercentage,
+                averageValueReceived = request.averageValueReceived,
+                minValueReceived = request.minValueReceived
             )
         )
-
-        request.stores?.let { supplierStoresService.editOrCreateMultiple(editedSupplier, it) }
+        supplierStoresService.editOrCreateMultiple(editedSupplier, request.stores)
     }
 
     @Transactional
-    fun editOrCreateMultiple(request: List<SupplierEditOrCreateSchema>) {
-        request.forEach { supp ->
-            val supplier = findByName(supp.name).orElse(null)
+    fun editOrCreateMultiple(request: List<SupplierSchema>) {
+        val suppliersNames = request.map { it.name }
+        val suppliers = getAll(suppliersNames)
 
-            if (supplier != null) {
-                val editedSupplier = supplierRepository.saveAndFlush(
-                    supplier.copy(
-                        status = supp.status ?: supplier.status,
-                        exchange = supp.exchange ?: supplier.exchange,
-                        score = supp.score ?: supplier.score,
-                        orderMinValue = supp.orderMinValue ?: supplier.orderMinValue,
-                        orders = supp.orders ?: supplier.orders,
-                        ordersNotDelivered = supp.ordersNotDelivered ?: supplier.ordersNotDelivered,
-                        ordersNotDeliveredPercentage = supp.ordersNotDeliveredPercentage
-                            ?: supplier.ordersNotDeliveredPercentage,
-                        totalValue = supp.totalValue ?: supplier.totalValue,
-                        valueReceived = supp.valueReceived ?: supplier.valueReceived,
-                        valueReceivedPercentage = supp.valueReceivedPercentage ?: supplier.valueReceivedPercentage,
-                        averageValueReceived = supp.averageValueReceived ?: supplier.averageValueReceived,
-                        minValueReceived = supp.minValueReceived ?: supplier.minValueReceived
-                    )
+        if (suppliersNames.size != suppliers.size) throw IllegalArgumentException("One or more Suppliers not found")
+
+        val suppliersMap = suppliers.associateBy { it.name }
+        request.forEach { supp ->
+            val foundSupplier = suppliersMap[supp.name]
+
+            val result = supplierRepository.save(
+                foundSupplier?.copy(
+                    name = supp.name,
+                    status = supp.status,
+                    exchange = supp.exchange,
+                    score = supp.score,
+                    orderMinValue = supp.orderMinValue,
+                    orders = supp.orders,
+                    ordersNotDelivered = supp.ordersNotDelivered,
+                    ordersNotDeliveredPercentage = supp.ordersNotDeliveredPercentage,
+                    totalValue = supp.totalValue,
+                    valueReceived = supp.valueReceived,
+                    valueReceivedPercentage = supp.valueReceivedPercentage,
+                    averageValueReceived = supp.averageValueReceived,
+                    minValueReceived = supp.minValueReceived
+                ) ?: SupplierModel(
+                    name = supp.name,
+                    status = supp.status,
+                    exchange = supp.exchange,
+                    score = supp.score,
+                    orderMinValue = supp.orderMinValue,
+                    orders = supp.orders,
+                    ordersNotDelivered = supp.ordersNotDelivered,
+                    ordersNotDeliveredPercentage = supp.ordersNotDeliveredPercentage,
+                    totalValue = supp.totalValue,
+                    valueReceived = supp.valueReceived,
+                    valueReceivedPercentage = supp.valueReceivedPercentage,
+                    averageValueReceived = supp.averageValueReceived,
+                    minValueReceived = supp.minValueReceived
                 )
-                supp.stores?.let { supplierStoresService.editOrCreateMultiple(editedSupplier, it) }
-            } else {
-                val newSupplier = supplierRepository.saveAndFlush(
-                    SupplierModel(
-                        name = supp.name,
-                        status = supp.status ?: throw IllegalArgumentException("status is required"),
-                        exchange = supp.exchange ?: false,
-                        score = supp.score ?: 0,
-                        orderMinValue = supp.orderMinValue,
-                        orders = supp.orders,
-                        ordersNotDelivered = supp.ordersNotDelivered,
-                        ordersNotDeliveredPercentage = supp.ordersNotDeliveredPercentage,
-                        totalValue = supp.totalValue,
-                        valueReceived = supp.valueReceived,
-                        valueReceivedPercentage = supp.valueReceivedPercentage,
-                        averageValueReceived = supp.averageValueReceived,
-                        minValueReceived = supp.minValueReceived
-                    )
-                )
-                supp.stores?.let { supplierStoresService.editOrCreateMultiple(newSupplier, it) }
-            }
+            )
+            supplierStoresService.editOrCreateMultiple(result, supp.stores)
         }
     }
 }

@@ -1,9 +1,7 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
-import agoraa.app.forms_back.schema.supplier.SupplierCreateSchema
-import agoraa.app.forms_back.schema.supplier.SupplierEditOrCreateSchema
-import agoraa.app.forms_back.schema.supplier.SupplierEditSchema
+import agoraa.app.forms_back.schema.supplier.SupplierSchema
 import agoraa.app.forms_back.service.suppliers.SupplierService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -26,9 +24,10 @@ class SupplierController(private val supplierService: SupplierService) {
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false) exchange: Boolean?,
         @RequestParam(required = false) status: List<SupplierStatusEnum>?,
+        @RequestParam(required = false) names: List<String>?,
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
-            .body(supplierService.getAll(full, pagination, page, size, sort, direction, name, exchange, status))
+            .body(supplierService.getAll(full, pagination, page, size, sort, direction, name, exchange, status, names))
 
     @GetMapping("/{id}")
     fun getSupplierById(
@@ -39,7 +38,7 @@ class SupplierController(private val supplierService: SupplierService) {
 
     @PostMapping
     fun createSupplier(
-        @Valid @RequestBody request: SupplierCreateSchema,
+        @Valid @RequestBody request: SupplierSchema,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {
@@ -57,7 +56,7 @@ class SupplierController(private val supplierService: SupplierService) {
     @PutMapping("/{id}/edit")
     fun editSupplier(
         @PathVariable id: Long,
-        @RequestBody request: SupplierEditSchema
+        @RequestBody request: SupplierSchema
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             supplierService.edit(id, request)
@@ -66,7 +65,7 @@ class SupplierController(private val supplierService: SupplierService) {
 
     @PutMapping("/edit-or-create-multiple")
     fun editOrCreateMultipleSuppliers(
-        @Valid @RequestBody request: List<SupplierEditOrCreateSchema>,
+        @Valid @RequestBody request: List<SupplierSchema>,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {

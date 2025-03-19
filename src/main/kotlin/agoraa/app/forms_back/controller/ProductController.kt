@@ -3,9 +3,7 @@ package agoraa.app.forms_back.controller
 import agoraa.app.forms_back.enum.MipsCategoriesEnum
 import agoraa.app.forms_back.enum.SectorsEnum
 import agoraa.app.forms_back.enum.StoresEnum
-import agoraa.app.forms_back.schema.product.ProductCreateSchema
-import agoraa.app.forms_back.schema.product.ProductEditOrCreateSchema
-import agoraa.app.forms_back.schema.product.ProductEditSchema
+import agoraa.app.forms_back.schema.product.ProductSchema
 import agoraa.app.forms_back.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -66,7 +64,7 @@ class ProductController(private val productService: ProductService) {
 
     @PostMapping
     fun createProduct(
-        @Valid @RequestBody request: ProductCreateSchema,
+        @Valid @RequestBody request: ProductSchema,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {
@@ -84,7 +82,7 @@ class ProductController(private val productService: ProductService) {
     @PutMapping("/{id}/edit")
     fun editProduct(
         @PathVariable id: Long,
-        @RequestBody request: ProductEditSchema
+        @RequestBody request: ProductSchema
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             productService.edit(id, request)
@@ -93,7 +91,7 @@ class ProductController(private val productService: ProductService) {
 
     @PutMapping("/edit-or-create-multiple")
     fun editOrCreateMultipleProducts(
-        @Valid @RequestBody request: List<ProductEditOrCreateSchema>,
+        @Valid @RequestBody request: List<ProductSchema>,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {

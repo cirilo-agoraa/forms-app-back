@@ -957,5 +957,25 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="39" author="PedroCostaa">
+        <createIndex indexName="idx_products_code" tableName="products">
+            <column name="code"/>
+        </createIndex>
+        <createIndex indexName="idx_products_store" tableName="products">
+            <column name="store"/>
+        </createIndex>
+        <createIndex indexName="idx_suppliers_name" tableName="suppliers">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="40" author="PedroCostaa">
+        <createIndex indexName="idx_products_sector" tableName="products">
+            <column name="sector"/>
+        </createIndex>
+        <createIndex indexName="idx_suppliers_status" tableName="suppliers">
+            <column name="status"/>
+        </createIndex>
+    </changeSet>
 
 </databaseChangeLog>
