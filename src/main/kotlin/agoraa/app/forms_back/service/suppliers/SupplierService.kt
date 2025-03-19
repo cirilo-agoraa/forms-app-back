@@ -178,14 +178,10 @@ class SupplierService(
 
     @Transactional
     fun editOrCreateMultiple(request: List<SupplierSchema>) {
-        val suppliersNames = request.map { it.name }
-        val suppliers = getAll(suppliersNames)
+        val suppliers = getAll(request.map { it.name }).associateBy { it.name }
 
-        if (suppliersNames.size != suppliers.size) throw IllegalArgumentException("One or more Suppliers not found")
-
-        val suppliersMap = suppliers.associateBy { it.name }
         request.forEach { supp ->
-            val foundSupplier = suppliersMap[supp.name]
+            val foundSupplier = suppliers[supp.name]
 
             val result = supplierRepository.save(
                 foundSupplier?.copy(
