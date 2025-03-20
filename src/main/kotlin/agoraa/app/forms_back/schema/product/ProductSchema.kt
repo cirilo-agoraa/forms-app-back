@@ -62,5 +62,6 @@ data class ProductSchema(
     val salesPrice: Float?,
     val salesPrice2: Float?,
     val promotionPrice: Float?,
-    val mipCategory: MipsCategoriesEnum?
+    val mipCategory: MipsCategoriesEnum?,
+    val stockPlusOpenOrder: Float
 )
