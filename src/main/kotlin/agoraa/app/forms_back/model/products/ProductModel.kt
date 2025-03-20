@@ -191,7 +191,4 @@ data class ProductModel(
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     val mipCategory: MipsCategoriesEnum? = null,
-
-    @Column(nullable = false)
-    val stockPlusOpenOrder: Float,
 )

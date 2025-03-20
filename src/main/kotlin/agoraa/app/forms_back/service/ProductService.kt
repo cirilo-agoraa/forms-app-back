@@ -88,7 +88,6 @@ class ProductService(
             exchangeQuantity = productModel.exchangeQuantity,
             mipCategory = productModel.mipCategory,
             supplier = productModel.supplier,
-            stockPlusOpenOrder = productModel.stockPlusOpenOrder
         )
 
         return productDto
@@ -282,7 +281,6 @@ class ProductService(
                 salesPrice2 = request.salesPrice2,
                 promotionPrice = request.promotionPrice,
                 mipCategory = request.mipCategory,
-                stockPlusOpenOrder = request.stockPlusOpenOrder
             )
         )
     }
@@ -353,7 +351,6 @@ class ProductService(
                 salesPrice2 = request.salesPrice2,
                 promotionPrice = request.promotionPrice,
                 mipCategory = request.mipCategory,
-                stockPlusOpenOrder = request.stockPlusOpenOrder
             )
         )
     }
@@ -431,7 +428,6 @@ class ProductService(
                 salesPrice = p.salesPrice,
                 salesPrice2 = p.salesPrice2,
                 promotionPrice = p.promotionPrice,
-                stockPlusOpenOrder = p.stockPlusOpenOrder
             )
                 ?: ProductModel(
                     code = p.code,
@@ -490,7 +486,6 @@ class ProductService(
                     salesPrice = p.salesPrice,
                     salesPrice2 = p.salesPrice2,
                     promotionPrice = p.promotionPrice,
-                    stockPlusOpenOrder = p.stockPlusOpenOrder
                 )
         }
         productRepository.saveAll(resultProducts)

@@ -67,5 +67,4 @@ data class ProductDto(
     val salesPrice2: Float? = null,
     val promotionPrice: Float? = null,
     val mipCategory: MipsCategoriesEnum? = null,
-    val stockPlusOpenOrder: Float,
 )
