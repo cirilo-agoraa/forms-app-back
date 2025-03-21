@@ -48,13 +48,16 @@ data class ProductModel(
     val minimumStock: Int,
 
     @Column(nullable = false)
-    val salesLast30Days: Float,
+    val salesLastThirtyDays: Double,
 
     @Column(nullable = false)
-    val salesLast12Months: Float,
+    val salesLastTwelveMonths: Double,
 
     @Column(nullable = false)
-    val salesLast7Days: Float,
+    val salesLastSevenDays: Double,
+
+    @Column(nullable = false)
+    val averageSalesLastThirtyDays: Double,
 
     @Column(nullable = false)
     val dailySales: Float,
@@ -63,10 +66,7 @@ data class ProductModel(
     val lastCost: Float,
 
     @Column(nullable = false)
-    val averageSalesLast30Days: Float,
-
-    @Column(nullable = false)
-    val openOrder: Float,
+    val openOrder: Double,
 
     @Column(nullable = false)
     val exchangeQuantity: Float,
@@ -77,11 +77,11 @@ data class ProductModel(
     @Column(nullable = true)
     val subgroup: String? = null,
 
-    @Column(nullable = true)
-    val packageQuantity: Int? = null,
+    @Column(nullable = false)
+    val packageQuantity: Int,
 
     @Column(nullable = true)
-    val currentStock: Float? = null,
+    val currentStock: Double? = null,
 
     @Column(nullable = true)
     val expirationDate: LocalDate? = null,
@@ -90,7 +90,7 @@ data class ProductModel(
     val lossQuantity: Float,
 
     @Column(nullable = false)
-    val averageExpiration: Float,
+    val averageExpiration: Double,
 
     @Column(nullable = false)
     val networkStock: Float,
@@ -105,7 +105,7 @@ data class ProductModel(
     val noDeliveryQuantity: Int,
 
     @Column(nullable = false)
-    val averageSales30d12m: Float,
+    val averageSalesThirtyDaysTwelveMonths: Double,
 
     @Column(nullable = false)
     val dailySalesAmount: Float,
@@ -156,7 +156,7 @@ data class ProductModel(
     val category: String? = null,
 
     @Column(nullable = true)
-    val highestSales: Float? = null,
+    val highestSales: Double? = null,
 
     @Column(nullable = true)
     val totalCost: Float? = null,
@@ -177,7 +177,7 @@ data class ProductModel(
     val stockTurnover: Float? = null,
 
     @Column(nullable = true)
-    val netCost: Float? = null,
+    val netCost: Double? = null,
 
     @Column(nullable = true)
     val salesPrice: Float? = null,

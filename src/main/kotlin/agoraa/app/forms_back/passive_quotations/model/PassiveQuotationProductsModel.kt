@@ -1,0 +1,32 @@
+package agoraa.app.forms_back.passive_quotations.model
+
+import agoraa.app.forms_back.model.products.ProductModel
+import jakarta.persistence.*
+
+@Entity
+@Table(name = "passive_quotation_products")
+data class PassiveQuotationProductsModel(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "passive_quotation_id", nullable = false)
+    val passiveQuotation: PassiveQuotationModel,
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    val product: ProductModel,
+
+    @Column(nullable = false)
+    val quantity: Int,
+
+    @Column(nullable = false)
+    val price: Float,
+
+    @Column(nullable = false)
+    val stockPlusOpenOrder: Float,
+
+    @Column(nullable = false)
+    val total: Float
+)

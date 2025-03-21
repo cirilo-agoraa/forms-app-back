@@ -978,4 +978,140 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="41" author="PedroCostaa" runInTransaction="true">
+        <createTable tableName="passive-quotations">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="wpp_group" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_term" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="worst_term" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="best_term" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stores_quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="variation" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="param1" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="param2" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="param3" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="param4" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="param5" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="param6" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="param7" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="param8" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="passive-quotations"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_passive_quotations_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="passive-quotations"
+                                 baseColumnNames="supplier_id"
+                                 constraintName="fk_passive_quotations_supplier"
+                                 referencedTableName="suppliers"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="42" author="PedroCostaa" runInTransaction="true">
+        <createTable tableName="passive_quotation_products">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="passive_quotation_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stock_plus_open_order" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="passive_quotation_products"
+                                 baseColumnNames="passive_quotation_id"
+                                 constraintName="fk_passive_quotation_products_passive_quotation"
+                                 referencedTableName="passive-quotations"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="passive_quotation_products"
+                                 baseColumnNames="product_id"
+                                 constraintName="fk_passive_quotation_products_product"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="43" author="PedroCostaa" runInTransaction="true">
+        <renameColumn tableName="products" oldColumnName="sales_last30days" newColumnName="sales_last_thirty_days" columnDataType="FLOAT"/>
+        <renameColumn tableName="products" oldColumnName="sales_last12months" newColumnName="sales_last_twelve_months" columnDataType="FLOAT"/>
+        <renameColumn tableName="products" oldColumnName="sales_last7days" newColumnName="sales_last_seven_days" columnDataType="FLOAT"/>
+        <renameColumn tableName="products" oldColumnName="average_sales_last30days" newColumnName="average_sales_last_thirty_days" columnDataType="FLOAT"/>
+        <renameColumn tableName="products" oldColumnName="average_sales30d12m" newColumnName="average_sales_last_thirty_days_twelve_months" columnDataType="FLOAT"/>
+    </changeSet>
+
+    <changeSet id="44" author="PedroCostaa" runInTransaction="true">
+        <modifyDataType tableName="products" columnName="sales_last_thirty_days" newDataType="DOUBLE"/>
+        <modifyDataType tableName="products" columnName="sales_last_twelve_months" newDataType="DOUBLE"/>
+        <modifyDataType tableName="products" columnName="sales_last_seven_days" newDataType="DOUBLE"/>
+        <modifyDataType tableName="products" columnName="average_sales_last_thirty_days" newDataType="DOUBLE"/>
+        <modifyDataType tableName="products" columnName="average_sales_last_thirty_days_twelve_months" newDataType="DOUBLE"/>
+        <modifyDataType tableName="products" columnName="current_stock" newDataType="DOUBLE"/>
+        <modifyDataType tableName="products" columnName="open_order" newDataType="DOUBLE"/>
+        <modifyDataType tableName="products" columnName="net_cost" newDataType="DOUBLE"/>
+        <modifyDataType tableName="products" columnName="average_expiration" newDataType="DOUBLE"/>
+    </changeSet>
+
+    <changeSet id="45" author="PedroCostaa" runInTransaction="true">
+        <dropNotNullConstraint tableName="products" columnName="package_quantity" columnDataType="INT"/>
+    </changeSet>
+
 </databaseChangeLog>

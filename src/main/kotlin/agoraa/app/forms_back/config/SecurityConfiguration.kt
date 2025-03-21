@@ -81,6 +81,13 @@ class SecurityConfiguration(
                     .requestMatchers("/api/extra-quotations/{id}").hasAnyRole("ADMIN", "LOJA")
                     .requestMatchers("/api/extra-quotations/{id}/edit").hasAnyRole("ADMIN", "LOJA")
 
+                    // passive quotations endpoints
+                    .requestMatchers(HttpMethod.GET, "/api/passive-quotations").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/passive-quotations").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/passive-quotations/current-user").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/passive-quotations/{id}").hasAnyRole("ADMIN", "COMPRADOR")
+                    .requestMatchers("/api/passive-quotations/{id}/edit").hasAnyRole("ADMIN", "COMPRADOR")
+
                     .anyRequest().fullyAuthenticated()
             }
             .sessionManagement {

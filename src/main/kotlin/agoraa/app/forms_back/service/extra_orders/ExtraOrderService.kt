@@ -12,6 +12,7 @@ import agoraa.app.forms_back.repository.extra_orders.ExtraOrderRepository
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
 import agoraa.app.forms_back.service.UserService
+import agoraa.app.forms_back.service.suppliers.SupplierService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
@@ -30,6 +31,7 @@ class ExtraOrderService(
     private val userService: UserService,
     private val extraOrderStoresService: ExtraOrderStoreService,
     private val extraOrderStoresProductsService: ExtraOrderProductService,
+    private val supplierService: SupplierService
 ) {
     private fun validateSchema(schema: ExtraOrderCreateSchema) {
         if (schema.partialComplete == "PARCIAL" && (schema.products.isNullOrEmpty() || schema.stores.size != 1)) {
@@ -209,12 +211,13 @@ class ExtraOrderService(
     @Transactional
     fun create(customUserDetails: CustomUserDetails, request: ExtraOrderCreateSchema) {
         val currentUser = customUserDetails.getUserModel()
+        val supplier = supplierService.findById(request.supplier.id)
         validateSchema(request)
 
         val extraOrder = extraOrderRepository.saveAndFlush(
             ExtraOrderModel(
                 user = currentUser,
-                supplier = request.supplier,
+                supplier = supplier,
                 partialComplete = PartialCompleteEnum.valueOf(request.partialComplete),
                 origin = request.origin?.let { OriginEnum.valueOf(it) },
             )
@@ -231,7 +234,7 @@ class ExtraOrderService(
         val extraOrderEdit = extraOrderRepository.saveAndFlush(
             extraOrder.copy(
                 processed = request.processed ?: extraOrder.processed,
-                supplier = request.supplier ?: extraOrder.supplier,
+                supplier = request.supplier?.let { supplierService.findById(it.id) } ?: extraOrder.supplier,
                 partialComplete = request.partialComplete?.let { PartialCompleteEnum.valueOf(it) }
                     ?: extraOrder.partialComplete,
                 origin = request.origin?.let { OriginEnum.valueOf(it) } ?: extraOrder.origin,
