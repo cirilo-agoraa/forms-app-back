@@ -105,7 +105,7 @@ data class ProductModel(
     val noDeliveryQuantity: Int,
 
     @Column(nullable = false)
-    val averageSalesThirtyDaysTwelveMonths: Double,
+    val averageSalesLastThirtyDaysTwelveMonths: Double,
 
     @Column(nullable = false)
     val dailySalesAmount: Float,
