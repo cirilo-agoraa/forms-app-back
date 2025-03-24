@@ -2,7 +2,8 @@ package agoraa.app.forms_back.users.users.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.users.users.dto.request.ChangePasswordRequest
-import agoraa.app.forms_back.users.users.dto.request.UserRequest
+import agoraa.app.forms_back.users.users.dto.request.UserCreateRequest
+import agoraa.app.forms_back.users.users.dto.request.UserEditRequest
 import agoraa.app.forms_back.users.users.service.UserService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -37,7 +38,7 @@ class UserController(private val userService: UserService) {
 
     @PostMapping
     fun createUser(
-        @RequestBody @Valid request: UserRequest,
+        @RequestBody @Valid request: UserCreateRequest,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {
@@ -54,7 +55,7 @@ class UserController(private val userService: UserService) {
     fun editUser(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
-        @RequestBody @Valid request: UserRequest,
+        @RequestBody @Valid request: UserEditRequest,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {

@@ -5,7 +5,8 @@ import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.users.user_roles.service.AuthorityService
 import agoraa.app.forms_back.users.users.dto.request.ChangePasswordRequest
-import agoraa.app.forms_back.users.users.dto.request.UserRequest
+import agoraa.app.forms_back.users.users.dto.request.UserCreateRequest
+import agoraa.app.forms_back.users.users.dto.request.UserEditRequest
 import agoraa.app.forms_back.users.users.dto.response.UserResponse
 import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.users.users.repository.UserRepository
@@ -124,7 +125,7 @@ class UserService(
     }
 
     @Transactional
-    fun create(request: UserRequest) {
+    fun create(request: UserCreateRequest) {
         val createdUser = userRepository.saveAndFlush(
             UserModel(
                 username = request.username,
@@ -140,7 +141,7 @@ class UserService(
     }
 
     @Transactional
-    fun edit(customUserDetails: CustomUserDetails, id: Long, request: UserRequest) {
+    fun edit(customUserDetails: CustomUserDetails, id: Long, request: UserEditRequest) {
         val user = findById(customUserDetails, id)
 
         val editedUser = userRepository.saveAndFlush(
