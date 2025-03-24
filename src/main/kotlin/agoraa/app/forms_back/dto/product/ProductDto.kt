@@ -23,7 +23,7 @@ data class ProductDto(
     val salesLastSevenDays: Double,
     val averageSalesLastThirtyDays: Double,
     val openOrder: Double,
-    val averageSalesThirtyDaysTwelveMonths: Double,
+    val averageSalesLastThirtyDaysTwelveMonths: Double,
     val averageExpiration: Double,
     val dailySales: Float,
     val lastCost: Float,

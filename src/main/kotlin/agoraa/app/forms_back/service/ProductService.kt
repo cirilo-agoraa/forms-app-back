@@ -65,7 +65,7 @@ class ProductService(
             networkStock = productModel.networkStock,
             promotionQuantity = productModel.promotionQuantity,
             noDeliveryQuantity = productModel.noDeliveryQuantity,
-            averageSalesThirtyDaysTwelveMonths = productModel.averageSalesLastThirtyDaysTwelveMonths,
+            averageSalesLastThirtyDaysTwelveMonths = productModel.averageSalesLastThirtyDaysTwelveMonths,
             highestSales = productModel.highestSales,
             dailySalesAmount = productModel.dailySalesAmount,
             daysToExpire = productModel.daysToExpire,
