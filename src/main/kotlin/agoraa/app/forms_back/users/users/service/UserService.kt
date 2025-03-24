@@ -162,7 +162,8 @@ class UserService(
 
         userRepository.saveAndFlush(
             user.copy(
-                password = encode.encode(request.password)
+                password = encode.encode(request.password),
+                firstAccess = !user.firstAccess
             )
         )
     }
