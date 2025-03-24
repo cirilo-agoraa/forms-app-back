@@ -1,9 +1,9 @@
 package agoraa.app.forms_back.service
 
 import agoraa.app.forms_back.dto.product.ProductDto
-import agoraa.app.forms_back.enum.MipsCategoriesEnum
-import agoraa.app.forms_back.enum.SectorsEnum
-import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.enums.MipsCategoriesEnum
+import agoraa.app.forms_back.enums.SectorsEnum
+import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.products.ProductModel
 import agoraa.app.forms_back.model.suppliers.SupplierModel

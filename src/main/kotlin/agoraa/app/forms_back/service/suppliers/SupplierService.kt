@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.service.suppliers
 
 import agoraa.app.forms_back.dto.suppliers.SupplierDto
-import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
+import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.suppliers.SupplierModel
 import agoraa.app.forms_back.repository.suppliers.SupplierRepository

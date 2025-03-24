@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.model
 
+import agoraa.app.forms_back.users.users.model.UserModel
 import jakarta.persistence.*
 import java.time.LocalDate
 

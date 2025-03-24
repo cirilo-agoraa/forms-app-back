@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.model.extra_orders
 
-import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.enums.StoresEnum
 import jakarta.persistence.*
 
 @Entity

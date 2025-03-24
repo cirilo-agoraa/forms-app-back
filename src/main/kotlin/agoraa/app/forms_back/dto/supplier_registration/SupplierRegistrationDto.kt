@@ -1,15 +1,15 @@
 package agoraa.app.forms_back.dto.supplier_registration
 
-import agoraa.app.forms_back.dto.user.UserDto
-import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.enums.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.users.users.dto.response.UserResponse
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 data class SupplierRegistrationDto(
     val id: Long,
-    val user: UserDto,
+    val user: UserResponse,
     val accepted: Boolean,
     val createdAt: LocalDateTime,
     val type: SuppliersRegistrationTypesEnum,

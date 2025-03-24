@@ -5,6 +5,7 @@ import agoraa.app.forms_back.schema.auth.AuthenticationRefreshTokenRequestSchema
 import agoraa.app.forms_back.schema.auth.AuthenticationRefreshTokenResponseSchema
 import agoraa.app.forms_back.schema.auth.AuthenticationRequestSchema
 import agoraa.app.forms_back.schema.auth.AuthenticationResponseSchema
+import agoraa.app.forms_back.users.users.service.UserService
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.provisioning.JdbcUserDetailsManager
@@ -41,6 +42,7 @@ class AuthenticationService(
         )
 
         return AuthenticationResponseSchema(
+            nickname = userModel.nickname,
             username = userDetails.username,
             store = userModel.store,
             accessToken = accessToken,

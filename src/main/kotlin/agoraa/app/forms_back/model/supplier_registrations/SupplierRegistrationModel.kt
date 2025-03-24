@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.model.supplier_registrations
 
-import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTypesEnum
-import agoraa.app.forms_back.model.UserModel
+import agoraa.app.forms_back.enums.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.users.users.model.UserModel
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime

@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.model.supplier_registrations
 
-import agoraa.app.forms_back.enum.suppliers_registration.WeeklyQuotationEnum
+import agoraa.app.forms_back.enums.suppliers_registration.WeeklyQuotationEnum
 import jakarta.persistence.*
 
 @Entity

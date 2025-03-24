@@ -1,8 +1,8 @@
 package agoraa.app.forms_back.schema.product
 
-import agoraa.app.forms_back.enum.MipsCategoriesEnum
-import agoraa.app.forms_back.enum.SectorsEnum
-import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.enums.MipsCategoriesEnum
+import agoraa.app.forms_back.enums.SectorsEnum
+import agoraa.app.forms_back.enums.StoresEnum
 import java.time.LocalDate
 
 data class ProductSchema(

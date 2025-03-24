@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.config
 
-import agoraa.app.forms_back.model.UserModel
+import agoraa.app.forms_back.users.users.model.UserModel
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.User
 

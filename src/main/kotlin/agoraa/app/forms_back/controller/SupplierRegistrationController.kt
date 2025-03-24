@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.enums.suppliers_registration.SuppliersRegistrationTypesEnum
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationCreateSchema
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationEditSchema
 import agoraa.app.forms_back.service.supplier_registration.SupplierRegistrationService

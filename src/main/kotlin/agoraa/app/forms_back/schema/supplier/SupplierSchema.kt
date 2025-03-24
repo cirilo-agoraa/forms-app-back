@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.schema.supplier
 
-import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
+import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
 
 data class SupplierSchema(
     val name: String,

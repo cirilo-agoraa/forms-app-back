@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.model.suppliers
 
-import agoraa.app.forms_back.enum.supplier.SupplierStatusEnum
+import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
 import jakarta.persistence.*
 
 @Entity

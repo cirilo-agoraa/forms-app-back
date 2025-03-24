@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.model.extra_quotations
 
-import agoraa.app.forms_back.model.UserModel
+import agoraa.app.forms_back.users.users.model.UserModel
 import jakarta.persistence.*
 import java.time.LocalDateTime
 

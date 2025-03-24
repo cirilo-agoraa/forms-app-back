@@ -1,8 +1,8 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enum.extra_order.OriginEnum
-import agoraa.app.forms_back.enum.extra_order.PartialCompleteEnum
+import agoraa.app.forms_back.enums.extra_order.OriginEnum
+import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
 import agoraa.app.forms_back.service.extra_orders.ExtraOrderService

@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.schema.extra_transfers
 
-import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.enums.StoresEnum
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 

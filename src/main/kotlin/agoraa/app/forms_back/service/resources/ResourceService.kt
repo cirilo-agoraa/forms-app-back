@@ -2,15 +2,15 @@ package agoraa.app.forms_back.service.resources
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.resource.ResourceDto
-import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.model.UserModel
+import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.model.resources.ResourceModel
 import agoraa.app.forms_back.repository.resources.ResourceRepository
 import agoraa.app.forms_back.schema.resources.ResourceCreateSchema
 import agoraa.app.forms_back.schema.resources.ResourceEditSchema
-import agoraa.app.forms_back.service.UserService
+import agoraa.app.forms_back.users.users.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate

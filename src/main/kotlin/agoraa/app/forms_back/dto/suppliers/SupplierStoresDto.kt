@@ -1,8 +1,7 @@
 package agoraa.app.forms_back.dto.suppliers
 
-import agoraa.app.forms_back.enum.OrderDaysEnum
-import agoraa.app.forms_back.enum.StoresEnum
-import java.time.LocalDate
+import agoraa.app.forms_back.enums.OrderDaysEnum
+import agoraa.app.forms_back.enums.StoresEnum
 import java.time.LocalDateTime
 
 data class SupplierStoresDto(

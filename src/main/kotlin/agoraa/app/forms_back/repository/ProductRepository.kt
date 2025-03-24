@@ -1,11 +1,8 @@
 package agoraa.app.forms_back.repository
 
-import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.model.products.ProductModel
-import org.springframework.data.jpa.domain.Specification
-import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.stereotype.Repository
 import java.util.*

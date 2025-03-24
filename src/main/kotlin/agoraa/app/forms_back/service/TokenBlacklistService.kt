@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.service
 
 import agoraa.app.forms_back.model.TokenBlacklistModel
-import agoraa.app.forms_back.model.UserModel
+import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.repository.TokenBlacklistRepository
 import org.springframework.stereotype.Service
 

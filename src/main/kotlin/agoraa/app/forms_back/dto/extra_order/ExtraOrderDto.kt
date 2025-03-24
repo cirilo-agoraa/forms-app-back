@@ -1,16 +1,16 @@
 package agoraa.app.forms_back.dto.extra_order
 
-import agoraa.app.forms_back.dto.user.UserDto
-import agoraa.app.forms_back.enum.extra_order.OriginEnum
-import agoraa.app.forms_back.enum.extra_order.PartialCompleteEnum
+import agoraa.app.forms_back.enums.extra_order.OriginEnum
+import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.model.suppliers.SupplierModel
+import agoraa.app.forms_back.users.users.dto.response.UserResponse
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 
 @JsonInclude(JsonInclude.Include.ALWAYS)
 data class ExtraOrderDto(
     val id: Long,
-    val user: UserDto,
+    val user: UserResponse,
     val supplier: SupplierModel,
     val processed: Boolean,
     val createdAt: LocalDateTime,

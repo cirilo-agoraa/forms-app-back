@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.schema.supplier_registration
 
-import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.enums.suppliers_registration.SuppliersRegistrationTypesEnum
 import java.time.LocalDate
 
 data class SupplierRegistrationEditSchema(

@@ -2,16 +2,16 @@ package agoraa.app.forms_back.service.extra_orders
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.extra_order.ExtraOrderDto
-import agoraa.app.forms_back.enum.extra_order.OriginEnum
-import agoraa.app.forms_back.enum.extra_order.PartialCompleteEnum
+import agoraa.app.forms_back.enums.extra_order.OriginEnum
+import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.model.UserModel
+import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.model.extra_orders.ExtraOrderModel
 import agoraa.app.forms_back.repository.extra_orders.ExtraOrderRepository
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
-import agoraa.app.forms_back.service.UserService
+import agoraa.app.forms_back.users.users.service.UserService
 import agoraa.app.forms_back.service.suppliers.SupplierService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery

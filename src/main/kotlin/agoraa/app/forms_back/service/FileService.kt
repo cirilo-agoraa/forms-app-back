@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.service
 
-import agoraa.app.forms_back.enum.FoldersEnum
+import agoraa.app.forms_back.enums.FoldersEnum
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File

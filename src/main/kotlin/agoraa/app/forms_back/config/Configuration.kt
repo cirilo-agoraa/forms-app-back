@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.config
 
-import agoraa.app.forms_back.service.UserService
+import agoraa.app.forms_back.users.users.service.UserService
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

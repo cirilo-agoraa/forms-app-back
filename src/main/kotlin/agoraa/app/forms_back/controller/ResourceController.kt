@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enum.StoresEnum
+import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.schema.resources.ResourceCreateSchema
 import agoraa.app.forms_back.schema.resources.ResourceEditSchema
 import agoraa.app.forms_back.service.resources.ResourceService

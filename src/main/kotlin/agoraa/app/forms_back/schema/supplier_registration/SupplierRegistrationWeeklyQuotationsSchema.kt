@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.schema.supplier_registration
 
-import agoraa.app.forms_back.enum.suppliers_registration.WeeklyQuotationEnum
+import agoraa.app.forms_back.enums.suppliers_registration.WeeklyQuotationEnum
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 

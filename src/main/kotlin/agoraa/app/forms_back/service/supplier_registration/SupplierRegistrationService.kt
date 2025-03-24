@@ -2,15 +2,15 @@ package agoraa.app.forms_back.service.supplier_registration
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.supplier_registration.SupplierRegistrationDto
-import agoraa.app.forms_back.enum.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.enums.suppliers_registration.SuppliersRegistrationTypesEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.model.UserModel
+import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.model.supplier_registrations.SupplierRegistrationModel
 import agoraa.app.forms_back.repository.supplier_registrations.SupplierRegistrationRepository
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationCreateSchema
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationEditSchema
-import agoraa.app.forms_back.service.UserService
+import agoraa.app.forms_back.users.users.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate

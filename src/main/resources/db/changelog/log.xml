@@ -1114,4 +1114,17 @@
         <dropNotNullConstraint tableName="products" columnName="package_quantity" columnDataType="INT"/>
     </changeSet>
 
+    <changeSet id="46" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="users">
+            <column name="nickname" defaultValue="placeholder" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="first_access" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
