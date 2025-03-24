@@ -29,7 +29,9 @@ class SecurityConfiguration(
                     .requestMatchers("swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                     // users endpoints
-                    .requestMatchers("/api/users/**").hasRole("ADMIN")
+                    .requestMatchers("/api/users").hasRole("ADMIN")
+                    .requestMatchers("/api/users/{id}").hasRole("ADMIN")
+                    .requestMatchers("/api/users/{id}/edit").hasRole("ADMIN")
 
                     // suppliers endpoints
                     .requestMatchers(HttpMethod.POST, "/api/suppliers").hasRole("ADMIN")
