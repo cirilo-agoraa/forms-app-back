@@ -42,6 +42,7 @@ class AuthenticationService(
         )
 
         return AuthenticationResponseSchema(
+            firstAccess = userModel.firstAccess,
             nickname = userModel.nickname,
             username = userDetails.username,
             store = userModel.store,
