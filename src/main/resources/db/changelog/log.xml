@@ -1127,4 +1127,26 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="47" author="PedroCostaa" runInTransaction="true">
+        <dropColumn tableName="passive_quotation_products" columnName="total"/>
+        <modifyDataType tableName="passive_quotation_products" columnName="price" newDataType="DOUBLE"/>
+        <modifyDataType tableName="passive_quotation_products" columnName="stock_plus_open_order" newDataType="DOUBLE"/>
+        <dropNotNullConstraint tableName="passive_quotation_products" columnName="stock_plus_open_order" columnDataType="DOUBLE"/>
+        <dropNotNullConstraint tableName="passive_quotation_products" columnName="quantity" columnDataType="INT"/>
+    </changeSet>
+
+    <changeSet id="48" author="PedroCostaa" runInTransaction="true">
+        <dropForeignKeyConstraint baseTableName="passive_quotation_products" constraintName="fk_passive_quotation_products_passive_quotation"/>
+        <addForeignKeyConstraint baseTableName="passive_quotation_products"
+                                 baseColumnNames="passive_quotation_id"
+                                 constraintName="fk_passive_quotation_products_passive_quotation"
+                                 referencedTableName="passive-quotations"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+    </changeSet>
+
+    <changeSet id="49" author="PedroCostaa" runInTransaction="true">
+        <renameTable oldTableName="passive-quotations" newTableName="passive_quotations"/>
+    </changeSet>
+
 </databaseChangeLog>

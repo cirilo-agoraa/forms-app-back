@@ -18,7 +18,6 @@ class PassiveQuotationProductsService(private val passiveQuotationProductsReposi
                 quantity = p.quantity,
                 price = p.price,
                 stockPlusOpenOrder = p.stockPlusOpenOrder,
-                total = p.total,
             )
         }
         passiveQuotationProductsRepository.saveAll(passiveQuotationProducts)
@@ -31,7 +30,6 @@ class PassiveQuotationProductsService(private val passiveQuotationProductsReposi
                 quantity = p.quantity,
                 price = p.price,
                 stockPlusOpenOrder = p.stockPlusOpenOrder,
-                total = p.total,
             )
         }
         passiveQuotationProductsRepository.saveAll(passiveQuotationProducts)

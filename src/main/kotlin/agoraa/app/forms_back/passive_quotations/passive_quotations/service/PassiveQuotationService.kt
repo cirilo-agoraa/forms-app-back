@@ -2,6 +2,7 @@ package agoraa.app.forms_back.passive_quotations.passive_quotations.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.enums.WppGroupsEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.suppliers.SupplierModel
@@ -10,6 +11,7 @@ import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.P
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.response.PassiveQuotationCalculationResponse
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.response.PassiveQuotationResponse
+import agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel
 import agoraa.app.forms_back.passive_quotations.passive_quotations.repository.PassiveQuotationRepository
 import agoraa.app.forms_back.service.ProductService
 import agoraa.app.forms_back.service.suppliers.SupplierService
@@ -27,6 +29,8 @@ import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.round
 
@@ -44,8 +48,8 @@ class PassiveQuotationService(
         createdAt: LocalDateTime? = null,
         store: StoresEnum? = null,
         userId: Long? = null,
-    ): Specification<agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel> {
-        return Specification { root: Root<agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
+    ): Specification<PassiveQuotationModel> {
+        return Specification { root: Root<PassiveQuotationModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
 
             userId?.let {
@@ -74,7 +78,7 @@ class PassiveQuotationService(
 
     private fun hasPermission(
         customUserDetails: CustomUserDetails,
-        passiveQuotation: agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel
+        passiveQuotation: PassiveQuotationModel
     ): Boolean {
         val currentUser = customUserDetails.getUserModel()
         val isAdmin = customUserDetails.authorities.any { it.authority == "ROLE_ADMIN" }
@@ -84,7 +88,7 @@ class PassiveQuotationService(
     }
 
     fun createDto(
-        passiveQuotation: agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel,
+        passiveQuotation: PassiveQuotationModel,
         full: Boolean = false
     ): PassiveQuotationResponse {
         val userDto = userService.createDto(passiveQuotation.user)
@@ -122,7 +126,7 @@ class PassiveQuotationService(
     fun findById(
         customUserDetails: CustomUserDetails,
         id: Long
-    ): agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel {
+    ): PassiveQuotationModel {
         val passiveQuotation = passiveQuotationRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("Passive Quotation with id $id not found") }
 
@@ -200,12 +204,15 @@ class PassiveQuotationService(
         return PageImpl(pageResult.content.map { createDto(it) }, pageable, pageResult.totalElements)
     }
 
-    fun calculateQuotation(request: PassiveQuotationCalculateRequest): List<Map<String, PassiveQuotationCalculationResponse>> {
-        val stores = StoresEnum.entries
+    fun calculateQuotation(request: PassiveQuotationCalculateRequest): List<PassiveQuotationCalculationResponse> {
         val requestCodes = request.products.map { it.code }
         val products = productsService.findAll(requestCodes)
 
-        val notFundProducts = products.toSet() - requestCodes.toSet()
+        if (products.isEmpty()) {
+            throw ResourceNotFoundException("Products not found")
+        }
+
+        val notFundProducts = products.map { it.code }.toSet() - requestCodes.toSet()
 
         if (notFundProducts.isNotEmpty()) {
             throw ResourceNotFoundException("Products with codes $notFundProducts not found")
@@ -278,7 +285,7 @@ class PassiveQuotationService(
             val biggestExpiration = list.maxOf { it.expirationDate ?: LocalDate.now().plusYears(1) }
             val expirationDays = biggestExpiration.toEpochDay() - LocalDate.now().toEpochDay()
             val salesProjection = saleDay * expirationDays
-            val finalQtt = requestItem.quantity ?: when {
+            val finalQtt = requestItem.finalQtt ?: when {
                 (biggestSale < (request.param1 * productStore.packageQuantity) && stockPlusOpenOrder > request.param2 * productStore.packageQuantity) || !relevantPurchase || salesNetStock -> 0
                 else -> {
                     when {
@@ -289,31 +296,25 @@ class PassiveQuotationService(
             }
             val maxPurchase = when {
                 (salesProjection - currentStockSum) / productStore.packageQuantity <= 0 -> 0
-                else -> (salesProjection - currentStockSum) / productStore.packageQuantity
+                else -> floor((salesProjection - currentStockSum) / productStore.packageQuantity)
             }
             val total = requestItem.price * finalQtt.toDouble() * productStore.packageQuantity
             val stockPlusOrder = stockPlusOpenOrder + finalQtt.toInt() + productStore.packageQuantity
 
-            mapOf(
-                code to PassiveQuotationCalculationResponse(
-                    productStore.name,
-                    productStore.packageQuantity,
-                    biggestSale,
-                    stockPlusOpenOrder,
-                    list.find { it.store == StoresEnum.TRESMANN_VIX }!!.currentStock ?: 0.0,
-                    list.find { it.store == StoresEnum.TRESMANN_SMJ }!!.currentStock ?: 0.0,
-                    list.find { it.store == StoresEnum.TRESMANN_STT }!!.currentStock ?: 0.0,
-                    finalQtt.toDouble(),
-                    maxPurchase.toDouble(),
-                    productStore.netCost!!,
-                    productStore.averageExpiration,
-                    total,
-                    flag1,
-                    flag2,
-                    stockPlusOpenOrder == currentStockSum,
-                    salesProjection > stockPlusOrder,
-                    productStore.brand!!
-                )
+            PassiveQuotationCalculationResponse(
+                productStore,
+                biggestSale.toInt(),
+                stockPlusOpenOrder,
+                list.find { it.store == StoresEnum.TRESMANN_VIX }!!.currentStock ?: 0.0,
+                list.find { it.store == StoresEnum.TRESMANN_SMJ }!!.currentStock ?: 0.0,
+                list.find { it.store == StoresEnum.TRESMANN_STT }!!.currentStock ?: 0.0,
+                ceil(finalQtt.toDouble()),
+                maxPurchase.toDouble(),
+                total,
+                flag1,
+                flag2,
+                stockPlusOpenOrder == currentStockSum,
+                salesProjection > stockPlusOrder,
             )
         }
 
@@ -326,7 +327,7 @@ class PassiveQuotationService(
         val supplier = supplierService.findById(request.supplier.id)
 
         val passiveQuotation = passiveQuotationRepository.saveAndFlush(
-            agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel(
+            PassiveQuotationModel(
                 user = currentUser,
                 supplier = supplier,
                 wppGroup = request.wppGroup,

@@ -9,7 +9,7 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "passive-quotations")
+@Table(name = "passive_quotations")
 data class PassiveQuotationModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +27,15 @@ data class PassiveQuotationModel(
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     val store: StoresEnum,
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     val wppGroup: WppGroupsEnum,
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     val paymentTerm: PaymentTermsEnum,
 
     @Column(nullable = false)

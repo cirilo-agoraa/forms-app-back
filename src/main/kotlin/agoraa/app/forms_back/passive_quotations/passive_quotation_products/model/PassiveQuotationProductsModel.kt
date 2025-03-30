@@ -11,7 +11,7 @@ data class PassiveQuotationProductsModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "passive_quotation_id", nullable = false)
     val passiveQuotation: PassiveQuotationModel,
 
@@ -20,14 +20,11 @@ data class PassiveQuotationProductsModel(
     val product: ProductModel,
 
     @Column(nullable = false)
-    val quantity: Int,
+    val price: Double,
 
-    @Column(nullable = false)
-    val price: Float,
+    @Column(nullable = true)
+    val quantity: Int? = null,
 
-    @Column(nullable = false)
-    val stockPlusOpenOrder: Float,
-
-    @Column(nullable = false)
-    val total: Float
+    @Column(nullable = true)
+    val stockPlusOpenOrder: Double? = null,
 )
