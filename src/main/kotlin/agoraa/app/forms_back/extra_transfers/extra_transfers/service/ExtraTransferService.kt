@@ -1,15 +1,15 @@
-package agoraa.app.forms_back.service.extra_transfers
+package agoraa.app.forms_back.extra_transfers.extra_transfers.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.dto.extra_transfers.ExtraTransferDto
+import agoraa.app.forms_back.extra_transfers.extra_transfers.dto.response.ExtraTransferResponse
 import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.users.users.model.UserModel
-import agoraa.app.forms_back.model.extra_transfers.ExtraTransferModel
-import agoraa.app.forms_back.repository.extra_transfers.ExtraTransferRepository
-import agoraa.app.forms_back.schema.extra_transfers.ExtraTransferCreateSchema
-import agoraa.app.forms_back.schema.extra_transfers.ExtraTransferEditSchema
+import agoraa.app.forms_back.extra_transfers.extra_transfers.model.ExtraTransferModel
+import agoraa.app.forms_back.extra_transfers.extra_transfers.repository.ExtraTransferRepository
+import agoraa.app.forms_back.extra_transfers.extra_transfers.dto.request.ExtraTransferRequest
+import agoraa.app.forms_back.extra_transfers.extra_transfer_products.service.ExtraTransferProductsService
 import agoraa.app.forms_back.users.users.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
@@ -80,19 +80,20 @@ class ExtraTransferService(
         return isAdmin || isOwner
     }
 
-    fun createDto(extraTransfer: ExtraTransferModel, full: Boolean = false): ExtraTransferDto {
+    fun createDto(extraTransfer: ExtraTransferModel, full: Boolean = false): ExtraTransferResponse {
         val userDto = userService.createDto(extraTransfer.user)
-        val extraTransferDto = ExtraTransferDto(
+        val extraTransferDto = ExtraTransferResponse(
             id = extraTransfer.id,
             user = userDto,
             createdAt = extraTransfer.createdAt,
             processed = extraTransfer.processed,
             originStore = extraTransfer.originStore,
             destinyStore = extraTransfer.destinyStore,
+            name = extraTransfer.name
         )
 
         if (full) {
-            val extraTransferProducts = extraTransferProductsService.findByParentId(extraTransfer.id)
+            val extraTransferProducts = extraTransferProductsService.findByParentId(extraTransfer.id).map { extraTransferProductsService.createDto(it) }
 
             extraTransferDto.products = extraTransferProducts
         }
@@ -114,7 +115,7 @@ class ExtraTransferService(
         customUserDetails: CustomUserDetails,
         id: Long,
         full: Boolean = false
-    ): ExtraTransferDto {
+    ): ExtraTransferResponse {
         val extraTransfer = findById(customUserDetails, id)
         return createDto(extraTransfer, full)
     }
@@ -187,7 +188,7 @@ class ExtraTransferService(
     }
 
     @Transactional
-    fun create(customUserDetails: CustomUserDetails, request: ExtraTransferCreateSchema) {
+    fun create(customUserDetails: CustomUserDetails, request: ExtraTransferRequest) {
         val currentUser = customUserDetails.getUserModel()
 
         val extraTransfer = extraTransferRepository.saveAndFlush(
@@ -195,27 +196,26 @@ class ExtraTransferService(
                 user = currentUser,
                 originStore = request.originStore,
                 destinyStore = request.destinyStore,
+                name = request.name
             )
         )
 
-        extraTransferProductsService.create(extraTransfer, request.products)
+        extraTransferProductsService.editOrCreateOrDelete(extraTransfer, request.products)
     }
 
     @Transactional
-    fun edit(customUserDetails: CustomUserDetails, id: Long, request: ExtraTransferEditSchema) {
+    fun edit(customUserDetails: CustomUserDetails, id: Long, request: ExtraTransferRequest) {
         val extraTransfer = findById(customUserDetails, id)
 
         val extraTransferEdit = extraTransferRepository.saveAndFlush(
             extraTransfer.copy(
-                processed = request.processed ?: extraTransfer.processed,
-                destinyStore = request.destinyStore ?: extraTransfer.destinyStore,
-                originStore = request.originStore ?: extraTransfer.originStore,
+                processed = request.processed,
+                destinyStore = request.destinyStore,
+                originStore = request.originStore,
+                name = request.name
             )
         )
-
-        request.products?.let {
-            extraTransferProductsService.edit(extraTransferEdit, it)
-        }
+        extraTransferProductsService.editOrCreateOrDelete(extraTransferEdit, request.products)
     }
 
     @Transactional

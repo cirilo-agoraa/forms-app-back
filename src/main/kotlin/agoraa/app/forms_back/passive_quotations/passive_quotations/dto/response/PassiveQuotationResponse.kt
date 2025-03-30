@@ -4,6 +4,7 @@ import agoraa.app.forms_back.enums.PaymentTermsEnum
 import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.enums.WppGroupsEnum
 import agoraa.app.forms_back.model.suppliers.SupplierModel
+import agoraa.app.forms_back.passive_quotations.passive_quotation_products.dto.response.PassiveQuotationProductsResponse
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.model.PassiveQuotationProductsModel
 import agoraa.app.forms_back.users.users.dto.response.UserResponse
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -30,5 +31,5 @@ data class PassiveQuotationResponse(
     val param6: Double,
     val param7: Double,
     val param8: Double,
-    var products: List<PassiveQuotationProductsModel>? = null
+    var products: List<PassiveQuotationProductsResponse>? = null
 )

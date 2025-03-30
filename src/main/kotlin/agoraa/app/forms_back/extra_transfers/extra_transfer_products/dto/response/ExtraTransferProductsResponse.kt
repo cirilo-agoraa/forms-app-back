@@ -1,8 +1,8 @@
-package agoraa.app.forms_back.dto.extra_transfers
+package agoraa.app.forms_back.extra_transfers.extra_transfer_products.dto.response
 
 import agoraa.app.forms_back.model.products.ProductModel
 
-data class ExtraTransferProductsDto(
+data class ExtraTransferProductsResponse(
     val id: Long,
     val product: ProductModel,
     val quantity: Int

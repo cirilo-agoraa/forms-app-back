@@ -1,4 +1,4 @@
-package agoraa.app.forms_back.model.extra_transfers
+package agoraa.app.forms_back.extra_transfers.extra_transfers.model
 
 import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.users.users.model.UserModel
@@ -21,6 +21,9 @@ data class ExtraTransferModel (
 
     @Column(nullable = false)
     val processed: Boolean = false,
+
+    @Column(nullable = false)
+    val name: String,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

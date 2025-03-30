@@ -1,9 +1,8 @@
-package agoraa.app.forms_back.controller
+package agoraa.app.forms_back.extra_transfers.extra_transfers.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.schema.extra_transfers.ExtraTransferCreateSchema
-import agoraa.app.forms_back.schema.extra_transfers.ExtraTransferEditSchema
-import agoraa.app.forms_back.service.extra_transfers.ExtraTransferService
+import agoraa.app.forms_back.extra_transfers.extra_transfers.dto.request.ExtraTransferRequest
+import agoraa.app.forms_back.extra_transfers.extra_transfers.service.ExtraTransferService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -85,7 +84,7 @@ class ExtraTransferController(private val extraTransferService: ExtraTransferSer
     @PostMapping
     fun createExtraTransfer(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
-        @Valid @RequestBody request: ExtraTransferCreateSchema,
+        @Valid @RequestBody request: ExtraTransferRequest,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {
@@ -109,7 +108,7 @@ class ExtraTransferController(private val extraTransferService: ExtraTransferSer
     fun editExtraTransfer(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
-        @RequestBody request: ExtraTransferEditSchema
+        @RequestBody request: ExtraTransferRequest
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             extraTransferService.edit(

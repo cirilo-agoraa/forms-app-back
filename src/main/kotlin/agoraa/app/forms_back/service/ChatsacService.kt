@@ -17,32 +17,36 @@ class ChatsacService {
         .defaultHeaders { it.setAll(headers) }
         .build()
 
-    fun sendMessageByContactId(message: String, number: String): Mono<Void> {
+    fun sendPdf(filePath: String, groupId: String): Mono<String> {
+        val file = java.io.File(filePath)
+        val fileBytes = file.readBytes()
+        val fileBase64 = java.util.Base64.getEncoder().encodeToString(fileBytes)
+
         val body = mapOf(
-            "message" to message,
-            "isWhisper" to false,
+            "base64" to fileBase64,
+            "extension" to "." + file.extension,
+            "fileName" to file.name.replace(".pdf", ""),
+            "contactId" to groupId,
             "forceSend" to true,
-            "delayInSeconds" to 0,
-            "verifyContact" to false
+            "verifyContact" to true,
         )
 
-        return webClient.post()
-            .uri("/send-text")
+        val response =  webClient.post()
+            .uri("/send-media")
             .bodyValue(body)
             .retrieve()
-            .onStatus({ status -> status.isError }) { response ->
-                response.bodyToMono(String::class.java).flatMap { errorBody ->
-                    Mono.error(
-                        WebClientResponseException.create(
-                            response.statusCode().value(),
-                            response.statusCode().toString(),
-                            response.headers().asHttpHeaders(),
-                            errorBody.toByteArray(),
-                            null
-                        )
-                    )
+            .bodyToMono(String::class.java)
+            .onErrorResume { error ->
+                if (error is WebClientResponseException) {
+                    val errorBody = error.responseBodyAsString
+                    Mono.just(errorBody.ifEmpty { "Error: ${error.message}" })
+                } else {
+                    Mono.just("Error: ${error.message}")
                 }
             }
-            .bodyToMono(Void::class.java)
+
+        file.delete()
+
+        return response
     }
 }

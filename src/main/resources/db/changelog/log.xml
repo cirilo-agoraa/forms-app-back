@@ -1149,4 +1149,12 @@
         <renameTable oldTableName="passive-quotations" newTableName="passive_quotations"/>
     </changeSet>
 
+    <changeSet id="50" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="extra_transfers">
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

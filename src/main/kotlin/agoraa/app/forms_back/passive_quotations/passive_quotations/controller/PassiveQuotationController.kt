@@ -3,6 +3,7 @@ package agoraa.app.forms_back.passive_quotations.passive_quotations.controller
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationCalculateRequest
+import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationPrintRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.service.PassiveQuotationService
 import jakarta.validation.Valid
@@ -128,5 +129,10 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
     @PostMapping("/calculate")
     fun calculate(@RequestBody request: PassiveQuotationCalculateRequest) = ResponseEntity.status(HttpStatus.OK).body(
         passiveQuotationService.calculateQuotation(request)
+    )
+
+    @PostMapping("/send-pdf")
+    fun sendPdf(@RequestBody request: PassiveQuotationPrintRequest) = ResponseEntity.status(HttpStatus.OK).body(
+        passiveQuotationService.sendPdf(request)
     )
 }

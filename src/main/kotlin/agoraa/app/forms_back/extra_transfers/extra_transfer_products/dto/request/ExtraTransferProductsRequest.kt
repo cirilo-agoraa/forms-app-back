@@ -1,10 +1,10 @@
-package agoraa.app.forms_back.schema.extra_transfers
+package agoraa.app.forms_back.extra_transfers.extra_transfer_products.dto.request
 
 import agoraa.app.forms_back.model.products.ProductModel
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 
-data class ExtraTransferProductsCreateSchema (
+data class ExtraTransferProductsRequest (
     @field:NotNull(message = "Product is required")
     val product: ProductModel,
 

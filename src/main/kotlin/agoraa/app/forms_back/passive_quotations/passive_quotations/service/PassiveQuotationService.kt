@@ -8,11 +8,13 @@ import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.suppliers.SupplierModel
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.service.PassiveQuotationProductsService
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationCalculateRequest
+import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationPrintRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.response.PassiveQuotationCalculationResponse
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.response.PassiveQuotationResponse
 import agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel
 import agoraa.app.forms_back.passive_quotations.passive_quotations.repository.PassiveQuotationRepository
+import agoraa.app.forms_back.service.ChatsacService
 import agoraa.app.forms_back.service.ProductService
 import agoraa.app.forms_back.service.suppliers.SupplierService
 import agoraa.app.forms_back.users.users.model.UserModel
@@ -27,6 +29,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Mono
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.math.ceil
@@ -40,7 +43,8 @@ class PassiveQuotationService(
     private val passiveQuotationProductsService: PassiveQuotationProductsService,
     private val userService: UserService,
     private val supplierService: SupplierService,
-    private val productsService: ProductService
+    private val productsService: ProductService,
+    private val chatsacService: ChatsacService
 ) {
     private fun createCriteria(
         username: String? = null,
@@ -117,7 +121,7 @@ class PassiveQuotationService(
         if (full) {
             val passiveQuotationProducts = passiveQuotationProductsService.findByParentId(passiveQuotation.id)
 
-            passiveQuotationDto.products = passiveQuotationProducts
+            passiveQuotationDto.products = passiveQuotationProducts.map { passiveQuotationProductsService.createDto(it) }
         }
 
         return passiveQuotationDto
@@ -319,6 +323,13 @@ class PassiveQuotationService(
         }
 
         return response
+    }
+
+    fun sendPdf(request: PassiveQuotationPrintRequest) {
+        val filePath = "C:\\Users\\phmc\\Documents\\${request.fileName}.pdf"
+        val groupId = request.wppGroup.getGroupId()
+
+        print(chatsacService.sendPdf(filePath, groupId).block())
     }
 
     @Transactional

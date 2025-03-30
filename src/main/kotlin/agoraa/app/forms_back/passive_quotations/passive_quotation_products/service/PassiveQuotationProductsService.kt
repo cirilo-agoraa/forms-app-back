@@ -1,14 +1,16 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotation_products.service
 
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.dto.request.PassiveQuotationProductsRequest
+import agoraa.app.forms_back.passive_quotations.passive_quotation_products.dto.response.PassiveQuotationProductsResponse
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.model.PassiveQuotationProductsModel
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.repository.PassiveQuotationProductsRepository
+import agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel
 import org.springframework.stereotype.Service
 
 @Service
 class PassiveQuotationProductsService(private val passiveQuotationProductsRepository: PassiveQuotationProductsRepository) {
     private fun create(
-        passiveQuotation: agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel,
+        passiveQuotation: PassiveQuotationModel,
         products: List<PassiveQuotationProductsRequest>
     ) {
         val passiveQuotationProducts = products.map { p ->
@@ -37,12 +39,22 @@ class PassiveQuotationProductsService(private val passiveQuotationProductsReposi
 
     fun findByParentId(
         passiveQuotationId: Long,
-    ): List<PassiveQuotationProductsModel> {
-        return passiveQuotationProductsRepository.findByPassiveQuotationId(passiveQuotationId)
+    ): List<PassiveQuotationProductsModel> = passiveQuotationProductsRepository.findByPassiveQuotationId(passiveQuotationId)
+
+    fun createDto(
+        passiveQuotationProduct: PassiveQuotationProductsModel,
+    ): PassiveQuotationProductsResponse {
+        return PassiveQuotationProductsResponse(
+            id = passiveQuotationProduct.id,
+            price = passiveQuotationProduct.price,
+            quantity = passiveQuotationProduct.quantity,
+            stockPlusOpenOrder = passiveQuotationProduct.stockPlusOpenOrder,
+            product = passiveQuotationProduct.product
+        )
     }
 
     fun editOrCreateOrDelete(
-        passiveQuotation: agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel,
+        passiveQuotation: PassiveQuotationModel,
         products: List<PassiveQuotationProductsRequest>
     ) {
         val passiveQuotationProducts = findByParentId(passiveQuotation.id)
