@@ -10,6 +10,7 @@ import agoraa.app.forms_back.extra_transfers.extra_transfers.model.ExtraTransfer
 import agoraa.app.forms_back.extra_transfers.extra_transfers.repository.ExtraTransferRepository
 import agoraa.app.forms_back.extra_transfers.extra_transfers.dto.request.ExtraTransferRequest
 import agoraa.app.forms_back.extra_transfers.extra_transfer_products.service.ExtraTransferProductsService
+import agoraa.app.forms_back.extra_transfers.extra_transfers.dto.request.ExtraTransferPatchRequest
 import agoraa.app.forms_back.users.users.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
@@ -222,5 +223,14 @@ class ExtraTransferService(
     fun delete(customUserDetails: CustomUserDetails, id: Long) {
         val extraTransfer = findById(customUserDetails, id)
         extraTransferRepository.delete(extraTransfer)
+    }
+
+    fun patch(customUserDetails: CustomUserDetails, id: Long, request: ExtraTransferPatchRequest) {
+        val extraTransfer = findById(customUserDetails, id)
+        extraTransferRepository.save(
+            extraTransfer.copy(
+                processed = request.processed ?: extraTransfer.processed,
+            )
+        )
     }
 }

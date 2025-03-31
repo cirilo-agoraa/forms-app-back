@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.extra_transfers.extra_transfers.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
+import agoraa.app.forms_back.extra_transfers.extra_transfers.dto.request.ExtraTransferPatchRequest
 import agoraa.app.forms_back.extra_transfers.extra_transfers.dto.request.ExtraTransferRequest
 import agoraa.app.forms_back.extra_transfers.extra_transfers.service.ExtraTransferService
 import jakarta.validation.Valid
@@ -112,6 +113,21 @@ class ExtraTransferController(private val extraTransferService: ExtraTransferSer
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             extraTransferService.edit(
+                customUserDetails,
+                id,
+                request
+            )
+        )
+    }
+
+    @PatchMapping("/{id}/patch")
+    fun patchExtraTransfer(
+        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
+        @PathVariable id: Long,
+        @RequestBody request: ExtraTransferPatchRequest
+    ): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            extraTransferService.patch(
                 customUserDetails,
                 id,
                 request
