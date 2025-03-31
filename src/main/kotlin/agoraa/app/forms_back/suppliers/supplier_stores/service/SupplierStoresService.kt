@@ -46,6 +46,9 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
             nextOrder = supplierStores.nextOrder,
             openOrderExpectedDelivery = supplierStores.openOrderExpectedDelivery,
             openOrderRealDelivery = supplierStores.openOrderRealDelivery,
+            sellerName = supplierStores.sellerName,
+            sellerEmail = supplierStores.sellerEmail,
+            sellerPhone = supplierStores.sellerPhone
         )
     }
 

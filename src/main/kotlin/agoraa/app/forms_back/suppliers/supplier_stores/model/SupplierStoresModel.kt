@@ -40,6 +40,15 @@ data class SupplierStoresModel(
     val orderMeanDeliveryTime: Float,
 
     @Column(nullable = true)
+    val sellerName: String? = null,
+
+    @Column(nullable = true)
+    val sellerPhone: String? = null,
+
+    @Column(nullable = true)
+    val sellerEmail: String? = null,
+
+    @Column(nullable = true)
     val nextOrder: LocalDateTime? = null,
 
     @Column(nullable = true)

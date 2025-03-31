@@ -1157,4 +1157,18 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="51" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="supplier_stores">
+            <column name="seller_name" type="varchar(255)"/>
+        </addColumn>
+
+        <addColumn tableName="supplier_stores">
+            <column name="seller_phone" type="varchar(255)"/>
+        </addColumn>
+
+        <addColumn tableName="supplier_stores">
+            <column name="seller_email" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

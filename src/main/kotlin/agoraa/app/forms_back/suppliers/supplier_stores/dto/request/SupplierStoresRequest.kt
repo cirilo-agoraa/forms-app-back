@@ -27,8 +27,11 @@ data class SupplierStoresRequest(
     @field:NotNull(message = "Order mean delivery time cannot be null")
     val orderMeanDeliveryTime: Float,
 
-    val orderDay: OrderDaysEnum? = null,
-    val nextOrder: LocalDateTime? = null,
-    val openOrderExpectedDelivery: LocalDateTime? = null,
-    val openOrderRealDelivery: LocalDateTime? = null,
+    val orderDay: OrderDaysEnum?,
+    val nextOrder: LocalDateTime?,
+    val openOrderExpectedDelivery: LocalDateTime?,
+    val openOrderRealDelivery: LocalDateTime?,
+    val sellerName: String?,
+    val sellerPhone: String?,
+    val sellerEmail: String?,
 )
