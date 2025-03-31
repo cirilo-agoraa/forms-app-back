@@ -75,6 +75,9 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
                 nextOrder = p.nextOrder,
                 openOrderRealDelivery = p.openOrderRealDelivery,
                 openOrderExpectedDelivery = p.openOrderExpectedDelivery,
+                sellerName = p.sellerName,
+                sellerEmail = p.sellerEmail,
+                sellerPhone = p.sellerPhone
             )
         }
         supplierStoresRepository.saveAll(supplierStores)
@@ -103,6 +106,9 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
                 nextOrder = updatedSs.nextOrder,
                 openOrderExpectedDelivery = updatedSs.openOrderExpectedDelivery,
                 openOrderRealDelivery = updatedSs.openOrderRealDelivery,
+                sellerName = updatedSs.sellerName,
+                sellerEmail = updatedSs.sellerEmail,
+                sellerPhone = updatedSs.sellerPhone
             )
         }
 
