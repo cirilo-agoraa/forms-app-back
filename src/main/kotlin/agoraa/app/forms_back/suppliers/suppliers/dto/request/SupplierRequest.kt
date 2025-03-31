@@ -1,16 +1,15 @@
-package agoraa.app.forms_back.dto.suppliers
+package agoraa.app.forms_back.suppliers.suppliers.dto.request
 
 import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
-import com.fasterxml.jackson.annotation.JsonInclude
+import agoraa.app.forms_back.suppliers.supplier_stores.dto.request.SupplierStoresRequest
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class SupplierDto(
-    val id: Long,
+data class SupplierRequest(
     val name: String,
     val status: SupplierStatusEnum,
-    val orderMinValue: Float? = null,
     val score: Int,
     val exchange: Boolean,
+    val stores: List<SupplierStoresRequest>,
+    val orderMinValue: Float?,
     val orders: Int?,
     val ordersNotDelivered: Int?,
     val ordersNotDeliveredPercentage: Float?,
@@ -18,6 +17,5 @@ data class SupplierDto(
     val valueReceived: Float?,
     val valueReceivedPercentage: Float?,
     val averageValueReceived: Float?,
-    val minValueReceived: Float?,
-    var stores: List<SupplierStoresDto>? = null
+    val minValueReceived: Float?
 )

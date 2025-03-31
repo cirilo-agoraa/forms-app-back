@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.schema.extra_order
 
-import agoraa.app.forms_back.model.suppliers.SupplierModel
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern

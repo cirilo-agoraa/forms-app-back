@@ -3,8 +3,8 @@ package agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request
 import agoraa.app.forms_back.enums.PaymentTermsEnum
 import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.enums.WppGroupsEnum
-import agoraa.app.forms_back.model.suppliers.SupplierModel
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.dto.request.PassiveQuotationProductsRequest
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 
 data class PassiveQuotationRequest(
     val supplier: SupplierModel,

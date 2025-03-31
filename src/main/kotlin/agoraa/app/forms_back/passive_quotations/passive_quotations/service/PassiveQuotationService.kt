@@ -2,10 +2,8 @@ package agoraa.app.forms_back.passive_quotations.passive_quotations.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.enums.StoresEnum
-import agoraa.app.forms_back.enums.WppGroupsEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.model.suppliers.SupplierModel
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.service.PassiveQuotationProductsService
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationCalculateRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationPrintRequest
@@ -16,7 +14,8 @@ import agoraa.app.forms_back.passive_quotations.passive_quotations.model.Passive
 import agoraa.app.forms_back.passive_quotations.passive_quotations.repository.PassiveQuotationRepository
 import agoraa.app.forms_back.service.ChatsacService
 import agoraa.app.forms_back.service.ProductService
-import agoraa.app.forms_back.service.suppliers.SupplierService
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
+import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
 import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.users.users.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
@@ -29,7 +28,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.math.ceil

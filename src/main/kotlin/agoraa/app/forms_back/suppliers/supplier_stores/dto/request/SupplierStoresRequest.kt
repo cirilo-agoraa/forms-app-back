@@ -1,11 +1,11 @@
-package agoraa.app.forms_back.schema.supplier
+package agoraa.app.forms_back.suppliers.supplier_stores.dto.request
 
 import agoraa.app.forms_back.enums.OrderDaysEnum
 import agoraa.app.forms_back.enums.StoresEnum
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDateTime
 
-data class SupplierStoresSchema(
+data class SupplierStoresRequest(
     @field:NotNull(message = "Store cannot be null")
     val store: StoresEnum,
 

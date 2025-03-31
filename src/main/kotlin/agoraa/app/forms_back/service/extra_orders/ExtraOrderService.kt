@@ -6,13 +6,13 @@ import agoraa.app.forms_back.enums.extra_order.OriginEnum
 import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.model.extra_orders.ExtraOrderModel
 import agoraa.app.forms_back.repository.extra_orders.ExtraOrderRepository
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
+import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
+import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.users.users.service.UserService
-import agoraa.app.forms_back.service.suppliers.SupplierService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate

@@ -4,11 +4,11 @@ import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.extra_quotations.ExtraQuotationDto
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.model.extra_quotations.ExtraQuotationModel
 import agoraa.app.forms_back.repository.extra_quotations.ExtraQuotationRepository
 import agoraa.app.forms_back.schema.extra_quotations.ExtraQuotationCreateSchema
 import agoraa.app.forms_back.schema.extra_quotations.ExtraQuotationEditSchema
+import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.users.users.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery

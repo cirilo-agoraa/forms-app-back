@@ -1,11 +1,12 @@
-package agoraa.app.forms_back.service.suppliers
+package agoraa.app.forms_back.suppliers.suppliers.service
 
-import agoraa.app.forms_back.dto.suppliers.SupplierDto
 import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.model.suppliers.SupplierModel
-import agoraa.app.forms_back.repository.suppliers.SupplierRepository
-import agoraa.app.forms_back.schema.supplier.SupplierSchema
+import agoraa.app.forms_back.suppliers.supplier_stores.service.SupplierStoresService
+import agoraa.app.forms_back.suppliers.suppliers.dto.request.SupplierRequest
+import agoraa.app.forms_back.suppliers.suppliers.dto.response.SupplierResponse
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
+import agoraa.app.forms_back.suppliers.suppliers.repository.SupplierRepository
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
@@ -53,8 +54,8 @@ class SupplierService(
         }
     }
 
-    private fun createDto(supplier: SupplierModel, full: Boolean = false): SupplierDto {
-        val supplierDto = SupplierDto(
+    private fun createDto(supplier: SupplierModel, full: Boolean = false): SupplierResponse {
+        val supplierDto = SupplierResponse(
             id = supplier.id,
             name = supplier.name,
             status = supplier.status,
@@ -120,7 +121,7 @@ class SupplierService(
         }
     }
 
-    fun getById(id: Long, full: Boolean = false): SupplierDto {
+    fun getById(id: Long, full: Boolean = false): SupplierResponse {
         val supplier = findById(id)
 
         return createDto(supplier, full)
@@ -131,7 +132,7 @@ class SupplierService(
     }
 
     @Transactional
-    fun create(request: SupplierSchema) {
+    fun create(request: SupplierRequest) {
         val supplier = supplierRepository.saveAndFlush(
             SupplierModel(
                 name = request.name,
@@ -153,7 +154,7 @@ class SupplierService(
     }
 
     @Transactional
-    fun edit(id: Long, request: SupplierSchema) {
+    fun edit(id: Long, request: SupplierRequest) {
         val supplier = findById(id)
 
         val editedSupplier = supplierRepository.saveAndFlush(
@@ -177,7 +178,7 @@ class SupplierService(
     }
 
     @Transactional
-    fun editOrCreateMultiple(request: List<SupplierSchema>) {
+    fun editOrCreateMultiple(request: List<SupplierRequest>) {
         val suppliers = getAll(request.map { it.name }).associateBy { it.name }
 
         request.forEach { supp ->

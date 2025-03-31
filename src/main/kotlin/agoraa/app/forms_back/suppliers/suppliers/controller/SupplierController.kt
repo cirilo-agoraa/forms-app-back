@@ -1,8 +1,8 @@
-package agoraa.app.forms_back.controller
+package agoraa.app.forms_back.suppliers.suppliers.controller
 
 import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
-import agoraa.app.forms_back.schema.supplier.SupplierSchema
-import agoraa.app.forms_back.service.suppliers.SupplierService
+import agoraa.app.forms_back.suppliers.suppliers.dto.request.SupplierRequest
+import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -38,7 +38,7 @@ class SupplierController(private val supplierService: SupplierService) {
 
     @PostMapping
     fun createSupplier(
-        @Valid @RequestBody request: SupplierSchema,
+        @Valid @RequestBody request: SupplierRequest,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {
@@ -56,7 +56,7 @@ class SupplierController(private val supplierService: SupplierService) {
     @PutMapping("/{id}/edit")
     fun editSupplier(
         @PathVariable id: Long,
-        @RequestBody request: SupplierSchema
+        @RequestBody request: SupplierRequest
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             supplierService.edit(id, request)
@@ -65,7 +65,7 @@ class SupplierController(private val supplierService: SupplierService) {
 
     @PutMapping("/edit-or-create-multiple")
     fun editOrCreateMultipleSuppliers(
-        @Valid @RequestBody request: List<SupplierSchema>,
+        @Valid @RequestBody request: List<SupplierRequest>,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {

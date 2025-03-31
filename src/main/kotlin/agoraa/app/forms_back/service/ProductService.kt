@@ -6,10 +6,10 @@ import agoraa.app.forms_back.enums.SectorsEnum
 import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.products.ProductModel
-import agoraa.app.forms_back.model.suppliers.SupplierModel
 import agoraa.app.forms_back.repository.ProductRepository
 import agoraa.app.forms_back.schema.product.ProductSchema
-import agoraa.app.forms_back.service.suppliers.SupplierService
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
+import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate

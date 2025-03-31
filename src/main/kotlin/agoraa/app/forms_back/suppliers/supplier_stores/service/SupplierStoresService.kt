@@ -1,10 +1,10 @@
-package agoraa.app.forms_back.service.suppliers
+package agoraa.app.forms_back.suppliers.supplier_stores.service
 
-import agoraa.app.forms_back.dto.suppliers.SupplierStoresDto
-import agoraa.app.forms_back.model.suppliers.SupplierModel
-import agoraa.app.forms_back.model.suppliers.SupplierStoresModel
-import agoraa.app.forms_back.repository.suppliers.SupplierStoresRepository
-import agoraa.app.forms_back.schema.supplier.SupplierStoresSchema
+import agoraa.app.forms_back.suppliers.supplier_stores.dto.request.SupplierStoresRequest
+import agoraa.app.forms_back.suppliers.supplier_stores.dto.response.SupplierStoresResponse
+import agoraa.app.forms_back.suppliers.supplier_stores.model.SupplierStoresModel
+import agoraa.app.forms_back.suppliers.supplier_stores.repository.SupplierStoresRepository
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
@@ -32,8 +32,8 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
         }
     }
 
-    fun createDto(supplierStores: SupplierStoresModel): SupplierStoresDto {
-        return SupplierStoresDto(
+    fun createDto(supplierStores: SupplierStoresModel): SupplierStoresResponse {
+        return SupplierStoresResponse(
             id = supplierStores.id,
             store = supplierStores.store,
             openOrder = supplierStores.openOrder,
@@ -51,13 +51,13 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
 
     fun findByParentId(
         supplierId: Long,
-    ): List<SupplierStoresDto> {
+    ): List<SupplierStoresResponse> {
         val spec = createCriteria(supplierId)
 
         return supplierStoresRepository.findAll(spec).map { createDto(it) }
     }
 
-    fun createMultiple(supplier: SupplierModel, stores: List<SupplierStoresSchema>) {
+    fun createMultiple(supplier: SupplierModel, stores: List<SupplierStoresRequest>) {
         val supplierStores = stores.map { p ->
             SupplierStoresModel(
                 supplier = supplier,
@@ -77,7 +77,7 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
         supplierStoresRepository.saveAll(supplierStores)
     }
 
-    fun editOrCreateMultiple(supplier: SupplierModel, stores: List<SupplierStoresSchema>) {
+    fun editOrCreateMultiple(supplier: SupplierModel, stores: List<SupplierStoresRequest>) {
         val spec = createCriteria(supplier.id)
         val supplierStores = supplierStoresRepository.findAll(spec)
         val currentSupplierStores = supplierStores.map { it.store }.toSet()

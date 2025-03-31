@@ -5,11 +5,11 @@ import agoraa.app.forms_back.dto.resource_mips.ResourceMipDto
 import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.exception.NotAllowedException
 import agoraa.app.forms_back.exception.ResourceNotFoundException
-import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.model.resource_mip.ResourceMipModel
 import agoraa.app.forms_back.repository.resource_mips.ResourceMipRepository
 import agoraa.app.forms_back.schema.resource_mips.ResourceMipCreateSchema
 import agoraa.app.forms_back.schema.resource_mips.ResourceMipEditSchema
+import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.users.users.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery

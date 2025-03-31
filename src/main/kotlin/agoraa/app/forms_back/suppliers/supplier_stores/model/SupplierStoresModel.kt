@@ -1,7 +1,8 @@
-package agoraa.app.forms_back.model.suppliers
+package agoraa.app.forms_back.suppliers.supplier_stores.model
 
 import agoraa.app.forms_back.enums.OrderDaysEnum
 import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import jakarta.persistence.*
 import java.time.LocalDateTime
 

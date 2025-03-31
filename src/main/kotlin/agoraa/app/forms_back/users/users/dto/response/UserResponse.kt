@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.users.users.dto.response
 
-import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.enums.RolesEnum
+import agoraa.app.forms_back.enums.StoresEnum
 import com.fasterxml.jackson.annotation.JsonInclude
 
 @JsonInclude(JsonInclude.Include.ALWAYS)

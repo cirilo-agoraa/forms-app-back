@@ -3,8 +3,8 @@ package agoraa.app.forms_back.passive_quotations.passive_quotations.model
 import agoraa.app.forms_back.enums.PaymentTermsEnum
 import agoraa.app.forms_back.enums.StoresEnum
 import agoraa.app.forms_back.enums.WppGroupsEnum
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.users.users.model.UserModel
-import agoraa.app.forms_back.model.suppliers.SupplierModel
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
