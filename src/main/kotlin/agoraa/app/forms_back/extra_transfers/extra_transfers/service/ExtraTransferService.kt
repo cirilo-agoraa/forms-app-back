@@ -36,8 +36,8 @@ class ExtraTransferService(
         createdAt: LocalDateTime? = null,
         processed: Boolean? = null,
         userId: Long? = null,
-        originStore: agoraa.app.forms_back.shared.enums.StoresEnum? = null,
-        destinyStore: agoraa.app.forms_back.shared.enums.StoresEnum? = null,
+        originStore: StoresEnum? = null,
+        destinyStore: StoresEnum? = null,
     ): Specification<ExtraTransferModel> {
         return Specification { root: Root<ExtraTransferModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()

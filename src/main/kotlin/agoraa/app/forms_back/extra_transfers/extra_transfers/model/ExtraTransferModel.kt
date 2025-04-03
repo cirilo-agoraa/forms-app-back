@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "extra_transfers")
-data class ExtraTransferModel (
+data class ExtraTransferModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
@@ -27,9 +27,9 @@ data class ExtraTransferModel (
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val originStore: agoraa.app.forms_back.shared.enums.StoresEnum,
+    val originStore: StoresEnum,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val destinyStore: agoraa.app.forms_back.shared.enums.StoresEnum,
+    val destinyStore: StoresEnum,
 )
