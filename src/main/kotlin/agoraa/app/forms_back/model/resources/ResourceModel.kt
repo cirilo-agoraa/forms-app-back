@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.model.resources
 
-import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.users.users.model.UserModel
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -18,7 +18,7 @@ data class ResourceModel(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val store: StoresEnum,
+    val store: agoraa.app.forms_back.shared.enums.StoresEnum,
 
     @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),

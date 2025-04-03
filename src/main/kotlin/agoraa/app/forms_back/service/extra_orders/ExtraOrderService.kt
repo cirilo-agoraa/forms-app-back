@@ -2,10 +2,10 @@ package agoraa.app.forms_back.service.extra_orders
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.extra_order.ExtraOrderDto
-import agoraa.app.forms_back.enums.extra_order.OriginEnum
-import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
-import agoraa.app.forms_back.exception.NotAllowedException
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.shared.enums.extra_order.OriginEnum
+import agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum
+import agoraa.app.forms_back.shared.exception.NotAllowedException
+import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.extra_orders.ExtraOrderModel
 import agoraa.app.forms_back.repository.extra_orders.ExtraOrderRepository
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
@@ -43,8 +43,8 @@ class ExtraOrderService(
         username: String? = null,
         createdAt: LocalDateTime? = null,
         processed: Boolean? = null,
-        partialCompleteEnum: PartialCompleteEnum? = null,
-        origin: OriginEnum? = null,
+        partialCompleteEnum: agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum? = null,
+        origin: agoraa.app.forms_back.shared.enums.extra_order.OriginEnum? = null,
         userId: Long? = null,
     ): Specification<ExtraOrderModel> {
         return Specification { root: Root<ExtraOrderModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
@@ -67,11 +67,11 @@ class ExtraOrderService(
             }
 
             partialCompleteEnum?.let {
-                predicates.add(criteriaBuilder.equal(root.get<PartialCompleteEnum>("partialComplete"), it))
+                predicates.add(criteriaBuilder.equal(root.get<agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum>("partialComplete"), it))
             }
 
             origin?.let {
-                predicates.add(criteriaBuilder.equal(root.get<OriginEnum>("origin"), it))
+                predicates.add(criteriaBuilder.equal(root.get<agoraa.app.forms_back.shared.enums.extra_order.OriginEnum>("origin"), it))
             }
 
             criteriaBuilder.and(*predicates.toTypedArray())
@@ -114,11 +114,11 @@ class ExtraOrderService(
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): ExtraOrderModel {
         val extraOrder = extraOrderRepository.findById(id)
-            .orElseThrow { ResourceNotFoundException("Extra Order with id $id not found") }
+            .orElseThrow { agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Extra Order with id $id not found") }
 
         return when {
             hasPermission(customUserDetails, extraOrder) -> extraOrder
-            else -> throw NotAllowedException("You don't have permission to access this resource")
+            else -> throw agoraa.app.forms_back.shared.exception.NotAllowedException("You don't have permission to access this resource")
         }
     }
 
@@ -142,8 +142,8 @@ class ExtraOrderService(
         username: String?,
         createdAt: LocalDateTime?,
         processed: Boolean?,
-        partialComplete: PartialCompleteEnum?,
-        origin: OriginEnum?,
+        partialComplete: agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum?,
+        origin: agoraa.app.forms_back.shared.enums.extra_order.OriginEnum?,
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
@@ -176,8 +176,8 @@ class ExtraOrderService(
         direction: String,
         createdAt: LocalDateTime?,
         accepted: Boolean?,
-        partialComplete: PartialCompleteEnum?,
-        origin: OriginEnum?,
+        partialComplete: agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum?,
+        origin: agoraa.app.forms_back.shared.enums.extra_order.OriginEnum?,
     ): Any {
         val currentUser = customUserDetails.getUserModel()
         val sortDirection =
@@ -218,8 +218,8 @@ class ExtraOrderService(
             ExtraOrderModel(
                 user = currentUser,
                 supplier = supplier,
-                partialComplete = PartialCompleteEnum.valueOf(request.partialComplete),
-                origin = request.origin?.let { OriginEnum.valueOf(it) },
+                partialComplete = agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum.valueOf(request.partialComplete),
+                origin = request.origin?.let { agoraa.app.forms_back.shared.enums.extra_order.OriginEnum.valueOf(it) },
             )
         )
 
@@ -235,9 +235,9 @@ class ExtraOrderService(
             extraOrder.copy(
                 processed = request.processed ?: extraOrder.processed,
                 supplier = request.supplier?.let { supplierService.findById(it.id) } ?: extraOrder.supplier,
-                partialComplete = request.partialComplete?.let { PartialCompleteEnum.valueOf(it) }
+                partialComplete = request.partialComplete?.let { agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum.valueOf(it) }
                     ?: extraOrder.partialComplete,
-                origin = request.origin?.let { OriginEnum.valueOf(it) } ?: extraOrder.origin,
+                origin = request.origin?.let { agoraa.app.forms_back.shared.enums.extra_order.OriginEnum.valueOf(it) } ?: extraOrder.origin,
             )
         )
 

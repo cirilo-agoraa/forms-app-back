@@ -1,12 +1,12 @@
 package agoraa.app.forms_back.schema.supplier_registration
 
-import agoraa.app.forms_back.enums.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum
 import java.time.LocalDate
 
 data class SupplierRegistrationEditSchema(
     val accepted: Boolean? = null,
     val stores: List<SupplierRegistrationStoresEditSchema>? = null,
-    val type: SuppliersRegistrationTypesEnum? = null,
+    val type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum? = null,
     val cnpj: String? = null,
     val companyName: String? = null,
     val paymentTerm: String? = null,

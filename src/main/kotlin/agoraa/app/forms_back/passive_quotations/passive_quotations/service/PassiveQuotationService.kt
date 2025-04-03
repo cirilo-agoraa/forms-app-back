@@ -1,9 +1,9 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotations.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enums.StoresEnum
-import agoraa.app.forms_back.exception.NotAllowedException
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.shared.enums.StoresEnum
+import agoraa.app.forms_back.shared.exception.NotAllowedException
+import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.service.PassiveQuotationProductsService
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationCalculateRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationPrintRequest
@@ -12,8 +12,8 @@ import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.response.
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.response.PassiveQuotationResponse
 import agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel
 import agoraa.app.forms_back.passive_quotations.passive_quotations.repository.PassiveQuotationRepository
-import agoraa.app.forms_back.service.ChatsacService
-import agoraa.app.forms_back.service.ProductService
+import agoraa.app.forms_back.shared.service.ChatsacService
+import agoraa.app.forms_back.products.products.service.ProductService
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
 import agoraa.app.forms_back.users.users.model.UserModel
@@ -47,7 +47,7 @@ class PassiveQuotationService(
         username: String? = null,
         supplier: String? = null,
         createdAt: LocalDateTime? = null,
-        store: StoresEnum? = null,
+        store: agoraa.app.forms_back.shared.enums.StoresEnum? = null,
         userId: Long? = null,
     ): Specification<PassiveQuotationModel> {
         return Specification { root: Root<PassiveQuotationModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
@@ -70,7 +70,7 @@ class PassiveQuotationService(
             }
 
             store?.let {
-                predicates.add(criteriaBuilder.equal(root.get<StoresEnum>("store"), it))
+                predicates.add(criteriaBuilder.equal(root.get<agoraa.app.forms_back.shared.enums.StoresEnum>("store"), it))
             }
 
             criteriaBuilder.and(*predicates.toTypedArray())
@@ -130,11 +130,11 @@ class PassiveQuotationService(
         id: Long
     ): PassiveQuotationModel {
         val passiveQuotation = passiveQuotationRepository.findById(id)
-            .orElseThrow { ResourceNotFoundException("Passive Quotation with id $id not found") }
+            .orElseThrow { agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Passive Quotation with id $id not found") }
 
         return when {
             hasPermission(customUserDetails, passiveQuotation) -> passiveQuotation
-            else -> throw NotAllowedException("You don't have permission to access this resource")
+            else -> throw agoraa.app.forms_back.shared.exception.NotAllowedException("You don't have permission to access this resource")
         }
     }
 
@@ -157,7 +157,7 @@ class PassiveQuotationService(
         username: String?,
         supplier: String?,
         createdAt: LocalDateTime?,
-        store: StoresEnum?
+        store: agoraa.app.forms_back.shared.enums.StoresEnum?
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
@@ -187,7 +187,7 @@ class PassiveQuotationService(
         direction: String,
         supplier: String?,
         createdAt: LocalDateTime?,
-        store: StoresEnum?
+        store: agoraa.app.forms_back.shared.enums.StoresEnum?
     ): Any {
         val currentUser = customUserDetails.getUserModel()
         val sortDirection =
@@ -211,13 +211,13 @@ class PassiveQuotationService(
         val products = productsService.findAll(requestCodes)
 
         if (products.isEmpty()) {
-            throw ResourceNotFoundException("Products not found")
+            throw agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Products not found")
         }
 
         val notFundProducts = products.map { it.code }.toSet() - requestCodes.toSet()
 
         if (notFundProducts.isNotEmpty()) {
-            throw ResourceNotFoundException("Products with codes $notFundProducts not found")
+            throw agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Products with codes $notFundProducts not found")
         }
 
         val requestProductsMap = request.products.associateBy { it.code }
@@ -316,9 +316,9 @@ class PassiveQuotationService(
                 productStore,
                 biggestSale.toInt(),
                 stockPlusOpenOrder,
-                list.find { it.store == StoresEnum.TRESMANN_VIX }!!.currentStock ?: 0.0,
-                list.find { it.store == StoresEnum.TRESMANN_SMJ }!!.currentStock ?: 0.0,
-                list.find { it.store == StoresEnum.TRESMANN_STT }!!.currentStock ?: 0.0,
+                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_VIX }!!.currentStock ?: 0.0,
+                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_SMJ }!!.currentStock ?: 0.0,
+                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_STT }!!.currentStock ?: 0.0,
                 finalQtt,
                 maxPurchase.toDouble(),
                 total,

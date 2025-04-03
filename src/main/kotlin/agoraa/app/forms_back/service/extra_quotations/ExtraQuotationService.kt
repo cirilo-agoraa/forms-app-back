@@ -2,8 +2,8 @@ package agoraa.app.forms_back.service.extra_quotations
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.extra_quotations.ExtraQuotationDto
-import agoraa.app.forms_back.exception.NotAllowedException
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.shared.exception.NotAllowedException
+import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.extra_quotations.ExtraQuotationModel
 import agoraa.app.forms_back.repository.extra_quotations.ExtraQuotationRepository
 import agoraa.app.forms_back.schema.extra_quotations.ExtraQuotationCreateSchema
@@ -89,11 +89,11 @@ class ExtraQuotationService(
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): ExtraQuotationModel {
         val extraQuotation = extraQuotationRepository.findById(id)
-            .orElseThrow { ResourceNotFoundException("Extra Order with id $id not found") }
+            .orElseThrow { agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Extra Order with id $id not found") }
 
         return when {
             hasPermission(customUserDetails, extraQuotation) -> extraQuotation
-            else -> throw NotAllowedException("You don't have permission to access this resource")
+            else -> throw agoraa.app.forms_back.shared.exception.NotAllowedException("You don't have permission to access this resource")
         }
     }
 

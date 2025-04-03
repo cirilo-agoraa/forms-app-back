@@ -2,9 +2,9 @@ package agoraa.app.forms_back.service.supplier_registration
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.supplier_registration.SupplierRegistrationDto
-import agoraa.app.forms_back.enums.suppliers_registration.SuppliersRegistrationTypesEnum
-import agoraa.app.forms_back.exception.NotAllowedException
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.shared.exception.NotAllowedException
+import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.supplier_registrations.SupplierRegistrationModel
 import agoraa.app.forms_back.repository.supplier_registrations.SupplierRegistrationRepository
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationCreateSchema
@@ -80,7 +80,7 @@ class SupplierRegistrationService(
         username: String? = null,
         createdAt: LocalDateTime? = null,
         accepted: Boolean? = null,
-        type: SuppliersRegistrationTypesEnum? = null,
+        type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum? = null,
         cnpj: String? = null,
         userId: Long? = null,
     ): Specification<SupplierRegistrationModel> {
@@ -104,7 +104,7 @@ class SupplierRegistrationService(
             }
 
             type?.let {
-                predicates.add(criteriaBuilder.equal(root.get<SuppliersRegistrationTypesEnum>("type"), it))
+                predicates.add(criteriaBuilder.equal(root.get<agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum>("type"), it))
             }
 
             cnpj?.let {
@@ -176,11 +176,11 @@ class SupplierRegistrationService(
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): SupplierRegistrationModel {
         val supplierRegistration = supplierRegistrationRepository.findById(id)
-            .orElseThrow { ResourceNotFoundException("Supplier Registration with id $id not found") }
+            .orElseThrow { agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Supplier Registration with id $id not found") }
 
         return when {
             hasPermission(customUserDetails, supplierRegistration) -> supplierRegistration
-            else -> throw NotAllowedException("You don't have permission to access this resource")
+            else -> throw agoraa.app.forms_back.shared.exception.NotAllowedException("You don't have permission to access this resource")
         }
     }
 
@@ -203,7 +203,7 @@ class SupplierRegistrationService(
         username: String?,
         createdAt: LocalDateTime?,
         accepted: Boolean?,
-        type: SuppliersRegistrationTypesEnum?,
+        type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum?,
         cnpj: String?,
     ): Any {
         val sortDirection =
@@ -236,7 +236,7 @@ class SupplierRegistrationService(
         direction: String,
         createdAt: LocalDateTime?,
         accepted: Boolean?,
-        type: SuppliersRegistrationTypesEnum?,
+        type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum?,
         cnpj: String?,
     ): Any {
         val currentUser = customUserDetails.getUserModel()
@@ -278,7 +278,7 @@ class SupplierRegistrationService(
                 user = currentUser,
                 companyName = request.companyName.uppercase(),
                 paymentTerm = request.paymentTerm,
-                type = SuppliersRegistrationTypesEnum.valueOf(request.type),
+                type = agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum.valueOf(request.type),
                 sellerPhone = request.sellerPhone,
                 sellerEmail = request.sellerEmail,
                 cnpj = request.cnpj,

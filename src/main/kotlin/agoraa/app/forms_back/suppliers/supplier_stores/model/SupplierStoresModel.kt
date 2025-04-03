@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.suppliers.supplier_stores.model
 
-import agoraa.app.forms_back.enums.OrderDaysEnum
-import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.shared.enums.OrderDaysEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -19,7 +19,7 @@ data class SupplierStoresModel(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val store: StoresEnum,
+    val store: agoraa.app.forms_back.shared.enums.StoresEnum,
 
     @Column(nullable = false)
     val frequency: Int,
@@ -59,5 +59,5 @@ data class SupplierStoresModel(
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    val orderDay: OrderDaysEnum? = null,
+    val orderDay: agoraa.app.forms_back.shared.enums.OrderDaysEnum? = null,
 )

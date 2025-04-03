@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotation_products.dto.request
 
-import agoraa.app.forms_back.model.products.ProductModel
+import agoraa.app.forms_back.products.products.model.ProductModel
 
 data class PassiveQuotationProductsRequest(
     val product: ProductModel,

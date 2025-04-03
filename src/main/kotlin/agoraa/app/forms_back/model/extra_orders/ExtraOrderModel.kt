@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.model.extra_orders
 
-import agoraa.app.forms_back.enums.extra_order.OriginEnum
-import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
+import agoraa.app.forms_back.shared.enums.extra_order.OriginEnum
+import agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.users.users.model.UserModel
 import jakarta.persistence.*
@@ -24,7 +24,7 @@ data class ExtraOrderModel(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val partialComplete: PartialCompleteEnum,
+    val partialComplete: agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum,
 
     @Column(nullable = false)
     val processed: Boolean = false,
@@ -34,5 +34,5 @@ data class ExtraOrderModel(
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    val origin: OriginEnum? = null,
+    val origin: agoraa.app.forms_back.shared.enums.extra_order.OriginEnum? = null,
 )

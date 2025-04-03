@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.suppliers.suppliers.dto.response
 
-import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
+import agoraa.app.forms_back.suppliers.suppliers.enums.SupplierStatusEnum
 import agoraa.app.forms_back.suppliers.supplier_stores.dto.response.SupplierStoresResponse
 import com.fasterxml.jackson.annotation.JsonInclude
 

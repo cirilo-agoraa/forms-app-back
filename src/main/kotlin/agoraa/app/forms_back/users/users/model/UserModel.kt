@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.users.users.model
 
-import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import jakarta.persistence.*
 
 @Entity
@@ -27,5 +27,5 @@ data class UserModel(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val store: StoresEnum
+    val store: agoraa.app.forms_back.shared.enums.StoresEnum
 )

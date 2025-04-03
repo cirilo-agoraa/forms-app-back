@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.suppliers.suppliers.controller
 
-import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
+import agoraa.app.forms_back.suppliers.suppliers.enums.SupplierStatusEnum
 import agoraa.app.forms_back.suppliers.suppliers.dto.request.SupplierRequest
 import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
 import jakarta.validation.Valid

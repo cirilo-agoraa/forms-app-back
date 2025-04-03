@@ -1,8 +1,8 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotations.dto.response
 
-import agoraa.app.forms_back.enums.PaymentTermsEnum
-import agoraa.app.forms_back.enums.StoresEnum
-import agoraa.app.forms_back.enums.WppGroupsEnum
+import agoraa.app.forms_back.shared.enums.PaymentTermsEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
+import agoraa.app.forms_back.shared.enums.WppGroupsEnum
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.dto.response.PassiveQuotationProductsResponse
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.users.users.dto.response.UserResponse
@@ -15,9 +15,9 @@ data class PassiveQuotationResponse(
     val user: UserResponse,
     val supplier: SupplierModel,
     val createdAt: LocalDateTime,
-    val store: StoresEnum,
-    val wppGroup: WppGroupsEnum,
-    val paymentTerm: PaymentTermsEnum,
+    val store: agoraa.app.forms_back.shared.enums.StoresEnum,
+    val wppGroup: agoraa.app.forms_back.shared.enums.WppGroupsEnum,
+    val paymentTerm: agoraa.app.forms_back.shared.enums.PaymentTermsEnum,
     val worstTerm: Int,
     val bestTerm: Int,
     val storesQuantity: Int,

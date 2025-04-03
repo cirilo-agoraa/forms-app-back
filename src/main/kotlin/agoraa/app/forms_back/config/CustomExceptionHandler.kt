@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.config
 
-import agoraa.app.forms_back.exception.NotAllowedException
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.shared.exception.NotAllowedException
+import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -11,8 +11,8 @@ import org.springframework.web.context.request.WebRequest
 @ControllerAdvice
 class CustomExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException::class)
-    fun handleResourceNotFoundException(ex: ResourceNotFoundException, request: WebRequest): ResponseEntity<String> {
+    @ExceptionHandler(agoraa.app.forms_back.shared.exception.ResourceNotFoundException::class)
+    fun handleResourceNotFoundException(ex: agoraa.app.forms_back.shared.exception.ResourceNotFoundException, request: WebRequest): ResponseEntity<String> {
         return ResponseEntity("Resource Not Found: ${ex.message}", HttpStatus.NOT_FOUND)
     }
 
@@ -21,8 +21,8 @@ class CustomExceptionHandler {
         return ResponseEntity("Bad Request: ${ex.message}", HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(NotAllowedException::class)
-    fun handleNotAllowedException(ex: NotAllowedException, request: WebRequest): ResponseEntity<String> {
+    @ExceptionHandler(agoraa.app.forms_back.shared.exception.NotAllowedException::class)
+    fun handleNotAllowedException(ex: agoraa.app.forms_back.shared.exception.NotAllowedException, request: WebRequest): ResponseEntity<String> {
         return ResponseEntity("Forbidden: ${ex.message}", HttpStatus.UNAUTHORIZED)
     }
 

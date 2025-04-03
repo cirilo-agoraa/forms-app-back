@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.users.user_roles.service
 
-import agoraa.app.forms_back.enums.RolesEnum
+import agoraa.app.forms_back.shared.enums.RolesEnum
 import agoraa.app.forms_back.users.user_roles.model.AuthorityModel
 import agoraa.app.forms_back.users.user_roles.repository.AuthorityRepository
 import agoraa.app.forms_back.users.users.model.UserModel
@@ -11,7 +11,7 @@ class AuthorityService(
     private val authorityRepository: AuthorityRepository
 ) {
 
-    private fun create(user: UserModel, roles: List<RolesEnum>) {
+    private fun create(user: UserModel, roles: List<agoraa.app.forms_back.shared.enums.RolesEnum>) {
         val authorities = roles.map { role ->
            AuthorityModel(
                user = user,
@@ -25,7 +25,7 @@ class AuthorityService(
         userId: Long,
     ): List<AuthorityModel> = authorityRepository.findByUserId(userId)
 
-    fun createOrDelete(user: UserModel, roles: List<RolesEnum>) {
+    fun createOrDelete(user: UserModel, roles: List<agoraa.app.forms_back.shared.enums.RolesEnum>) {
         val authorities = findByParentId(user.id)
         val currentRolesSet = authorities.map { it.authority }.toSet()
         val newRolesSet = roles.toSet()

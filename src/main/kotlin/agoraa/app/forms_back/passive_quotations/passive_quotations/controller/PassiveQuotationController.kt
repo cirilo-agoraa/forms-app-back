@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotations.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationCalculateRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationPrintRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationRequest
@@ -26,7 +26,7 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
         @RequestParam(required = false, defaultValue = "asc") direction: String,
         @RequestParam(required = false) username: String?,
         @RequestParam(required = false) supplier: String?,
-        @RequestParam(required = false) store: StoresEnum?,
+        @RequestParam(required = false) store: agoraa.app.forms_back.shared.enums.StoresEnum?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -53,7 +53,7 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
         @RequestParam(defaultValue = "id") sort: String,
         @RequestParam(defaultValue = "asc") direction: String,
         @RequestParam(required = false) supplier: String?,
-        @RequestParam(required = false) store: StoresEnum?,
+        @RequestParam(required = false) store: agoraa.app.forms_back.shared.enums.StoresEnum?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(

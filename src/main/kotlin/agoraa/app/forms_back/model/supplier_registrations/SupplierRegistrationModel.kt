@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.model.supplier_registrations
 
-import agoraa.app.forms_back.enums.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum
 import agoraa.app.forms_back.users.users.model.UserModel
 import jakarta.persistence.*
 import java.time.LocalDate
@@ -25,7 +25,7 @@ data class SupplierRegistrationModel(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val type: SuppliersRegistrationTypesEnum,
+    val type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum,
 
     @Column(nullable = false)
     val companyName: String,

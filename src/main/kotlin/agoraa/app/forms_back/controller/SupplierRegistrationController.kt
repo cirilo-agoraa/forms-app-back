@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enums.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationCreateSchema
 import agoraa.app.forms_back.schema.supplier_registration.SupplierRegistrationEditSchema
 import agoraa.app.forms_back.service.supplier_registration.SupplierRegistrationService
@@ -27,7 +27,7 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
         @RequestParam(required = false) username: String?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) accepted: Boolean?,
-        @RequestParam(required = false) type: SuppliersRegistrationTypesEnum?,
+        @RequestParam(required = false) type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum?,
         @RequestParam(required = false) cnpj: String?,
         @RequestParam(required = false) companyName: String?,
     ): ResponseEntity<Any> {
@@ -57,7 +57,7 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
         @RequestParam(defaultValue = "asc") direction: String,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) processed: Boolean?,
-        @RequestParam(required = false) type: SuppliersRegistrationTypesEnum?,
+        @RequestParam(required = false) type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum?,
         @RequestParam(required = false) cnpj: String?,
         @RequestParam(required = false) companyName: String?,
     ): ResponseEntity<Any> {

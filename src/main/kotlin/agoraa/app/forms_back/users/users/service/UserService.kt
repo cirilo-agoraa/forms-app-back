@@ -1,8 +1,8 @@
 package agoraa.app.forms_back.users.users.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.exception.NotAllowedException
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.shared.exception.NotAllowedException
+import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.users.user_roles.service.AuthorityService
 import agoraa.app.forms_back.users.users.dto.request.ChangePasswordRequest
 import agoraa.app.forms_back.users.users.dto.request.UserCreateRequest
@@ -105,11 +105,11 @@ class UserService(
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): UserModel {
         val user = userRepository.findById(id)
-            .orElseThrow { ResourceNotFoundException("User with id $id not found") }
+            .orElseThrow { agoraa.app.forms_back.shared.exception.ResourceNotFoundException("User with id $id not found") }
 
         return when {
             hasPermission(customUserDetails, user) -> user
-            else -> throw NotAllowedException("You don't have permission to access this resource")
+            else -> throw agoraa.app.forms_back.shared.exception.NotAllowedException("You don't have permission to access this resource")
         }
     }
 
@@ -121,7 +121,7 @@ class UserService(
     // used in the jwt auth filter
     fun findByUsername(username: String): UserModel {
         return userRepository.findByUsername(username)
-            .orElseThrow { ResourceNotFoundException("User not Found") }
+            .orElseThrow { agoraa.app.forms_back.shared.exception.ResourceNotFoundException("User not Found") }
     }
 
     @Transactional

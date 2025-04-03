@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.suppliers.suppliers.dto.request
 
-import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
+import agoraa.app.forms_back.suppliers.suppliers.enums.SupplierStatusEnum
 import agoraa.app.forms_back.suppliers.supplier_stores.dto.request.SupplierStoresRequest
 
 data class SupplierRequest(

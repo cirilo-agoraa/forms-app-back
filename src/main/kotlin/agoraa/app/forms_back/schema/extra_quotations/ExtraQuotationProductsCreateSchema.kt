@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.schema.extra_quotations
 
-import agoraa.app.forms_back.model.products.ProductModel
+import agoraa.app.forms_back.products.products.model.ProductModel
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 

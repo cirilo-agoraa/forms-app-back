@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.extra_transfers.extra_transfer_products.dto.request
 
-import agoraa.app.forms_back.model.products.ProductModel
+import agoraa.app.forms_back.products.products.model.ProductModel
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 

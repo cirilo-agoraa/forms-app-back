@@ -1,7 +1,6 @@
 package agoraa.app.forms_back.suppliers.suppliers.service
 
-import agoraa.app.forms_back.enums.supplier.SupplierStatusEnum
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.suppliers.suppliers.enums.SupplierStatusEnum
 import agoraa.app.forms_back.suppliers.supplier_stores.service.SupplierStoresService
 import agoraa.app.forms_back.suppliers.suppliers.dto.request.SupplierRequest
 import agoraa.app.forms_back.suppliers.suppliers.dto.response.SupplierResponse
@@ -82,7 +81,7 @@ class SupplierService(
 
     fun findById(id: Long): SupplierModel {
         return supplierRepository.findById(id)
-            .orElseThrow { throw ResourceNotFoundException("Supplier not Found") }
+            .orElseThrow { throw agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Supplier not Found") }
     }
 
     fun getAll(names: List<String>?): List<SupplierModel> {

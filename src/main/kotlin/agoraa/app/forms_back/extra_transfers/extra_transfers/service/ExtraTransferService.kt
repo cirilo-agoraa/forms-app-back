@@ -1,9 +1,9 @@
 package agoraa.app.forms_back.extra_transfers.extra_transfers.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enums.StoresEnum
-import agoraa.app.forms_back.exception.NotAllowedException
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.shared.enums.StoresEnum
+import agoraa.app.forms_back.shared.exception.NotAllowedException
+import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.extra_transfers.extra_transfer_products.service.ExtraTransferProductsService
 import agoraa.app.forms_back.extra_transfers.extra_transfers.dto.request.ExtraTransferPatchRequest
 import agoraa.app.forms_back.extra_transfers.extra_transfers.dto.request.ExtraTransferRequest
@@ -36,8 +36,8 @@ class ExtraTransferService(
         createdAt: LocalDateTime? = null,
         processed: Boolean? = null,
         userId: Long? = null,
-        originStore: StoresEnum? = null,
-        destinyStore: StoresEnum? = null,
+        originStore: agoraa.app.forms_back.shared.enums.StoresEnum? = null,
+        destinyStore: agoraa.app.forms_back.shared.enums.StoresEnum? = null,
     ): Specification<ExtraTransferModel> {
         return Specification { root: Root<ExtraTransferModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -59,11 +59,11 @@ class ExtraTransferService(
             }
 
             originStore?.let {
-                predicates.add(criteriaBuilder.equal(root.get<StoresEnum>("originStore"), it))
+                predicates.add(criteriaBuilder.equal(root.get<agoraa.app.forms_back.shared.enums.StoresEnum>("originStore"), it))
             }
 
             destinyStore?.let {
-                predicates.add(criteriaBuilder.equal(root.get<StoresEnum>("destinyStore"), it))
+                predicates.add(criteriaBuilder.equal(root.get<agoraa.app.forms_back.shared.enums.StoresEnum>("destinyStore"), it))
             }
 
             criteriaBuilder.and(*predicates.toTypedArray())
@@ -104,11 +104,11 @@ class ExtraTransferService(
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): ExtraTransferModel {
         val extraTransfer = extraTransferRepository.findById(id)
-            .orElseThrow { ResourceNotFoundException("Extra Transfer with id $id not found") }
+            .orElseThrow { agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Extra Transfer with id $id not found") }
 
         return when {
             hasPermission(customUserDetails, extraTransfer) -> extraTransfer
-            else -> throw NotAllowedException("You don't have permission to access this resource")
+            else -> throw agoraa.app.forms_back.shared.exception.NotAllowedException("You don't have permission to access this resource")
         }
     }
 

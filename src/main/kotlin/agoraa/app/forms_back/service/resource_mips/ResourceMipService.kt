@@ -2,9 +2,9 @@ package agoraa.app.forms_back.service.resource_mips
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.resource_mips.ResourceMipDto
-import agoraa.app.forms_back.enums.StoresEnum
-import agoraa.app.forms_back.exception.NotAllowedException
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.shared.enums.StoresEnum
+import agoraa.app.forms_back.shared.exception.NotAllowedException
+import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.resource_mip.ResourceMipModel
 import agoraa.app.forms_back.repository.resource_mips.ResourceMipRepository
 import agoraa.app.forms_back.schema.resource_mips.ResourceMipCreateSchema
@@ -33,7 +33,7 @@ class ResourceMipService(
         username: String? = null,
         createdAt: LocalDateTime? = null,
         processed: Boolean? = null,
-        stores: List<StoresEnum>? = null,
+        stores: List<agoraa.app.forms_back.shared.enums.StoresEnum>? = null,
         userId: Long? = null,
     ): Specification<ResourceMipModel> {
         return Specification { root: Root<ResourceMipModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
@@ -48,7 +48,7 @@ class ResourceMipService(
             }
 
             stores?.let {
-                predicates.add(root.get<StoresEnum>("store").`in`(it))
+                predicates.add(root.get<agoraa.app.forms_back.shared.enums.StoresEnum>("store").`in`(it))
             }
 
             createdAt?.let {
@@ -95,11 +95,11 @@ class ResourceMipService(
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): ResourceMipModel {
         val resourceMip = resourceMipRepository.findById(id)
-            .orElseThrow { ResourceNotFoundException("Resource Mip with id $id not found") }
+            .orElseThrow { agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Resource Mip with id $id not found") }
 
         return when {
             hasPermission(customUserDetails, resourceMip) -> resourceMip
-            else -> throw NotAllowedException("You don't have permission to access this resource")
+            else -> throw agoraa.app.forms_back.shared.exception.NotAllowedException("You don't have permission to access this resource")
         }
     }
 

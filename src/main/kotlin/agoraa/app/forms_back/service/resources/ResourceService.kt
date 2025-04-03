@@ -2,9 +2,9 @@ package agoraa.app.forms_back.service.resources
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.dto.resource.ResourceDto
-import agoraa.app.forms_back.enums.StoresEnum
-import agoraa.app.forms_back.exception.NotAllowedException
-import agoraa.app.forms_back.exception.ResourceNotFoundException
+import agoraa.app.forms_back.shared.enums.StoresEnum
+import agoraa.app.forms_back.shared.exception.NotAllowedException
+import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.model.resources.ResourceModel
 import agoraa.app.forms_back.repository.resources.ResourceRepository
 import agoraa.app.forms_back.schema.resources.ResourceCreateSchema
@@ -31,7 +31,7 @@ class ResourceService(
 
     private fun createCriteria(
         username: String? = null,
-        stores: List<StoresEnum>? = null,
+        stores: List<agoraa.app.forms_back.shared.enums.StoresEnum>? = null,
         createdAt: LocalDateTime? = null,
         processed: Boolean? = null,
         userId: Long? = null,
@@ -50,7 +50,7 @@ class ResourceService(
             }
 
             stores?.let {
-                predicates.add(root.get<StoresEnum>("store").`in`(it))
+                predicates.add(root.get<agoraa.app.forms_back.shared.enums.StoresEnum>("store").`in`(it))
             }
 
             createdAt?.let {
@@ -102,11 +102,11 @@ class ResourceService(
 
     fun findById(customUserDetails: CustomUserDetails, id: Long): ResourceModel {
         val resource = resourceRepository.findById(id)
-            .orElseThrow { ResourceNotFoundException("Resource with id $id not found") }
+            .orElseThrow { agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Resource with id $id not found") }
 
         return when {
             hasPermission(customUserDetails, resource) -> resource
-            else -> throw NotAllowedException("You don't have permission to access this resource")
+            else -> throw agoraa.app.forms_back.shared.exception.NotAllowedException("You don't have permission to access this resource")
         }
     }
 
@@ -128,7 +128,7 @@ class ResourceService(
         sort: String,
         direction: String,
         username: String?,
-        stores: List<StoresEnum>?,
+        stores: List<agoraa.app.forms_back.shared.enums.StoresEnum>?,
         createdAt: LocalDateTime?,
         maxDate: LocalDateTime?,
         minDate: LocalDateTime?,
@@ -165,7 +165,7 @@ class ResourceService(
         size: Int,
         sort: String,
         direction: String,
-        stores: List<StoresEnum>?,
+        stores: List<agoraa.app.forms_back.shared.enums.StoresEnum>?,
         createdAt: LocalDateTime?,
         processed: Boolean?
     ): Any {

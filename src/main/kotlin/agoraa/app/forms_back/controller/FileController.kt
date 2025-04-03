@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.controller
 
-import agoraa.app.forms_back.service.FileService
+import agoraa.app.forms_back.shared.service.FileService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping

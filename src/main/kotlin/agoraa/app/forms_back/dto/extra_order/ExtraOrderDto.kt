@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.dto.extra_order
 
-import agoraa.app.forms_back.enums.extra_order.OriginEnum
-import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
+import agoraa.app.forms_back.shared.enums.extra_order.OriginEnum
+import agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.users.users.dto.response.UserResponse
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -14,8 +14,8 @@ data class ExtraOrderDto(
     val supplier: SupplierModel,
     val processed: Boolean,
     val createdAt: LocalDateTime,
-    val partialComplete: PartialCompleteEnum,
-    val origin: OriginEnum? = null,
+    val partialComplete: agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum,
+    val origin: agoraa.app.forms_back.shared.enums.extra_order.OriginEnum? = null,
     var stores: List<ExtraOrderStoresDto>? = null,
     var products: List<ExtraOrderProductsDto>? = null
 )

@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.extra_transfers.extra_transfers.model
 
-import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.users.users.model.UserModel
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -27,9 +27,9 @@ data class ExtraTransferModel (
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val originStore: StoresEnum,
+    val originStore: agoraa.app.forms_back.shared.enums.StoresEnum,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val destinyStore: StoresEnum,
+    val destinyStore: agoraa.app.forms_back.shared.enums.StoresEnum,
 )

@@ -6,7 +6,7 @@ import agoraa.app.forms_back.model.resource_mip.ResourceMipProductsModel
 import agoraa.app.forms_back.repository.resource_mips.ResourceMipProductsRepository
 import agoraa.app.forms_back.schema.resource_mips.ResourceMipProductsCreateSchema
 import agoraa.app.forms_back.schema.resource_mips.ResourceMipProductsEditSchema
-import agoraa.app.forms_back.service.ProductService
+import agoraa.app.forms_back.products.products.service.ProductService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate

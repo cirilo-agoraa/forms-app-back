@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.dto.supplier_registration
 
-import agoraa.app.forms_back.enums.suppliers_registration.SuppliersRegistrationTypesEnum
+import agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum
 import agoraa.app.forms_back.users.users.dto.response.UserResponse
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDate
@@ -12,7 +12,7 @@ data class SupplierRegistrationDto(
     val user: UserResponse,
     val accepted: Boolean,
     val createdAt: LocalDateTime,
-    val type: SuppliersRegistrationTypesEnum,
+    val type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum,
     val companyName: String,
     var stores: List<SupplierRegistrationStoresDto>? = null,
     var weeklyQuotations: List<SupplierRegistrationWeeklyQuotationsDto>? = null,

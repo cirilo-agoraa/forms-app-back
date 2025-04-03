@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.schema.resources.ResourceCreateSchema
 import agoraa.app.forms_back.schema.resources.ResourceEditSchema
 import agoraa.app.forms_back.service.resources.ResourceService
@@ -25,7 +25,7 @@ class ResourceController(private val resourceService: ResourceService) {
         @RequestParam(required = false, defaultValue = "id") sort: String,
         @RequestParam(required = false, defaultValue = "asc") direction: String,
         @RequestParam(required = false) username: String?,
-        @RequestParam(required = false) stores: List<StoresEnum>?,
+        @RequestParam(required = false) stores: List<agoraa.app.forms_back.shared.enums.StoresEnum>?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) maxDate: LocalDateTime?,
         @RequestParam(required = false) minDate: LocalDateTime?,
@@ -56,7 +56,7 @@ class ResourceController(private val resourceService: ResourceService) {
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "id") sort: String,
         @RequestParam(defaultValue = "asc") direction: String,
-        @RequestParam(required = false) stores: List<StoresEnum>?,
+        @RequestParam(required = false) stores: List<agoraa.app.forms_back.shared.enums.StoresEnum>?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) processed: Boolean?
     ): ResponseEntity<Any> {

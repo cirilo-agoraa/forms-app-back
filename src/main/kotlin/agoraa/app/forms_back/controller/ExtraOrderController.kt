@@ -1,8 +1,8 @@
 package agoraa.app.forms_back.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.enums.extra_order.OriginEnum
-import agoraa.app.forms_back.enums.extra_order.PartialCompleteEnum
+import agoraa.app.forms_back.shared.enums.extra_order.OriginEnum
+import agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderCreateSchema
 import agoraa.app.forms_back.schema.extra_order.ExtraOrderEditSchema
 import agoraa.app.forms_back.service.extra_orders.ExtraOrderService
@@ -29,8 +29,8 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
         @RequestParam(required = false) username: String?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) processed: Boolean?,
-        @RequestParam(required = false) partialComplete: PartialCompleteEnum?,
-        @RequestParam(required = false) origin: OriginEnum?,
+        @RequestParam(required = false) partialComplete: agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum?,
+        @RequestParam(required = false) origin: agoraa.app.forms_back.shared.enums.extra_order.OriginEnum?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             extraOrderService.getAll(
@@ -60,8 +60,8 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
         @RequestParam(defaultValue = "asc") direction: String,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) processed: Boolean?,
-        @RequestParam(required = false) partialComplete: PartialCompleteEnum?,
-        @RequestParam(required = false) origin: OriginEnum?,
+        @RequestParam(required = false) partialComplete: agoraa.app.forms_back.shared.enums.extra_order.PartialCompleteEnum?,
+        @RequestParam(required = false) origin: agoraa.app.forms_back.shared.enums.extra_order.OriginEnum?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             extraOrderService.getAllByCurrentUser(

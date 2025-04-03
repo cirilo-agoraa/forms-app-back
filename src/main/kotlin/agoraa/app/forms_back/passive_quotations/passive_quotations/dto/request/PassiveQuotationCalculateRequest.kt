@@ -1,10 +1,10 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request
 
-import agoraa.app.forms_back.enums.StoresEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.dto.request.PassiveQuotationProductsCalculateRequest
 
 data class PassiveQuotationCalculateRequest(
-    val store: StoresEnum,
+    val store: agoraa.app.forms_back.shared.enums.StoresEnum,
     val worstTerm: Int,
     val bestTerm: Int,
     val storesQuantity: Int,

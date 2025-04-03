@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotation_products.dto.response
 
-import agoraa.app.forms_back.model.products.ProductModel
+import agoraa.app.forms_back.products.products.model.ProductModel
 import com.fasterxml.jackson.annotation.JsonInclude
 
 @JsonInclude(JsonInclude.Include.ALWAYS)

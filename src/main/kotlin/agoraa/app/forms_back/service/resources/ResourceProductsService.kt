@@ -1,13 +1,13 @@
 package agoraa.app.forms_back.service.resources
 
 import agoraa.app.forms_back.dto.resource_products.ResourceProductsDto
-import agoraa.app.forms_back.model.products.ProductModel
+import agoraa.app.forms_back.products.products.model.ProductModel
 import agoraa.app.forms_back.model.resources.ResourceModel
 import agoraa.app.forms_back.model.resources.ResourceProductsModel
 import agoraa.app.forms_back.repository.resources.ResourceProductsRepository
 import agoraa.app.forms_back.schema.resources.ResourceProductsCreateSchema
 import agoraa.app.forms_back.schema.resources.ResourceProductsEditSchema
-import agoraa.app.forms_back.service.ProductService
+import agoraa.app.forms_back.products.products.service.ProductService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate

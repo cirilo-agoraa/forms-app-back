@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.model.extra_orders
 
-import agoraa.app.forms_back.model.products.ProductModel
+import agoraa.app.forms_back.products.products.model.ProductModel
 import jakarta.persistence.*
 
 @Entity
