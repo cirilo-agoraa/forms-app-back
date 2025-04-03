@@ -4,5 +4,6 @@ enum class RolesEnum {
     ROLE_FISCAL,
     ROLE_COMPRADOR,
     ROLE_LOJA,
-    ROLE_ADMIN
+    ROLE_ADMIN,
+    ROLE_REPOSITOR
 }
