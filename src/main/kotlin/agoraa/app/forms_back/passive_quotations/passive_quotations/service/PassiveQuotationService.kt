@@ -333,7 +333,7 @@ class PassiveQuotationService(
     }
 
     fun sendPdf(request: PassiveQuotationPrintRequest) {
-        val filePath = "C:\\Users\\pcago\\Downloads\\${request.fileName}.pdf"
+        val filePath = "F:\\COMPRAS\\Automações.Compras\\Cotacoes\\${request.fileName}.pdf"
         val groupId = request.wppGroup.getGroupId()
 
         print(chatsacService.sendPdf(filePath, groupId).block())
