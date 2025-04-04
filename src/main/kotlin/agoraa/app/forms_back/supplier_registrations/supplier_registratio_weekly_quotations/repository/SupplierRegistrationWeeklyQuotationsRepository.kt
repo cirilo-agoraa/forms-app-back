@@ -1,0 +1,11 @@
+package agoraa.app.forms_back.supplier_registrations.supplier_registratio_weekly_quotations.repository
+
+import agoraa.app.forms_back.supplier_registrations.supplier_registratio_weekly_quotations.model.SupplierRegistrationWeeklyQuotationsModel
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
+import org.springframework.stereotype.Repository
+
+@Repository
+interface SupplierRegistrationWeeklyQuotationsRepository :
+    JpaRepository<SupplierRegistrationWeeklyQuotationsModel, Long>,
+    JpaSpecificationExecutor<SupplierRegistrationWeeklyQuotationsModel>

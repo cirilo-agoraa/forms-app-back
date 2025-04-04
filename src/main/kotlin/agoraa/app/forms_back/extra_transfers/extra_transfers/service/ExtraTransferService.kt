@@ -94,7 +94,7 @@ class ExtraTransferService(
         )
 
         if (full) {
-            val extraTransferProducts = extraTransferProductsService.findByParentId(extraTransfer.id).map { extraTransferProductsService.createDto(it) }
+            val extraTransferProducts = extraTransferProductsService.findByParentId(extraTransfer.id)
 
             extraTransferDto.products = extraTransferProducts
         }

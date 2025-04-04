@@ -1,6 +1,6 @@
 package agoraa.app.forms_back.config
 
-import agoraa.app.forms_back.service.TokenService
+import agoraa.app.forms_back.shared.service.TokenService
 import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

@@ -70,6 +70,7 @@ data class ProductModel(
     val exchangeQuantity: Float,
 
     @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
     val groupName: ProductGroupsEnum? = null,
 
     @Column(nullable = true)

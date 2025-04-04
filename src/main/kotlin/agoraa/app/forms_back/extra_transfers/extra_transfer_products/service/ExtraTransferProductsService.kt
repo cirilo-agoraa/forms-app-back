@@ -35,7 +35,7 @@ class ExtraTransferProductsService(private val extraTransferProductsRepository: 
 
     fun findByParentId(
         extraTransferId: Long,
-    ): List<ExtraTransferProductsModel> = extraTransferProductsRepository.findByExtraTransferId(extraTransferId)
+    ): List<ExtraTransferProductsResponse> = extraTransferProductsRepository.findByExtraTransferId(extraTransferId).map { createDto(it) }
 
     fun createDto(extraTransferProducts: ExtraTransferProductsModel): ExtraTransferProductsResponse {
         return ExtraTransferProductsResponse(
@@ -49,7 +49,7 @@ class ExtraTransferProductsService(private val extraTransferProductsRepository: 
         extraTransfer: ExtraTransferModel,
         products: List<ExtraTransferProductsRequest>
     ) {
-        val extraTransferProducts = findByParentId(extraTransfer.id)
+        val extraTransferProducts = extraTransferProductsRepository.findByExtraTransferId(extraTransfer.id)
         val currentProductsSet = extraTransferProducts.map { it.product }.toSet()
         val newProductsSet = products.map { it.product }.toSet()
 
