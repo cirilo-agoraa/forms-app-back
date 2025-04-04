@@ -106,9 +106,10 @@ class ProductService(
         codes: List<String>? = null,
         mipCategories: List<MipsCategoriesEnum>? = null,
         currentStockGreaterThan: Double? = null,
-        groupNameIn: ProductGroupsEnum? = null,
-        groupNameNotIn: ProductGroupsEnum? = null,
-        sectorsNotIn: ProductSectorsEnum? = null
+        groupNamesIn: List<ProductGroupsEnum>? = null,
+        groupNamesNotIn: List<ProductGroupsEnum>? = null,
+        sectorsNotIn: List<ProductSectorsEnum>? = null,
+        salesLastSevenDaysEqual: Double? = null
     ): Specification<ProductModel> {
         return Specification { root: Root<ProductModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -157,11 +158,11 @@ class ProductService(
                 predicates.add(criteriaBuilder.greaterThan(root.get("currentStock"), it))
             }
 
-            groupNameIn?.let {
+            groupNamesIn?.let {
                 predicates.add(root.get<ProductGroupsEnum>("groupName").`in`(it))
             }
 
-            groupNameNotIn?.let {
+            groupNamesNotIn?.let {
                 predicates.add(criteriaBuilder.not(root.get<ProductGroupsEnum>("groupName").`in`(it)))
             }
 
@@ -169,14 +170,38 @@ class ProductService(
                 predicates.add(criteriaBuilder.not(root.get<ProductSectorsEnum>("sector").`in`(it)))
             }
 
+            salesLastSevenDaysEqual?.let {
+                val epsilon = 0.000001
+                predicates.add(criteriaBuilder.between(
+                    root.get("salesLastSevenDays"),
+                    it - epsilon,
+                    it + epsilon
+                    )
+                )
+            }
+
             criteriaBuilder.and(*predicates.toTypedArray())
         }
     }
 
     fun findAll(
-        codes: List<String>? = null
+        codes: List<String>? = null,
+        stores: List<StoresEnum>? = null,
+        currentStockGreaterThan: Double? = null,
+        salesLastSevenDaysEqual: Double? = null,
+        outOfMix: Boolean? = null,
+        sectorsNotIn: List<ProductSectorsEnum>? = null,
+        groupNamesNotIn: List<ProductGroupsEnum>? = null
     ): List<ProductModel> {
-        val spec = createCriteria(codes = codes)
+        val spec = createCriteria(
+            codes = codes,
+            stores = stores,
+            currentStockGreaterThan = currentStockGreaterThan,
+            salesLastSevenDaysEqual = salesLastSevenDaysEqual,
+            outOfMix = outOfMix,
+            sectorsNotIn = sectorsNotIn,
+            groupNamesNotIn = groupNamesNotIn
+        )
         return productRepository.findAll(spec)
     }
 
