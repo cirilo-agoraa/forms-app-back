@@ -99,6 +99,7 @@ class SecurityConfiguration(
                     .requestMatchers(HttpMethod.GET, "/api/store-audits").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/api/store-audits").hasAnyRole("ADMIN", "REPOSITOR")
                     .requestMatchers("/api/store-audits/current-user").hasAnyRole("ADMIN", "REPOSITOR")
+                    .requestMatchers("/api/store-audits/audit-products").hasAnyRole("ADMIN", "REPOSITOR")
                     .requestMatchers("/api/store-audits/{id}").hasAnyRole("ADMIN", "REPOSITOR")
                     .requestMatchers("/api/store-audits/{id}/edit").hasAnyRole("ADMIN", "REPOSITOR")
                     .requestMatchers("/api/store-audits/{id}/patch").hasAnyRole("ADMIN", "REPOSITOR")
