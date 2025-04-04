@@ -1,9 +1,9 @@
 package agoraa.app.forms_back.suppliers.suppliers.service
 
-import agoraa.app.forms_back.suppliers.suppliers.enums.SupplierStatusEnum
 import agoraa.app.forms_back.suppliers.supplier_stores.service.SupplierStoresService
 import agoraa.app.forms_back.suppliers.suppliers.dto.request.SupplierRequest
 import agoraa.app.forms_back.suppliers.suppliers.dto.response.SupplierResponse
+import agoraa.app.forms_back.suppliers.suppliers.enums.SupplierStatusEnum
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.suppliers.suppliers.repository.SupplierRepository
 import jakarta.persistence.criteria.CriteriaBuilder

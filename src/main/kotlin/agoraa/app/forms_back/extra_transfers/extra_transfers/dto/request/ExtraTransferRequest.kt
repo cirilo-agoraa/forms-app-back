@@ -1,6 +1,5 @@
 package agoraa.app.forms_back.extra_transfers.extra_transfers.dto.request
 
-import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.extra_transfers.extra_transfer_products.dto.request.ExtraTransferProductsRequest
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull

@@ -1,9 +1,9 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotations.dto.response
 
+import agoraa.app.forms_back.passive_quotations.passive_quotation_products.dto.response.PassiveQuotationProductsResponse
 import agoraa.app.forms_back.shared.enums.PaymentTermsEnum
 import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.shared.enums.WppGroupsEnum
-import agoraa.app.forms_back.passive_quotations.passive_quotation_products.dto.response.PassiveQuotationProductsResponse
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.users.users.dto.response.UserResponse
 import com.fasterxml.jackson.annotation.JsonInclude

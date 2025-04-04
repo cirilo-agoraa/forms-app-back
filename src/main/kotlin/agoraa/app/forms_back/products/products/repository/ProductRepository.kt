@@ -1,6 +1,5 @@
 package agoraa.app.forms_back.products.products.repository
 
-import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.products.products.model.ProductModel
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor

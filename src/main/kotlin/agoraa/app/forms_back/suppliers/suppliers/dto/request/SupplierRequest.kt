@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.suppliers.suppliers.dto.request
 
-import agoraa.app.forms_back.suppliers.suppliers.enums.SupplierStatusEnum
 import agoraa.app.forms_back.suppliers.supplier_stores.dto.request.SupplierStoresRequest
+import agoraa.app.forms_back.suppliers.suppliers.enums.SupplierStatusEnum
 
 data class SupplierRequest(
     val name: String,

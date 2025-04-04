@@ -1,7 +1,5 @@
 package agoraa.app.forms_back.users.users.dto.request
 
-import agoraa.app.forms_back.shared.enums.RolesEnum
-import agoraa.app.forms_back.shared.enums.StoresEnum
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern

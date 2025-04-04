@@ -1,12 +1,12 @@
 package agoraa.app.forms_back.resources.resources.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.resources.resources.dto.response.ResourceResponse
-import agoraa.app.forms_back.resources.resources.repository.ResourceRepository
-import agoraa.app.forms_back.resources.resources.dto.request.ResourceRequest
 import agoraa.app.forms_back.resources.resource_products.service.ResourceProductsService
 import agoraa.app.forms_back.resources.resources.dto.request.ResourcePatchRequest
+import agoraa.app.forms_back.resources.resources.dto.request.ResourceRequest
+import agoraa.app.forms_back.resources.resources.dto.response.ResourceResponse
 import agoraa.app.forms_back.resources.resources.model.ResourceModel
+import agoraa.app.forms_back.resources.resources.repository.ResourceRepository
 import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.users.users.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder

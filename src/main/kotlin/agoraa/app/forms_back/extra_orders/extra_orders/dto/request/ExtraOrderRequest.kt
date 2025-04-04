@@ -6,9 +6,7 @@ import agoraa.app.forms_back.extra_orders.extra_orders.enums.OriginEnum
 import agoraa.app.forms_back.extra_orders.extra_orders.enums.PartialCompleteEnum
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import jakarta.validation.constraints.Min
-import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
-import jakarta.validation.constraints.Pattern
 
 data class ExtraOrderRequest(
     @field:NotNull(message = "Supplier cannot be null")

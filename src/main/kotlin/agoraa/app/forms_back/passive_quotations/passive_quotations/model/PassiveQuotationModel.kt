@@ -1,8 +1,5 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotations.model
 
-import agoraa.app.forms_back.shared.enums.PaymentTermsEnum
-import agoraa.app.forms_back.shared.enums.StoresEnum
-import agoraa.app.forms_back.shared.enums.WppGroupsEnum
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.users.users.model.UserModel
 import jakarta.persistence.*

@@ -1,8 +1,6 @@
 package agoraa.app.forms_back.users.users.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.shared.exception.NotAllowedException
-import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.users.user_roles.service.AuthorityService
 import agoraa.app.forms_back.users.users.dto.request.ChangePasswordRequest
 import agoraa.app.forms_back.users.users.dto.request.UserCreateRequest

@@ -1,6 +1,5 @@
 package agoraa.app.forms_back.users.user_roles.service
 
-import agoraa.app.forms_back.shared.enums.RolesEnum
 import agoraa.app.forms_back.users.user_roles.model.AuthorityModel
 import agoraa.app.forms_back.users.user_roles.repository.AuthorityRepository
 import agoraa.app.forms_back.users.users.model.UserModel

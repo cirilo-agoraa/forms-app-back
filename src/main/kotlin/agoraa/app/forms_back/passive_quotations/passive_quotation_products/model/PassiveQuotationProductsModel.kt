@@ -1,7 +1,7 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotation_products.model
 
-import agoraa.app.forms_back.products.products.model.ProductModel
 import agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel
+import agoraa.app.forms_back.products.products.model.ProductModel
 import jakarta.persistence.*
 
 @Entity

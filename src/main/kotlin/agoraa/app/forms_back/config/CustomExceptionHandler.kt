@@ -1,7 +1,5 @@
 package agoraa.app.forms_back.config
 
-import agoraa.app.forms_back.shared.exception.NotAllowedException
-import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice

@@ -1,6 +1,5 @@
 package agoraa.app.forms_back.users.users.model
 
-import agoraa.app.forms_back.shared.enums.StoresEnum
 import jakarta.persistence.*
 
 @Entity
