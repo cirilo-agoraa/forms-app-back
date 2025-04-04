@@ -7,6 +7,7 @@ import agoraa.app.forms_back.resources.resources.dto.request.ResourceRequest
 import agoraa.app.forms_back.resources.resources.dto.response.ResourceResponse
 import agoraa.app.forms_back.resources.resources.model.ResourceModel
 import agoraa.app.forms_back.resources.resources.repository.ResourceRepository
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.users.users.service.UserService
 import jakarta.persistence.criteria.CriteriaBuilder
@@ -163,7 +164,7 @@ class ResourceService(
         size: Int,
         sort: String,
         direction: String,
-        stores: List<agoraa.app.forms_back.shared.enums.StoresEnum>?,
+        stores: List<StoresEnum>?,
         createdAt: LocalDateTime?,
         processed: Boolean?
     ): Any {
@@ -215,6 +216,8 @@ class ResourceService(
                 processed = request.processed ?: resource.processed,
             )
         )
+
+        request.products?.let { resourceProductService.patchProducts(resource, it) }
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.resources.resource_products.service
 
+import agoraa.app.forms_back.resources.resource_products.dto.request.ResourceProductsPatchRequest
 import agoraa.app.forms_back.resources.resource_products.dto.request.ResourceProductsRequest
 import agoraa.app.forms_back.resources.resource_products.dto.response.ResourceProductsResponse
 import agoraa.app.forms_back.resources.resource_products.model.ResourceProductsModel
@@ -27,13 +28,31 @@ class ResourceProductsService(
         resourceProductsRepository.saveAll(resourceProducts)
     }
 
-    private fun edit(products: List<ResourceProductsModel>) {
+    private fun edit(products: List<ResourceProductsModel>, request: List<ResourceProductsRequest>) {
+        val productsMap = request.associateBy { it.product.code }
         val resourceProducts = products.map { p ->
+            val requestProducts = productsMap[p.product.code]!!
+
             p.copy(
-                product = p.product,
-                quantity = p.quantity,
-                qttReceived = p.qttReceived,
-                qttSent = p.qttSent
+                product = requestProducts.product,
+                quantity = requestProducts.quantity,
+                qttReceived = requestProducts.qttReceived,
+                qttSent = requestProducts.qttSent
+            )
+        }
+        resourceProductsRepository.saveAll(resourceProducts)
+    }
+
+    private fun patch(products: List<ResourceProductsModel>, request: List<ResourceProductsPatchRequest>) {
+        val productsMap = request.associateBy { it.product.code }
+
+        val resourceProducts = products.map { p ->
+            val requestProducts = productsMap[p.product.code]!!
+
+            p.copy(
+                product = requestProducts.product,
+                qttReceived = requestProducts.qttReceived,
+                qttSent = requestProducts.qttSent
             )
         }
         resourceProductsRepository.saveAll(resourceProducts)
@@ -69,6 +88,17 @@ class ResourceProductsService(
         resourceProductsRepository.deleteAll(toDelete)
 
         val toEdit = resourceProducts.filter { it.product in newProductsSet }
-        edit(toEdit)
+        edit(toEdit, products)
+    }
+
+    fun patchProducts(
+        resource: ResourceModel,
+        products: List<ResourceProductsPatchRequest>
+    ) {
+        val resourceProducts = resourceProductsRepository.findByResourceId(resource.id)
+        val newProductsSet = products.map { it.product }.toSet()
+
+        val toPatch = resourceProducts.filter { it.product in newProductsSet }
+        patch(toPatch, products)
     }
 }
