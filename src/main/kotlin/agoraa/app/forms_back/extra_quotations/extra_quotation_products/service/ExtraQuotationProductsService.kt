@@ -23,11 +23,13 @@ class ExtraQuotationProductsService(private val extraQuotationProductsRepository
         extraQuotationProductsRepository.saveAll(extraTransfersProducts)
     }
 
-    private fun edit(products: List<ExtraQuotationProductsModel>) {
+    private fun edit(products: List<ExtraQuotationProductsModel>, request: List<ExtraQuotationProductsRequest>) {
+        val productsMap = request.associateBy { it.product.code }
         val extraQuotationProducts = products.map { p ->
+            val requestProduct = productsMap[p.product.code]!!
             p.copy(
-                product = p.product,
-                motive = p.motive
+                product = requestProduct.product,
+                motive = requestProduct.motive
             )
         }
         extraQuotationProductsRepository.saveAll(extraQuotationProducts)
@@ -61,6 +63,6 @@ class ExtraQuotationProductsService(private val extraQuotationProductsRepository
         extraQuotationProductsRepository.deleteAll(toDelete)
 
         val toEdit = extraQuotationProducts.filter { it.product in newProductsSet }
-        edit(toEdit)
+        edit(toEdit, products)
     }
 }

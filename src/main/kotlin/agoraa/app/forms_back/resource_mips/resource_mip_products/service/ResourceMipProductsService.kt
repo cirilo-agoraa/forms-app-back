@@ -25,11 +25,13 @@ class ResourceMipProductsService(
         resourceMipProductsRepository.saveAll(resourceMipsProducts)
     }
 
-    private fun edit(products: List<ResourceMipProductsModel>) {
+    private fun edit(products: List<ResourceMipProductsModel>, request: List<ResourceMipProductsRequest>) {
+        val productsMap = request.associateBy { it.product.code }
         val resourceMipsProducts = products.map { p ->
+            val requestProduct = productsMap[p.product.code]!!
             p.copy(
-                product = p.product,
-                quantity = p.quantity
+                product = requestProduct.product,
+                quantity = requestProduct.quantity
             )
         }
         resourceMipProductsRepository.saveAll(resourceMipsProducts)
@@ -63,6 +65,6 @@ class ResourceMipProductsService(
         resourceMipProductsRepository.deleteAll(toDelete)
 
         val toEdit = resourceMipProducts.filter { it.product in newProductsSet }
-        edit(toEdit)
+        edit(toEdit, products)
     }
 }

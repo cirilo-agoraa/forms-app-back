@@ -23,11 +23,13 @@ class ExtraTransferProductsService(private val extraTransferProductsRepository: 
         extraTransferProductsRepository.saveAll(extraTransfersProducts)
     }
 
-    private fun edit(products: List<ExtraTransferProductsModel>) {
+    private fun edit(products: List<ExtraTransferProductsModel>, request: List<ExtraTransferProductsRequest>) {
+        val productsMap = request.associateBy { it.product.code }
         val extraTransfersProducts = products.map { p ->
+            val requestProduct = productsMap[p.product.code]!!
             p.copy(
-                product = p.product,
-                quantity = p.quantity,
+                product = requestProduct.product,
+                quantity = requestProduct.quantity,
             )
         }
         extraTransferProductsRepository.saveAll(extraTransfersProducts)
@@ -60,6 +62,6 @@ class ExtraTransferProductsService(private val extraTransferProductsRepository: 
         extraTransferProductsRepository.deleteAll(toDelete)
 
         val toEdit = extraTransferProducts.filter { it.product in newProductsSet }
-        edit(toEdit)
+        edit(toEdit, products)
     }
 }

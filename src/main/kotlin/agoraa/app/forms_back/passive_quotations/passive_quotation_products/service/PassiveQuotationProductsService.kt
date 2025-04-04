@@ -25,13 +25,15 @@ class PassiveQuotationProductsService(private val passiveQuotationProductsReposi
         passiveQuotationProductsRepository.saveAll(passiveQuotationProducts)
     }
 
-    private fun edit(products: List<PassiveQuotationProductsModel>) {
+    private fun edit(products: List<PassiveQuotationProductsModel>, request: List<PassiveQuotationProductsRequest>) {
+        val productsMap = request.associateBy { it.product.code }
         val passiveQuotationProducts = products.map { p ->
+            val requestProduct = productsMap[p.product.code]!!
             p.copy(
-                product = p.product,
-                quantity = p.quantity,
-                price = p.price,
-                stockPlusOpenOrder = p.stockPlusOpenOrder,
+                product = requestProduct.product,
+                quantity = requestProduct.quantity,
+                price = requestProduct.price,
+                stockPlusOpenOrder = requestProduct.stockPlusOpenOrder,
             )
         }
         passiveQuotationProductsRepository.saveAll(passiveQuotationProducts)
@@ -68,6 +70,6 @@ class PassiveQuotationProductsService(private val passiveQuotationProductsReposi
         passiveQuotationProductsRepository.deleteAll(toDelete)
 
         val toEdit = passiveQuotationProducts.filter { it.product in newProductsSet }
-        edit(toEdit)
+        edit(toEdit, products)
     }
 }
