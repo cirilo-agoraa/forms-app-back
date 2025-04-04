@@ -5,8 +5,8 @@ import agoraa.app.forms_back.extra_orders.extra_order_stores.dto.request.ExtraOr
 import agoraa.app.forms_back.extra_orders.extra_orders.enums.OriginEnum
 import agoraa.app.forms_back.extra_orders.extra_orders.enums.PartialCompleteEnum
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
-import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Size
 
 data class ExtraOrderRequest(
     @field:NotNull(message = "Supplier cannot be null")
@@ -16,7 +16,7 @@ data class ExtraOrderRequest(
     val partialComplete: PartialCompleteEnum,
 
     @field:NotNull(message = "Stores cannot be null")
-    @field:Min(value = 1, message = "At least one store must be selected")
+    @field:Size(min = 1, message = "At least one store must be selected")
     val stores: List<ExtraOrderStoresRequest>,
 
     val origin: OriginEnum? = null,
