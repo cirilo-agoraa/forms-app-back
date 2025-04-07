@@ -221,7 +221,11 @@ class ProductService(
         isResource: Boolean?,
         stores: List<StoresEnum>?,
         sector: ProductSectorsEnum?,
-        mipCategories: List<MipsCategoriesEnum>?
+        mipCategories: List<MipsCategoriesEnum>?,
+        currentStockGreaterThan: Double? = null,
+        salesLastSevenDaysEqual: Double? = null,
+        sectorsNotIn: List<ProductSectorsEnum>? = null,
+        groupNamesNotIn: List<ProductGroupsEnum>? = null
     ): Any {
         val spec =
             createCriteria(
