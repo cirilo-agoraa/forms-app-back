@@ -2,8 +2,12 @@ package agoraa.app.forms_back.store_audits.store_audits.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.products.products.service.ProductService
+import agoraa.app.forms_back.shared.enums.ProductGroupsEnum
+import agoraa.app.forms_back.shared.enums.ProductSectorsEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.shared.exception.NotAllowedException
 import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
+import agoraa.app.forms_back.store_audits.store_audit_products.dto.request.StoreAuditProductsRequest
 import agoraa.app.forms_back.store_audits.store_audit_products.service.StoreAuditProductsService
 import agoraa.app.forms_back.store_audits.store_audits.dto.request.StoreAuditPatchRequest
 import agoraa.app.forms_back.store_audits.store_audits.dto.request.StoreAuditRequest
@@ -12,6 +16,8 @@ import agoraa.app.forms_back.store_audits.store_audits.model.StoreAuditModel
 import agoraa.app.forms_back.store_audits.store_audits.repository.StoreAuditRepository
 import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.users.users.service.UserService
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
@@ -21,7 +27,10 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.LocalDateTime
 
 @Service
@@ -29,8 +38,19 @@ class StoreAuditService(
     private val storeAuditRepository: StoreAuditRepository,
     private val storeAuditProductsService: StoreAuditProductsService,
     private val userService: UserService,
-    private val productsService: ProductService
+    private val productService: ProductService
 ) {
+    private val objectMapper = jacksonObjectMapper()
+    private val configFilePath =
+        "F:\\COMPRAS\\Automações.Compras\\JSONS PARAMETROS\\config_formulario_auditoria_de_loja.json"
+    private val config = readConfig()
+
+    private fun readConfig(): Map<String, Any> {
+        val path = Paths.get(configFilePath)
+        val jsonString = Files.readString(path)
+        return objectMapper.readValue(jsonString)
+    }
+
     private fun createCriteria(
         username: String? = null,
         createdAt: LocalDateTime? = null,
@@ -212,5 +232,62 @@ class StoreAuditService(
         val storeAudit = findById(customUserDetails, id)
 
         storeAuditRepository.save(storeAudit.copy(processed = request.processed ?: storeAudit.processed))
+    }
+
+    @Scheduled(cron = "0 35 16 * * ?", zone = "America/Sao_Paulo")
+    @Transactional
+    fun createAudit() {
+        val botUser = userService.findByUsername("bot@forms.com")
+        val sectorsNotIn = config["EXCECAO_SETORES"] as List<ProductSectorsEnum>
+        val groupNamesNotIn = config["EXCECAO_GRUPOS"] as List<ProductGroupsEnum>
+        val targetDate = config["DIAS_PARA_NAO_REPETIR_PRODUTOS"] as Long
+        val dailyProductsLimit = config["LIMITE_DIARIO_DE_PRODUTOS"] as Int
+
+        val products = productService.findAll(
+            stores = listOf(StoresEnum.TRESMANN_VIX),
+            outOfMix = false,
+            currentStockGreaterThan = 0.0,
+            salesLastSevenDaysEqual = 0.0,
+            sectorsNotIn = sectorsNotIn,
+            groupNamesNotIn = groupNamesNotIn,
+        ).toSet()
+
+        val spec = createCriteria(createdAtGreaterThanEqual = LocalDateTime.now().minusDays(targetDate))
+        val storeAudits = storeAuditRepository.findAll(spec)
+        val storeAuditsProducts = storeAudits.map { storeAuditProductsService.findByParentId(it.id) }
+            .map { storeAuditProducts -> storeAuditProducts.map { it.product } }
+            .flatten()
+            .toSet()
+
+        println("Products: ${products.size}")
+        println("Store Audits Products: ${storeAuditsProducts.size}")
+
+        val finalProducts = (products - storeAuditsProducts).take(dailyProductsLimit).map { finalProduct ->
+            StoreAuditProductsRequest(
+                product = finalProduct,
+                inStore = false
+            )
+        }
+
+        val newAudit = storeAuditRepository.saveAndFlush(StoreAuditModel(user = botUser))
+
+        storeAuditProductsService.editOrCreateOrDelete(newAudit, finalProducts)
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?", zone = "America/Sao_Paulo")
+    fun closeExpiredAudits() {
+        val today = LocalDateTime.now()
+        val paramDate = config["DURACAO_DO_FORMULARIO_EM_DIAS"] as Long
+
+        val spec = createCriteria(processed = false)
+        val audits = storeAuditRepository.findAll(spec)
+        val closedAudits = audits.mapNotNull { audit ->
+            if (audit.createdAt.plusDays(paramDate) <= today) {
+                audit.copy(processed = true)
+            } else {
+                null
+            }
+        }
+        storeAuditRepository.saveAll(closedAudits)
     }
 }
