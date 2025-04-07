@@ -234,13 +234,13 @@ class StoreAuditService(
         storeAuditRepository.save(storeAudit.copy(processed = request.processed ?: storeAudit.processed))
     }
 
-    @Scheduled(cron = "0 35 16 * * ?", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 42 16 * * ?", zone = "America/Sao_Paulo")
     @Transactional
     fun createAudit() {
         val botUser = userService.findByUsername("bot@forms.com")
         val sectorsNotIn = config["EXCECAO_SETORES"] as List<ProductSectorsEnum>
         val groupNamesNotIn = config["EXCECAO_GRUPOS"] as List<ProductGroupsEnum>
-        val targetDate = config["DIAS_PARA_NAO_REPETIR_PRODUTOS"] as Long
+        val targetDate = config["DIAS_PARA_NAO_REPETIR_PRODUTOS"] as Int
         val dailyProductsLimit = config["LIMITE_DIARIO_DE_PRODUTOS"] as Int
 
         val products = productService.findAll(
@@ -252,7 +252,7 @@ class StoreAuditService(
             groupNamesNotIn = groupNamesNotIn,
         ).toSet()
 
-        val spec = createCriteria(createdAtGreaterThanEqual = LocalDateTime.now().minusDays(targetDate))
+        val spec = createCriteria(createdAtGreaterThanEqual = LocalDateTime.now().minusDays(targetDate.toLong()))
         val storeAudits = storeAuditRepository.findAll(spec)
         val storeAuditsProducts = storeAudits.map { storeAuditProductsService.findByParentId(it.id) }
             .map { storeAuditProducts -> storeAuditProducts.map { it.product } }
