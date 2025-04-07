@@ -188,34 +188,6 @@ class StoreAuditService(
         }
     }
 
-    fun getAuditProducts(
-        productsQtt: Int,
-        days: Int,
-        sectorsNotIn: List<ProductSectorsEnum>,
-        groupNamesNotIn: List<ProductGroupsEnum>
-    ): List<ProductModel> {
-        val today = LocalDateTime.now()
-        val targetDay = today.minusDays(days.toLong())
-
-        val spec = createCriteria(createdAtGreaterThanEqual = targetDay)
-        val storeAudits = storeAuditRepository.findAll(spec)
-        val storeAuditResponses = storeAudits.map { createDto(it) }
-
-        val storeAuditProducts = storeAuditResponses.flatMap { storeAuditResponse ->
-            storeAuditResponse.products?.map { storeAuditProducts -> storeAuditProducts.product } ?: emptyList()
-        }.distinct().toSet()
-        val products = productsService.findAll(
-            stores = listOf(StoresEnum.TRESMANN_VIX),
-            currentStockGreaterThan = 0.0,
-            salesLastSevenDaysEqual = 0.0,
-            outOfMix = false,
-            sectorsNotIn = sectorsNotIn,
-            groupNamesNotIn = groupNamesNotIn
-        ).toSet()
-
-        return (products - storeAuditProducts).toList()
-    }
-
     @Transactional
     fun create(customUserDetails: CustomUserDetails, request: StoreAuditRequest) {
         val currentUser = customUserDetails.getUserModel()

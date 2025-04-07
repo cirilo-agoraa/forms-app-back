@@ -17,23 +17,6 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping("/api/store-audits")
 class StoreAuditController(private val storeAuditService: StoreAuditService) {
-    @GetMapping("/audit-products")
-    fun getAuditProducts(
-        @RequestParam(required = true) productsQtt: Int,
-        @RequestParam(required = true) days: Int,
-        @RequestParam(required = true) sectorsNotIn: List<ProductSectorsEnum>,
-        @RequestParam(required = true) groupNamesNotIn: List<ProductGroupsEnum>
-    ): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.OK).body(
-            storeAuditService.getAuditProducts(
-                productsQtt,
-                days,
-                sectorsNotIn,
-                groupNamesNotIn
-            )
-        )
-    }
-
     @GetMapping
     fun getExtraTransfers(
         @RequestParam(required = false, defaultValue = "false") full: Boolean,
