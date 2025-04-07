@@ -106,7 +106,6 @@ class ProductService(
         codes: List<String>? = null,
         mipCategories: List<MipsCategoriesEnum>? = null,
         currentStockGreaterThan: Double? = null,
-        groupNamesIn: List<ProductGroupsEnum>? = null,
         groupNamesNotIn: List<ProductGroupsEnum>? = null,
         sectorsNotIn: List<ProductSectorsEnum>? = null,
         salesLastSevenDaysEqual: Double? = null
@@ -156,10 +155,6 @@ class ProductService(
 
             currentStockGreaterThan?.let {
                 predicates.add(criteriaBuilder.greaterThan(root.get("currentStock"), it))
-            }
-
-            groupNamesIn?.let {
-                predicates.add(root.get<ProductGroupsEnum>("groupName").`in`(it))
             }
 
             groupNamesNotIn?.let {
@@ -223,9 +218,9 @@ class ProductService(
         sector: ProductSectorsEnum?,
         mipCategories: List<MipsCategoriesEnum>?,
         currentStockGreaterThan: Double? = null,
-        salesLastSevenDaysEqual: Double? = null,
+        groupNamesNotIn: List<ProductGroupsEnum>? = null,
         sectorsNotIn: List<ProductSectorsEnum>? = null,
-        groupNamesNotIn: List<ProductGroupsEnum>? = null
+        salesLastSevenDaysEqual: Double? = null,
     ): Any {
         val spec =
             createCriteria(
@@ -238,7 +233,11 @@ class ProductService(
                 isResource = isResource,
                 sector,
                 codes,
-                mipCategories
+                mipCategories,
+                currentStockGreaterThan,
+                groupNamesNotIn,
+                sectorsNotIn,
+                salesLastSevenDaysEqual,
             )
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC

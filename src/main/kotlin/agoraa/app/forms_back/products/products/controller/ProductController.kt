@@ -2,6 +2,10 @@ package agoraa.app.forms_back.products.products.controller
 
 import agoraa.app.forms_back.products.products.dto.request.ProductSchema
 import agoraa.app.forms_back.products.products.service.ProductService
+import agoraa.app.forms_back.shared.enums.MipsCategoriesEnum
+import agoraa.app.forms_back.shared.enums.ProductGroupsEnum
+import agoraa.app.forms_back.shared.enums.ProductSectorsEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -27,9 +31,13 @@ class ProductController(private val productService: ProductService) {
         @RequestParam(required = false) code: String?,
         @RequestParam(required = false) codes: List<String>?,
         @RequestParam(required = false) isResource: Boolean?,
-        @RequestParam(required = false) stores: List<agoraa.app.forms_back.shared.enums.StoresEnum>?,
-        @RequestParam(required = false) sector: agoraa.app.forms_back.shared.enums.ProductSectorsEnum?,
-        @RequestParam(required = false) mipCategories: List<agoraa.app.forms_back.shared.enums.MipsCategoriesEnum>?
+        @RequestParam(required = false) stores: List<StoresEnum>?,
+        @RequestParam(required = false) sector: ProductSectorsEnum?,
+        @RequestParam(required = false) mipCategories: List<MipsCategoriesEnum>?,
+        @RequestParam(required = false) currentStockGreaterThan: Double? = null,
+        @RequestParam(required = false) groupNamesNotIn: List<ProductGroupsEnum>? = null,
+        @RequestParam(required = false) sectorsNotIn: List<ProductSectorsEnum>? = null,
+        @RequestParam(required = false) salesLastSevenDaysEqual: Double? = null
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
             .body(
@@ -49,7 +57,11 @@ class ProductController(private val productService: ProductService) {
                     isResource,
                     stores,
                     sector,
-                    mipCategories
+                    mipCategories,
+                    currentStockGreaterThan,
+                    groupNamesNotIn,
+                    sectorsNotIn,
+                    salesLastSevenDaysEqual
                 )
             )
 
