@@ -1,11 +1,7 @@
 package agoraa.app.forms_back.store_audits.store_audits.service
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.products.products.model.ProductModel
 import agoraa.app.forms_back.products.products.service.ProductService
-import agoraa.app.forms_back.shared.enums.ProductGroupsEnum
-import agoraa.app.forms_back.shared.enums.ProductSectorsEnum
-import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.shared.exception.NotAllowedException
 import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.store_audits.store_audit_products.service.StoreAuditProductsService
@@ -131,11 +127,12 @@ class StoreAuditService(
         username: String?,
         createdAt: LocalDateTime?,
         processed: Boolean?,
+        createdAtGreaterThanEqual: LocalDateTime? = null
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
-        val spec = createCriteria(username, createdAt, processed)
+        val spec = createCriteria(username, createdAt, processed, createdAtGreaterThanEqual = createdAtGreaterThanEqual)
 
         return when {
             pagination -> {

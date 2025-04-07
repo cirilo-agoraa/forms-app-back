@@ -1,8 +1,6 @@
 package agoraa.app.forms_back.store_audits.store_audits.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
-import agoraa.app.forms_back.shared.enums.ProductGroupsEnum
-import agoraa.app.forms_back.shared.enums.ProductSectorsEnum
 import agoraa.app.forms_back.store_audits.store_audits.dto.request.StoreAuditPatchRequest
 import agoraa.app.forms_back.store_audits.store_audits.dto.request.StoreAuditRequest
 import agoraa.app.forms_back.store_audits.store_audits.service.StoreAuditService
@@ -28,6 +26,7 @@ class StoreAuditController(private val storeAuditService: StoreAuditService) {
         @RequestParam(required = false) username: String?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) processed: Boolean?,
+        @RequestParam(required = false) createdAtGreaterThanEqual: LocalDateTime?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             storeAuditService.getAll(
@@ -40,6 +39,7 @@ class StoreAuditController(private val storeAuditService: StoreAuditService) {
                 username,
                 createdAt,
                 processed,
+                createdAtGreaterThanEqual
             )
         )
     }
