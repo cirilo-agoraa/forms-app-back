@@ -9,7 +9,7 @@ data class SupplierRequest(
     val status: SupplierStatusEnum,
     val pause: Boolean,
     val centralized: String,
-    val centralizedStore: StoresEnum,
+    val centralizedStore: StoresEnum?,
     val overFrequency: Boolean,
     val score: Int,
     val exchange: Boolean,

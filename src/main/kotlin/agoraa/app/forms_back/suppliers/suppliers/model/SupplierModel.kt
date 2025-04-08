@@ -24,9 +24,9 @@ data class SupplierModel(
     @Column(nullable = false)
     val centralized: String,
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    val centralizedStore: StoresEnum,
+    val centralizedStore: StoresEnum? = null,
 
     @Column(nullable = false)
     val overFrequency: Boolean,
