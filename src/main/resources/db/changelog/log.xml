@@ -1258,4 +1258,9 @@
         <dropNotNullConstraint tableName="suppliers" columnName="centralized" columnDataType="varchar(255)"/>
     </changeSet>
 
+    <changeSet id="57" author="PedroCosta" runInTransaction="true">
+        <renameColumn tableName="suppliers" oldColumnName="centralizedStore" newColumnName="centralized_store"/>
+        <renameColumn tableName="suppliers" oldColumnName="overFrequency" newColumnName="over_frequency"/>
+    </changeSet>
+
 </databaseChangeLog>
