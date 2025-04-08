@@ -214,6 +214,7 @@ class ResourceService(
         resourceRepository.saveAndFlush(
             resource.copy(
                 processed = request.processed ?: resource.processed,
+                orderNumber = request.orderNumber ?: resource.orderNumber,
             )
         )
 
