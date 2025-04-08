@@ -1259,8 +1259,8 @@
     </changeSet>
 
     <changeSet id="57" author="PedroCosta" runInTransaction="true">
-        <renameColumn tableName="suppliers" oldColumnName="centralizedStore" newColumnName="centralized_store"/>
-        <renameColumn tableName="suppliers" oldColumnName="overFrequency" newColumnName="over_frequency"/>
+        <renameColumn tableName="suppliers" oldColumnName="centralizedStore" newColumnName="centralized_store" columnDataType="varchar(255)"/>
+        <renameColumn tableName="suppliers" oldColumnName="overFrequency" newColumnName="over_frequency" columnDataType="BOOLEAN"/>
     </changeSet>
 
 </databaseChangeLog>
