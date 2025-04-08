@@ -44,13 +44,12 @@ class ResourceProductsService(
     }
 
     private fun patch(products: List<ResourceProductsModel>, request: List<ResourceProductsPatchRequest>) {
-        val productsMap = request.associateBy { it.product.code }
+        val productsMap = request.associateBy { it.productId }
 
         val resourceProducts = products.map { p ->
-            val requestProducts = productsMap[p.product.code]!!
+            val requestProducts = productsMap[p.product.id]!!
 
             p.copy(
-                product = requestProducts.product,
                 qttReceived = requestProducts.qttReceived,
                 qttSent = requestProducts.qttSent
             )
@@ -96,9 +95,9 @@ class ResourceProductsService(
         products: List<ResourceProductsPatchRequest>
     ) {
         val resourceProducts = resourceProductsRepository.findByResourceId(resource.id)
-        val newProductsSet = products.map { it.product }.toSet()
+        val newProductsSet = products.map { it.productId }.toSet()
 
-        val toPatch = resourceProducts.filter { it.product in newProductsSet }
+        val toPatch = resourceProducts.filter { it.product.id in newProductsSet }
         patch(toPatch, products)
     }
 }
