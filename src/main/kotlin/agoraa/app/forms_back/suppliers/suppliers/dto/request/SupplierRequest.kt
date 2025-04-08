@@ -8,7 +8,7 @@ data class SupplierRequest(
     val name: String,
     val status: SupplierStatusEnum,
     val pause: Boolean,
-    val centralized: String,
+    val centralized: String?,
     val centralizedStore: StoresEnum?,
     val overFrequency: Boolean,
     val score: Int,

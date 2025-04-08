@@ -1250,4 +1250,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="55" author="PedroCostaa" runInTransaction="true">
+        <dropNotNullConstraint tableName="suppliers" columnName="centralizedStore" columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="55" author="PedroCostaa" runInTransaction="true">
+        <dropNotNullConstraint tableName="suppliers" columnName="centralized" columnDataType="varchar(255)"/>
+    </changeSet>
+
 </databaseChangeLog>

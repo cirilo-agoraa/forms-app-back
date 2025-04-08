@@ -21,8 +21,8 @@ data class SupplierModel(
     @Column(nullable = false)
     val pause: Boolean,
 
-    @Column(nullable = false)
-    val centralized: String,
+    @Column(nullable = true)
+    val centralized: String? = null,
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
