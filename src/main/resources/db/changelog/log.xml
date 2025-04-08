@@ -1224,4 +1224,30 @@
 
     </changeSet>
 
+    <changeSet id="54" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="suppliers">
+            <column name="pause" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="suppliers">
+            <column name="overFrequency" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="suppliers">
+            <column name="centralized" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="suppliers">
+            <column name="centralizedStore" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

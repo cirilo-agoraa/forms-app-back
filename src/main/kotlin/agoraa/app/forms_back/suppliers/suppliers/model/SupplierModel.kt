@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.suppliers.suppliers.model
 
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.suppliers.suppliers.enums.SupplierStatusEnum
 import jakarta.persistence.*
 
@@ -16,6 +17,19 @@ data class SupplierModel(
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val status: SupplierStatusEnum,
+
+    @Column(nullable = false)
+    val pause: Boolean,
+
+    @Column(nullable = false)
+    val centralized: String,
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    val centralizedStore: StoresEnum,
+
+    @Column(nullable = false)
+    val overFrequency: Boolean,
 
     @Column(nullable = true)
     val orderMinValue: Float? = null,

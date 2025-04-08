@@ -68,7 +68,11 @@ class SupplierService(
             valueReceived = supplier.valueReceived,
             valueReceivedPercentage = supplier.valueReceivedPercentage,
             averageValueReceived = supplier.averageValueReceived,
-            minValueReceived = supplier.minValueReceived
+            minValueReceived = supplier.minValueReceived,
+            pause = supplier.pause,
+            centralized = supplier.centralized,
+            centralizedStore = supplier.centralizedStore,
+            overFrequency = supplier.overFrequency,
         )
 
         if (full) {
@@ -146,7 +150,11 @@ class SupplierService(
                 valueReceived = request.valueReceived,
                 valueReceivedPercentage = request.valueReceivedPercentage,
                 averageValueReceived = request.averageValueReceived,
-                minValueReceived = request.minValueReceived
+                minValueReceived = request.minValueReceived,
+                pause = request.pause,
+                centralized = request.centralized,
+                centralizedStore = request.centralizedStore,
+                overFrequency = request.overFrequency,
             )
         )
         supplierStoresService.createMultiple(supplier, request.stores)
@@ -170,7 +178,11 @@ class SupplierService(
                 valueReceived = request.valueReceived,
                 valueReceivedPercentage = request.valueReceivedPercentage,
                 averageValueReceived = request.averageValueReceived,
-                minValueReceived = request.minValueReceived
+                minValueReceived = request.minValueReceived,
+                pause = request.pause,
+                centralized = request.centralized,
+                centralizedStore = request.centralizedStore,
+                overFrequency = request.overFrequency,
             )
         )
         supplierStoresService.editOrCreateMultiple(editedSupplier, request.stores)
@@ -197,8 +209,13 @@ class SupplierService(
                     valueReceived = supp.valueReceived,
                     valueReceivedPercentage = supp.valueReceivedPercentage,
                     averageValueReceived = supp.averageValueReceived,
-                    minValueReceived = supp.minValueReceived
-                ) ?: SupplierModel(
+                    minValueReceived = supp.minValueReceived,
+                    pause = supp.pause,
+                    centralized = supp.centralized,
+                    centralizedStore = supp.centralizedStore,
+                    overFrequency = supp.overFrequency,
+
+                    ) ?: SupplierModel(
                     name = supp.name,
                     status = supp.status,
                     exchange = supp.exchange,
@@ -211,7 +228,11 @@ class SupplierService(
                     valueReceived = supp.valueReceived,
                     valueReceivedPercentage = supp.valueReceivedPercentage,
                     averageValueReceived = supp.averageValueReceived,
-                    minValueReceived = supp.minValueReceived
+                    minValueReceived = supp.minValueReceived,
+                    pause = supp.pause,
+                    centralized = supp.centralized,
+                    centralizedStore = supp.centralizedStore,
+                    overFrequency = supp.overFrequency,
                 )
             )
             supplierStoresService.editOrCreateMultiple(result, supp.stores)
