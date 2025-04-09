@@ -41,8 +41,7 @@ class StoreAuditService(
     private val productService: ProductService
 ) {
     private val objectMapper = jacksonObjectMapper()
-    private val configFilePath =
-        "F:\\COMPRAS\\Automações.Compras\\JSONS PARAMETROS\\config_formulario_auditoria_de_loja.json"
+    private val configFilePath = io.github.cdimascio.dotenv.dotenv().get("STORE_AUDIT_CONFIG_PATH")
     private val config = readConfig()
 
     private fun readConfig(): Map<String, Any> {
@@ -234,7 +233,7 @@ class StoreAuditService(
         storeAuditRepository.save(storeAudit.copy(processed = request.processed ?: storeAudit.processed))
     }
 
-    @Scheduled(cron = "0 42 16 * * ?", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 10 0 * * ?", zone = "America/Sao_Paulo")
     @Transactional
     fun createAudit() {
         val botUser = userService.findByUsername("bot@forms.com")
@@ -259,35 +258,35 @@ class StoreAuditService(
             .flatten()
             .toSet()
 
-        println("Products: ${products.size}")
-        println("Store Audits Products: ${storeAuditsProducts.size}")
-
         val finalProducts = (products - storeAuditsProducts).take(dailyProductsLimit).map { finalProduct ->
             StoreAuditProductsRequest(
                 product = finalProduct,
                 inStore = false
             )
         }
-
         val newAudit = storeAuditRepository.saveAndFlush(StoreAuditModel(user = botUser))
 
         storeAuditProductsService.editOrCreateOrDelete(newAudit, finalProducts)
     }
 
-    @Scheduled(cron = "0 0 0 * * ?", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 36 10 * * ?", zone = "America/Sao_Paulo")
     fun closeExpiredAudits() {
-        val today = LocalDateTime.now()
-        val paramDate = config["DURACAO_DO_FORMULARIO_EM_DIAS"] as Long
+        val today = LocalDateTime.now().toLocalDate()
+        val paramDate = config["DURACAO_DO_FORMULARIO_EM_DIAS"] as Int
 
         val spec = createCriteria(processed = false)
         val audits = storeAuditRepository.findAll(spec)
+
         val closedAudits = audits.mapNotNull { audit ->
-            if (audit.createdAt.plusDays(paramDate) <= today) {
+            val targetDate = audit.createdAt.plusDays(paramDate.toLong()).toLocalDate()
+
+            if (targetDate.isBefore(today) || targetDate.isEqual(today)) {
                 audit.copy(processed = true)
             } else {
                 null
             }
         }
+
         storeAuditRepository.saveAll(closedAudits)
     }
 }
