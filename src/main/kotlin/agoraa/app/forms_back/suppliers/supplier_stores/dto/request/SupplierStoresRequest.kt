@@ -1,11 +1,13 @@
 package agoraa.app.forms_back.suppliers.supplier_stores.dto.request
 
+import agoraa.app.forms_back.shared.enums.OrderDaysEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDateTime
 
 data class SupplierStoresRequest(
     @field:NotNull(message = "Store cannot be null")
-    val store: agoraa.app.forms_back.shared.enums.StoresEnum,
+    val store: StoresEnum,
 
     @field:NotNull(message = "Frequency cannot be null")
     val frequency: Int,
@@ -25,7 +27,10 @@ data class SupplierStoresRequest(
     @field:NotNull(message = "Order mean delivery time cannot be null")
     val orderMeanDeliveryTime: Float,
 
-    val orderDay: agoraa.app.forms_back.shared.enums.OrderDaysEnum?,
+    @field:NotNull(message = "Centralized cannot be null")
+    val centralized: Boolean,
+
+    val orderDay: OrderDaysEnum?,
     val nextOrder: LocalDateTime?,
     val openOrderExpectedDelivery: LocalDateTime?,
     val openOrderRealDelivery: LocalDateTime?,

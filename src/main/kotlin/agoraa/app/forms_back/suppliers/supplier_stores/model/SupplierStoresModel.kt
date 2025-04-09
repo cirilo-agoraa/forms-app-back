@@ -35,6 +35,9 @@ data class SupplierStoresModel(
     val orderTerm: Int,
 
     @Column(nullable = false)
+    val centralized: Boolean,
+
+    @Column(nullable = false)
     val orderMeanDeliveryTime: Float,
 
     @Column(nullable = true)

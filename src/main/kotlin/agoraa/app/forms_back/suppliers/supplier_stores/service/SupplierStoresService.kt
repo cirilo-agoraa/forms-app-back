@@ -48,7 +48,8 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
             openOrderRealDelivery = supplierStores.openOrderRealDelivery,
             sellerName = supplierStores.sellerName,
             sellerEmail = supplierStores.sellerEmail,
-            sellerPhone = supplierStores.sellerPhone
+            sellerPhone = supplierStores.sellerPhone,
+            centralized = supplierStores.centralized
         )
     }
 
@@ -77,7 +78,8 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
                 openOrderExpectedDelivery = p.openOrderExpectedDelivery,
                 sellerName = p.sellerName,
                 sellerEmail = p.sellerEmail,
-                sellerPhone = p.sellerPhone
+                sellerPhone = p.sellerPhone,
+                centralized = p.centralized
             )
         }
         supplierStoresRepository.saveAll(supplierStores)
@@ -108,7 +110,8 @@ class SupplierStoresService(private val supplierStoresRepository: SupplierStores
                 openOrderRealDelivery = updatedSs.openOrderRealDelivery,
                 sellerName = updatedSs.sellerName,
                 sellerEmail = updatedSs.sellerEmail,
-                sellerPhone = updatedSs.sellerPhone
+                sellerPhone = updatedSs.sellerPhone,
+                centralized = updatedSs.centralized
             )
         }
 

@@ -1263,4 +1263,12 @@
         <renameColumn tableName="suppliers" oldColumnName="overFrequency" newColumnName="over_frequency" columnDataType="BOOLEAN"/>
     </changeSet>
 
+    <changeSet id="58" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="supplier_stores">
+            <column name="centralized" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
