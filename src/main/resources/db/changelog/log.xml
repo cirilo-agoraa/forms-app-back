@@ -1324,4 +1324,14 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="62" author="PedroCostaa" runInTransaction="true">
+        <dropForeignKeyConstraint baseTableName="store_audit_products" constraintName="fk_store_audit_products_store_audits"/>
+        <addForeignKeyConstraint baseTableName="store_audit_products"
+                                 baseColumnNames="store_audit_id"
+                                 constraintName="fk_store_audit_products_store_audits"
+                                 referencedTableName="store_audits"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+    </changeSet>
+
 </databaseChangeLog>
