@@ -108,7 +108,8 @@ class ProductService(
         currentStockGreaterThan: Double? = null,
         groupNamesNotIn: List<ProductGroupsEnum>? = null,
         sectorsNotIn: List<ProductSectorsEnum>? = null,
-        salesLastSevenDaysEqual: Double? = null
+        salesLastSevenDaysEqual: Double? = null,
+        sectorsIn: List<ProductSectorsEnum>? = null
     ): Specification<ProductModel> {
         return Specification { root: Root<ProductModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -163,6 +164,10 @@ class ProductService(
 
             sectorsNotIn?.let {
                 predicates.add(criteriaBuilder.not(root.get<ProductSectorsEnum>("sector").`in`(it)))
+            }
+
+            sectorsIn?.let {
+                predicates.add(root.get<ProductSectorsEnum>("sector").`in`(it))
             }
 
             salesLastSevenDaysEqual?.let {
@@ -267,6 +272,13 @@ class ProductService(
     fun findById(id: Long): ProductModel {
         return productRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("Product not found") }
+    }
+
+    fun getQuantity(sectorsIn: List<ProductSectorsEnum>?): Int {
+        val spec = createCriteria(stores = listOf(StoresEnum.TRESMANN_SMJ), sectorsIn = sectorsIn)
+        val products = productRepository.findAll(spec)
+
+        return products.size
     }
 
     fun returnById(id: Long): ProductResponse {

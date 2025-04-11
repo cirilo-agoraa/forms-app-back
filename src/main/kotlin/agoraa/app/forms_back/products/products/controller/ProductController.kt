@@ -71,6 +71,12 @@ class ProductController(private val productService: ProductService) {
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK).body(productService.returnById(id))
 
+    @GetMapping("/quantity")
+    fun getProductsQuantity(
+        @RequestParam(required = false) sectorsIn: List<ProductSectorsEnum>? = null,
+    ): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.OK).body(productService.getQuantity(sectorsIn))
+
     @PostMapping
     fun createProduct(
         @Valid @RequestBody request: ProductSchema,
