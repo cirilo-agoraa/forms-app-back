@@ -20,5 +20,8 @@ data class WeeklyQuotationSummariesModel(
     val situation: WeeklyQuotationSummariesSituationEnum,
 
     @Column(nullable = false)
-    val quantity: Int
+    val quantity: Int,
+
+    @Column(nullable = true)
+    val percentage: Double? = null,
 )

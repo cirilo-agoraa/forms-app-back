@@ -5,5 +5,5 @@ import agoraa.app.forms_back.weekly_quotations.weekly_quotation_summaries.dto.re
 
 data class WeeklyQuotationRequest(
     val sector: ProductSectorsEnum,
-    val products: List<WeeklyQuotationSummariesRequest>
+    val summaries: List<WeeklyQuotationSummariesRequest>
 )

@@ -1318,4 +1318,10 @@
                                  deleteCascade="true"/>
     </changeSet>
 
+    <changeSet id="61" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="weekly_quotation_summaries">
+            <column name="percentage" type="DOUBLE" defaultValue="null"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -4,5 +4,6 @@ import agoraa.app.forms_back.weekly_quotations.weekly_quotation_summaries.enums.
 
 data class WeeklyQuotationSummariesRequest(
     val situation: WeeklyQuotationSummariesSituationEnum,
-    val quantity: Int
+    val quantity: Int,
+    val percentage: Double? = null
 )

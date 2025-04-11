@@ -79,6 +79,12 @@ class WeeklyQuotationController(private val weeklyQuotationService: WeeklyQuotat
         )
     }
 
+    @GetMapping("/summaries-analysis")
+    fun getSummaryAnalysis(
+        @RequestParam(required = true) sector: ProductSectorsEnum,
+    ): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.OK).body(weeklyQuotationService.getSummaryAnalysis(sector))
+
     @PostMapping
     fun createResource(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,

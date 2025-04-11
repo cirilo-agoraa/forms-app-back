@@ -2,9 +2,8 @@ package agoraa.app.forms_back.weekly_quotations.weekly_quotation_summaries.dto.r
 
 import agoraa.app.forms_back.weekly_quotations.weekly_quotation_summaries.enums.WeeklyQuotationSummariesSituationEnum
 
-data class WeeklyQuotationSummariesResponse(
-    val id: Long,
+data class WeeklyQuotationSummariesAnalysisResponse(
     val situation: WeeklyQuotationSummariesSituationEnum,
-    val quantity: Int,
-    val response: Double? = null,
+    val percentageAll: Double,
+    val percentageSector: Double
 )

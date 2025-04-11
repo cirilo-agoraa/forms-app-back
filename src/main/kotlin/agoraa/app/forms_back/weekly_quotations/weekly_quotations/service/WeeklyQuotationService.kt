@@ -4,6 +4,7 @@ import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.shared.enums.ProductSectorsEnum
 import agoraa.app.forms_back.users.users.model.UserModel
 import agoraa.app.forms_back.users.users.service.UserService
+import agoraa.app.forms_back.weekly_quotations.weekly_quotation_summaries.dto.response.WeeklyQuotationSummariesAnalysisResponse
 import agoraa.app.forms_back.weekly_quotations.weekly_quotation_summaries.service.WeeklyQuotationSummariesService
 import agoraa.app.forms_back.weekly_quotations.weekly_quotations.dto.request.WeeklyQuotationRequest
 import agoraa.app.forms_back.weekly_quotations.weekly_quotations.dto.response.WeeklyQuotationResponse
@@ -167,6 +168,10 @@ class WeeklyQuotationService(
         return PageImpl(pageResult.content.map { createDto(it) }, pageable, pageResult.totalElements)
     }
 
+    fun getSummaryAnalysis(sector: ProductSectorsEnum): List<WeeklyQuotationSummariesAnalysisResponse> {
+        return weeklyQuotationSummariesService.summaryAnalysis(sector)
+    }
+
     @Transactional
     fun create(customUserDetails: CustomUserDetails, request: WeeklyQuotationRequest) {
         val currentUser = customUserDetails.getUserModel()
@@ -178,7 +183,7 @@ class WeeklyQuotationService(
             )
         )
 
-        weeklyQuotationSummariesService.editOrCreateOrDelete(weeklyQuotationModel, request.products)
+        weeklyQuotationSummariesService.editOrCreateOrDelete(weeklyQuotationModel, request.summaries)
     }
 
     @Transactional
@@ -190,7 +195,7 @@ class WeeklyQuotationService(
                 sector = request.sector
             )
         )
-        weeklyQuotationSummariesService.editOrCreateOrDelete(editedWeeklyQuotationModel, request.products)
+        weeklyQuotationSummariesService.editOrCreateOrDelete(editedWeeklyQuotationModel, request.summaries)
     }
 
     @Transactional
