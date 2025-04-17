@@ -7,6 +7,7 @@ import agoraa.app.forms_back.shared.enums.ProductSectorsEnum
 import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.shared.exception.NotAllowedException
 import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
+import agoraa.app.forms_back.store_audits.store_audit_config.service.StoreAuditConfigService
 import agoraa.app.forms_back.store_audits.store_audit_products.dto.request.StoreAuditProductsRequest
 import agoraa.app.forms_back.store_audits.store_audit_products.service.StoreAuditProductsService
 import agoraa.app.forms_back.store_audits.store_audits.dto.request.StoreAuditPatchRequest
@@ -37,18 +38,11 @@ import java.time.LocalDateTime
 class StoreAuditService(
     private val storeAuditRepository: StoreAuditRepository,
     private val storeAuditProductsService: StoreAuditProductsService,
+    private val storeAuditConfigService: StoreAuditConfigService,
     private val userService: UserService,
-    private val productService: ProductService
+    private val productService: ProductService,
 ) {
-    private val objectMapper = jacksonObjectMapper()
-    private val configFilePath = io.github.cdimascio.dotenv.dotenv().get("STORE_AUDIT_CONFIG_PATH")
-    private val config = readConfig()
-
-    private fun readConfig(): Map<String, Any> {
-        val path = Paths.get(configFilePath)
-        val jsonString = Files.readString(path)
-        return objectMapper.readValue(jsonString)
-    }
+    private val config = storeAuditConfigService.returnConfig()
 
     private fun createCriteria(
         username: String? = null,
@@ -233,14 +227,14 @@ class StoreAuditService(
         storeAuditRepository.save(storeAudit.copy(processed = request.processed ?: storeAudit.processed))
     }
 
-    @Scheduled(cron = "0 10 0 * * ?", zone = "America/Sao_Paulo")
+    //@Scheduled(cron = "0 10 11 * * ?", zone = "America/Sao_Paulo")
     @Transactional
     fun createAudit() {
-        val botUser = userService.findByUsername("bot@forms.com")
-        val sectorsNotIn = config["EXCECAO_SETORES"] as List<ProductSectorsEnum>
-        val groupNamesNotIn = config["EXCECAO_GRUPOS"] as List<ProductGroupsEnum>
-        val targetDate = config["DIAS_PARA_NAO_REPETIR_PRODUTOS"] as Int
-        val dailyProductsLimit = config["LIMITE_DIARIO_DE_PRODUTOS"] as Int
+        val botUser = userService.findByUsername("admin@hotmail.com")
+        val sectorsNotIn = config.excludeSectors
+        val groupNamesNotIn = config.excludeGroups
+        val targetDate = config.daysToNotRepeatProducts
+        val dailyProductsLimit = config.dailyProductsLimit
 
         val products = productService.findAll(
             stores = listOf(StoresEnum.TRESMANN_VIX),
@@ -251,7 +245,7 @@ class StoreAuditService(
             groupNamesNotIn = groupNamesNotIn,
         ).toSet()
 
-        val spec = createCriteria(createdAtGreaterThanEqual = LocalDateTime.now().minusDays(targetDate.toLong()))
+        val spec = createCriteria(createdAtGreaterThanEqual = LocalDateTime.now().minusDays(targetDate))
         val storeAudits = storeAuditRepository.findAll(spec)
         val storeAuditsProducts = storeAudits.map { storeAuditProductsService.findByParentId(it.id) }
             .map { storeAuditProducts -> storeAuditProducts.map { it.product } }
@@ -269,16 +263,16 @@ class StoreAuditService(
         storeAuditProductsService.editOrCreateOrDelete(newAudit, finalProducts)
     }
 
-    @Scheduled(cron = "0 36 10 * * ?", zone = "America/Sao_Paulo")
+    //@Scheduled(cron = "0 0 0 * * ?", zone = "America/Sao_Paulo")
     fun closeExpiredAudits() {
         val today = LocalDateTime.now().toLocalDate()
-        val paramDate = config["DURACAO_DO_FORMULARIO_EM_DIAS"] as Int
+        val paramDate = config.formDurationDays
 
         val spec = createCriteria(processed = false)
         val audits = storeAuditRepository.findAll(spec)
 
         val closedAudits = audits.mapNotNull { audit ->
-            val targetDate = audit.createdAt.plusDays(paramDate.toLong()).toLocalDate()
+            val targetDate = audit.createdAt.plusDays(paramDate).toLocalDate()
 
             if (targetDate.isBefore(today) || targetDate.isEqual(today)) {
                 audit.copy(processed = true)

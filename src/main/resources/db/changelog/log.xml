@@ -1334,4 +1334,70 @@
                                  deleteCascade="true"/>
     </changeSet>
 
+    <changeSet id="63" author="PedroCostaa" runInTransaction="true">
+        <createTable tableName="store_audit_config">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="days_to_not_repeat_products" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="daily_products_limit" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="form_duration_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="64" author="PedroCostaa" runInTransaction="true">
+        <createTable tableName="store_audit_config_sectors">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="store_audit_config_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="sector" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="store_audit_config_sectors"
+                                 baseColumnNames="store_audit_config_id"
+                                 constraintName="fk_store_audit_config_sectors_store_audit_config"
+                                 referencedTableName="store_audit_config"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+    </changeSet>
+
+    <changeSet id="65" author="PedroCostaa" runInTransaction="true">
+        <createTable tableName="store_audit_config_groups">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="store_audit_config_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="group_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="store_audit_config_groups"
+                                 baseColumnNames="store_audit_config_id"
+                                 constraintName="fk_store_audit_config_groups_store_audit_config"
+                                 referencedTableName="store_audit_config"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+    </changeSet>
+
 </databaseChangeLog>

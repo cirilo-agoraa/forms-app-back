@@ -1,6 +1,8 @@
 package agoraa.app.forms_back.store_audits.store_audits.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
+import agoraa.app.forms_back.store_audits.store_audit_config.dto.request.StoreAuditConfigRequest
+import agoraa.app.forms_back.store_audits.store_audit_config.service.StoreAuditConfigService
 import agoraa.app.forms_back.store_audits.store_audits.dto.request.StoreAuditPatchRequest
 import agoraa.app.forms_back.store_audits.store_audits.dto.request.StoreAuditRequest
 import agoraa.app.forms_back.store_audits.store_audits.service.StoreAuditService
@@ -14,7 +16,10 @@ import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/store-audits")
-class StoreAuditController(private val storeAuditService: StoreAuditService) {
+class StoreAuditController(
+    private val storeAuditService: StoreAuditService,
+    private val storeAuditConfigService: StoreAuditConfigService
+) {
     @GetMapping
     fun getExtraTransfers(
         @RequestParam(required = false, defaultValue = "false") full: Boolean,
@@ -147,6 +152,24 @@ class StoreAuditController(private val storeAuditService: StoreAuditService) {
                 customUserDetails,
                 id,
             )
+        )
+    }
+
+    // config
+    @GetMapping("/config")
+    fun getConfig(): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            storeAuditConfigService.returnConfig()
+        )
+    }
+
+    @PutMapping("/config/{id}/edit")
+    fun editConfig(
+        @PathVariable id: Long,
+        @RequestBody request: StoreAuditConfigRequest
+    ): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            storeAuditConfigService.editConfig(id, request)
         )
     }
 }
