@@ -29,6 +29,7 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
         @RequestParam(required = false) supplier: String?,
         @RequestParam(required = false) store: StoresEnum?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
+        @RequestParam(required = false) createOrder: Boolean?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             passiveQuotationService.getAll(
@@ -41,7 +42,8 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
                 username,
                 supplier,
                 createdAt,
-                store
+                store,
+                createOrder
             )
         )
     }
@@ -56,6 +58,7 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
         @RequestParam(required = false) supplier: String?,
         @RequestParam(required = false) store: StoresEnum?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
+        @RequestParam(required = false) createOrder: Boolean?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             passiveQuotationService.getAllByCurrentUser(
@@ -66,7 +69,8 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
                 direction,
                 supplier,
                 createdAt,
-                store
+                store,
+                createOrder
             )
         )
     }

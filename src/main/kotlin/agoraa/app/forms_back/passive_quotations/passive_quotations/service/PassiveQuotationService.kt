@@ -29,7 +29,10 @@ import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.max
 import kotlin.time.Duration.Companion.days
 import kotlin.time.DurationUnit
 
@@ -46,7 +49,8 @@ class PassiveQuotationService(
         username: String? = null,
         supplier: String? = null,
         createdAt: LocalDateTime? = null,
-        store: agoraa.app.forms_back.shared.enums.StoresEnum? = null,
+        store: StoresEnum? = null,
+        createOrder: Boolean? = null,
         userId: Long? = null,
     ): Specification<PassiveQuotationModel> {
         return Specification { root: Root<PassiveQuotationModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
@@ -69,7 +73,21 @@ class PassiveQuotationService(
             }
 
             store?.let {
-                predicates.add(criteriaBuilder.equal(root.get<agoraa.app.forms_back.shared.enums.StoresEnum>("store"), it))
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<StoresEnum>("store"),
+                        it
+                    )
+                )
+            }
+
+            createOrder?.let {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<Boolean>("createOrder"),
+                        it
+                    )
+                )
             }
 
             criteriaBuilder.and(*predicates.toTypedArray())
@@ -157,12 +175,13 @@ class PassiveQuotationService(
         username: String?,
         supplier: String?,
         createdAt: LocalDateTime?,
-        store: StoresEnum?
+        store: StoresEnum?,
+        createOrder: Boolean?
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
-        val spec = createCriteria(username, supplier, createdAt, store)
+        val spec = createCriteria(username, supplier, createdAt, store, createOrder)
 
         return when {
             pagination -> {
@@ -187,7 +206,8 @@ class PassiveQuotationService(
         direction: String,
         supplier: String?,
         createdAt: LocalDateTime?,
-        store: StoresEnum?
+        store: StoresEnum?,
+        createOrder: Boolean?
     ): Any {
         val currentUser = customUserDetails.getUserModel()
         val sortDirection =
@@ -198,6 +218,7 @@ class PassiveQuotationService(
                 supplier = supplier,
                 createdAt = createdAt,
                 store = store,
+                createOrder = createOrder,
                 userId = currentUser.id
             )
 
@@ -316,9 +337,12 @@ class PassiveQuotationService(
                 productStore,
                 biggestSale.toInt(),
                 stockPlusOpenOrder,
-                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_VIX }!!.currentStock ?: 0.0,
-                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_SMJ }!!.currentStock ?: 0.0,
-                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_STT }!!.currentStock ?: 0.0,
+                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_VIX }!!.currentStock
+                    ?: 0.0,
+                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_SMJ }!!.currentStock
+                    ?: 0.0,
+                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_STT }!!.currentStock
+                    ?: 0.0,
                 finalQtt,
                 maxPurchase.toDouble(),
                 total,
