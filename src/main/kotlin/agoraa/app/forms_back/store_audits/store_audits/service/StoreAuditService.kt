@@ -227,7 +227,8 @@ class StoreAuditService(
         storeAuditRepository.save(storeAudit.copy(processed = request.processed ?: storeAudit.processed))
     }
 
-    //@Scheduled(cron = "0 10 11 * * ?", zone = "America/Sao_Paulo")
+    /*
+    @Scheduled(cron = "0 10 11 * * ?", zone = "America/Sao_Paulo")
     @Transactional
     fun createAudit() {
         val botUser = userService.findByUsername("admin@hotmail.com")
@@ -263,7 +264,7 @@ class StoreAuditService(
         storeAuditProductsService.editOrCreateOrDelete(newAudit, finalProducts)
     }
 
-    //@Scheduled(cron = "0 0 0 * * ?", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 0 0 * * ?", zone = "America/Sao_Paulo")
     fun closeExpiredAudits() {
         val today = LocalDateTime.now().toLocalDate()
         val paramDate = config.formDurationDays
@@ -283,4 +284,5 @@ class StoreAuditService(
 
         storeAuditRepository.saveAll(closedAudits)
     }
+    */
 }
