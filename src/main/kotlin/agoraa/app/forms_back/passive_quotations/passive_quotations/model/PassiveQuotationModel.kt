@@ -1,5 +1,8 @@
 package agoraa.app.forms_back.passive_quotations.passive_quotations.model
 
+import agoraa.app.forms_back.shared.enums.PaymentTermsEnum
+import agoraa.app.forms_back.shared.enums.StoresEnum
+import agoraa.app.forms_back.shared.enums.WppGroupsEnum
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.users.users.model.UserModel
 import jakarta.persistence.*
@@ -25,15 +28,15 @@ data class PassiveQuotationModel(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val store: agoraa.app.forms_back.shared.enums.StoresEnum,
+    val store: StoresEnum,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val wppGroup: agoraa.app.forms_back.shared.enums.WppGroupsEnum,
+    val wppGroup: WppGroupsEnum,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val paymentTerm: agoraa.app.forms_back.shared.enums.PaymentTermsEnum,
+    val paymentTerm: PaymentTermsEnum,
 
     @Column(nullable = false)
     val worstTerm: Int = 60,
@@ -70,4 +73,7 @@ data class PassiveQuotationModel(
 
     @Column(nullable = false)
     val param8: Double = 0.7,
+
+    @Column(nullable = false)
+    val createOrder: Boolean = false
 )

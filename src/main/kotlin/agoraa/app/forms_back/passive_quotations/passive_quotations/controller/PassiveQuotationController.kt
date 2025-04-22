@@ -2,9 +2,11 @@ package agoraa.app.forms_back.passive_quotations.passive_quotations.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationCalculateRequest
+import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationPatchRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationPrintRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.service.PassiveQuotationService
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,7 +18,7 @@ import java.time.LocalDateTime
 @RequestMapping("/api/passive-quotations")
 class PassiveQuotationController(private val passiveQuotationService: PassiveQuotationService) {
     @GetMapping
-    fun getAllResources(
+    fun getAllPassiveQuotations(
         @RequestParam(required = false, defaultValue = "false") full: Boolean,
         @RequestParam(required = false, defaultValue = "true") pagination: Boolean,
         @RequestParam(required = false, defaultValue = "0") page: Int,
@@ -25,7 +27,7 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
         @RequestParam(required = false, defaultValue = "asc") direction: String,
         @RequestParam(required = false) username: String?,
         @RequestParam(required = false) supplier: String?,
-        @RequestParam(required = false) store: agoraa.app.forms_back.shared.enums.StoresEnum?,
+        @RequestParam(required = false) store: StoresEnum?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -45,14 +47,14 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
     }
 
     @GetMapping("/current-user")
-    fun getCurrentUserResources(
+    fun getCurrentUserPassiveQuotations(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "id") sort: String,
         @RequestParam(defaultValue = "asc") direction: String,
         @RequestParam(required = false) supplier: String?,
-        @RequestParam(required = false) store: agoraa.app.forms_back.shared.enums.StoresEnum?,
+        @RequestParam(required = false) store: StoresEnum?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -70,7 +72,7 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
     }
 
     @GetMapping("/{id}")
-    fun getResource(
+    fun getPassiveQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
         @RequestParam(required = false, defaultValue = "true") full: Boolean
@@ -85,7 +87,7 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
     }
 
     @PostMapping
-    fun createResource(
+    fun createPassiveQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @Valid @RequestBody request: PassiveQuotationRequest
     ): ResponseEntity<Any> {
@@ -98,7 +100,7 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
     }
 
     @PutMapping("/{id}/edit")
-    fun editResource(
+    fun patchPassiveQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
         @RequestBody request: PassiveQuotationRequest
@@ -112,8 +114,23 @@ class PassiveQuotationController(private val passiveQuotationService: PassiveQuo
         )
     }
 
+    @PatchMapping("/{id}/patch")
+    fun patchPassiveQuotation(
+        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
+        @PathVariable id: Long,
+        @RequestBody request: PassiveQuotationPatchRequest
+    ): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            passiveQuotationService.patch(
+                customUserDetails,
+                id,
+                request
+            )
+        )
+    }
+
     @DeleteMapping("/{id}")
-    fun deleteResource(
+    fun deletePassiveQuotation(
         @AuthenticationPrincipal customUserDetails: CustomUserDetails,
         @PathVariable id: Long,
     ): ResponseEntity<Any> {

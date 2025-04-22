@@ -3,6 +3,7 @@ package agoraa.app.forms_back.passive_quotations.passive_quotations.service
 import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.passive_quotations.passive_quotation_products.service.PassiveQuotationProductsService
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationCalculateRequest
+import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationPatchRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationPrintRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.request.PassiveQuotationRequest
 import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.response.PassiveQuotationCalculationResponse
@@ -10,6 +11,7 @@ import agoraa.app.forms_back.passive_quotations.passive_quotations.dto.response.
 import agoraa.app.forms_back.passive_quotations.passive_quotations.model.PassiveQuotationModel
 import agoraa.app.forms_back.passive_quotations.passive_quotations.repository.PassiveQuotationRepository
 import agoraa.app.forms_back.products.products.service.ProductService
+import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.shared.service.ChatsacService
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
@@ -110,6 +112,7 @@ class PassiveQuotationService(
             param8 = passiveQuotation.param8,
             bestTerm = passiveQuotation.bestTerm,
             wppGroup = passiveQuotation.wppGroup,
+            createOrder = passiveQuotation.createOrder
         )
 
         if (full) {
@@ -154,7 +157,7 @@ class PassiveQuotationService(
         username: String?,
         supplier: String?,
         createdAt: LocalDateTime?,
-        store: agoraa.app.forms_back.shared.enums.StoresEnum?
+        store: StoresEnum?
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
@@ -184,7 +187,7 @@ class PassiveQuotationService(
         direction: String,
         supplier: String?,
         createdAt: LocalDateTime?,
-        store: agoraa.app.forms_back.shared.enums.StoresEnum?
+        store: StoresEnum?
     ): Any {
         val currentUser = customUserDetails.getUserModel()
         val sortDirection =
@@ -389,9 +392,20 @@ class PassiveQuotationService(
                 param7 = request.param7,
                 param8 = request.param8,
                 bestTerm = request.bestTerm,
+                createOrder = request.createOrder
             )
         )
         passiveQuotationProductsService.editOrCreateOrDelete(editedPassiveQuotation, request.products)
+    }
+
+    fun patch(customUserDetails: CustomUserDetails, id: Long, request: PassiveQuotationPatchRequest) {
+        val extraQuotation = findById(customUserDetails, id)
+
+        passiveQuotationRepository.save(
+            extraQuotation.copy(
+                createOrder = request.createOrder
+            )
+        )
     }
 
     @Transactional

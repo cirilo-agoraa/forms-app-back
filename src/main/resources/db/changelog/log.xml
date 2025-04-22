@@ -1400,4 +1400,10 @@
                                  deleteCascade="true"/>
     </changeSet>
 
+    <changeSet id="66" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="passive_quotations">
+            <column name="create_order" type="BOOLEAN" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
