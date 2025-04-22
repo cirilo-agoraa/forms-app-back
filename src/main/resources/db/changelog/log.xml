@@ -1406,4 +1406,21 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="67" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="passive_quotation_products">
+            <column name="stock_plus_open_order_overwritten" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="passive_quotation_products">
+            <column name="quantity_overwritten" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addNotNullConstraint tableName="passive_quotation_products" columnName="stock_plus_open_order" columnDataType="DOUBLE" defaultNullValue="0"/>
+        <addNotNullConstraint tableName="passive_quotation_products" columnName="quantity" columnDataType="INT" defaultNullValue="0"/>
+    </changeSet>
+
 </databaseChangeLog>

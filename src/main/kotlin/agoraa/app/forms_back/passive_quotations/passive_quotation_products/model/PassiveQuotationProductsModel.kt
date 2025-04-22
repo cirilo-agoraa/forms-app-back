@@ -22,9 +22,15 @@ data class PassiveQuotationProductsModel(
     @Column(nullable = false)
     val price: Double,
 
-    @Column(nullable = true)
-    val quantity: Int? = null,
+    @Column(nullable = false)
+    val quantity: Int,
 
-    @Column(nullable = true)
-    val stockPlusOpenOrder: Double? = null,
+    @Column(nullable = false)
+    val stockPlusOpenOrder: Double,
+
+    @Column(nullable = false)
+    val quantityOverwritten: Boolean = false,
+
+    @Column(nullable = false)
+    val stockPlusOpenOrderOverwritten: Boolean = false,
 )

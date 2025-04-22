@@ -9,7 +9,7 @@ data class PassiveQuotationCalculationResponse(
     val stockVix: Double,
     val stockSmj: Double,
     val stockStt: Double,
-    val finalQtt: Double,
+    val quantity: Double,
     val maxPurchase: Double,
     val total: Double,
     val flag1: Int,

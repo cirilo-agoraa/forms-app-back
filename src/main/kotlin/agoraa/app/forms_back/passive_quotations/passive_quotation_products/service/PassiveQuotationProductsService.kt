@@ -20,6 +20,8 @@ class PassiveQuotationProductsService(private val passiveQuotationProductsReposi
                 quantity = p.quantity,
                 price = p.price,
                 stockPlusOpenOrder = p.stockPlusOpenOrder,
+                quantityOverwritten = p.quantityOverwritten,
+                stockPlusOpenOrderOverwritten = p.stockPlusOpenOrderOverwritten
             )
         }
         passiveQuotationProductsRepository.saveAll(passiveQuotationProducts)
@@ -34,6 +36,8 @@ class PassiveQuotationProductsService(private val passiveQuotationProductsReposi
                 quantity = requestProduct.quantity,
                 price = requestProduct.price,
                 stockPlusOpenOrder = requestProduct.stockPlusOpenOrder,
+                quantityOverwritten = requestProduct.quantityOverwritten,
+                stockPlusOpenOrderOverwritten = requestProduct.stockPlusOpenOrderOverwritten
             )
         }
         passiveQuotationProductsRepository.saveAll(passiveQuotationProducts)
@@ -51,7 +55,9 @@ class PassiveQuotationProductsService(private val passiveQuotationProductsReposi
             price = passiveQuotationProduct.price,
             quantity = passiveQuotationProduct.quantity,
             stockPlusOpenOrder = passiveQuotationProduct.stockPlusOpenOrder,
-            product = passiveQuotationProduct.product
+            product = passiveQuotationProduct.product,
+            quantityOverwritten = passiveQuotationProduct.quantityOverwritten,
+            stockPlusOpenOrderOverwritten = passiveQuotationProduct.stockPlusOpenOrderOverwritten
         )
     }
 

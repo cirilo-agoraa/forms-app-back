@@ -320,7 +320,7 @@ class PassiveQuotationService(
                 (salesProjection - currentStockSum) / productStore.packageQuantity <= 0 -> 0
                 else -> floor((salesProjection - currentStockSum) / productStore.packageQuantity)
             }
-            var finalQtt = requestItem.finalQtt ?: when {
+            var finalQtt = requestItem.quantity ?: when {
                 (biggestSale < (request.param1 * productStore.packageQuantity) && stockPlusOpenOrder > request.param2 * productStore.packageQuantity) || !relevantPurchase || salesNetStock -> 0
                 else -> {
                     when {

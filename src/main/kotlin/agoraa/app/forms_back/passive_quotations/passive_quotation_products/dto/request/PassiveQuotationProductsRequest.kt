@@ -5,6 +5,8 @@ import agoraa.app.forms_back.products.products.model.ProductModel
 data class PassiveQuotationProductsRequest(
     val product: ProductModel,
     val price: Double,
-    val quantity: Int?,
-    val stockPlusOpenOrder: Double?,
+    val quantity: Int,
+    val stockPlusOpenOrder: Double,
+    val quantityOverwritten: Boolean,
+    val stockPlusOpenOrderOverwritten: Boolean
 )
