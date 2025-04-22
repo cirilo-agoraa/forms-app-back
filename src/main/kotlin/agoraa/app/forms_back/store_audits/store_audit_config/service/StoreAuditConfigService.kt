@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service
 @Service
 class StoreAuditConfigService(private val storeAuditConfigRepository: StoreAuditConfigRepository) {
 
-    private fun findConfig(id: Long = 1): StoreAuditConfigModel {
+    private fun findConfig(): StoreAuditConfigModel {
         return storeAuditConfigRepository.findById(1L)
             .orElseThrow { ResourceNotFoundException("StoreAuditConfigModel not found") }
     }
 
-    fun editConfig(id: Long, request: StoreAuditConfigRequest) {
-        val storeAuditConfigModel = findConfig(id)
+    fun editConfig(request: StoreAuditConfigRequest) {
+        val storeAuditConfigModel = findConfig()
 
         val editedStoreAuditConfigModel = storeAuditConfigModel.copy(
             daysToNotRepeatProducts = request.daysToNotRepeatProducts,

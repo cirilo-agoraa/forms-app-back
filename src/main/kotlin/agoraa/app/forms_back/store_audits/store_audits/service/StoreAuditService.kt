@@ -7,6 +7,7 @@ import agoraa.app.forms_back.shared.enums.ProductSectorsEnum
 import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.shared.exception.NotAllowedException
 import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
+import agoraa.app.forms_back.store_audits.store_audit_config.dto.response.StoreAuditConfigResponse
 import agoraa.app.forms_back.store_audits.store_audit_config.service.StoreAuditConfigService
 import agoraa.app.forms_back.store_audits.store_audit_products.dto.request.StoreAuditProductsRequest
 import agoraa.app.forms_back.store_audits.store_audit_products.service.StoreAuditProductsService
@@ -42,7 +43,9 @@ class StoreAuditService(
     private val userService: UserService,
     private val productService: ProductService,
 ) {
-    private val config = storeAuditConfigService.returnConfig()
+    private fun getConfig(): StoreAuditConfigResponse {
+        return storeAuditConfigService.returnConfig()
+    }
 
     private fun createCriteria(
         username: String? = null,

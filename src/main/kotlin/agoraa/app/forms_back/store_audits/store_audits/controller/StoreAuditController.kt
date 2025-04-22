@@ -163,13 +163,12 @@ class StoreAuditController(
         )
     }
 
-    @PutMapping("/config/{id}/edit")
+    @PutMapping("/config/edit")
     fun editConfig(
-        @PathVariable id: Long,
         @RequestBody request: StoreAuditConfigRequest
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            storeAuditConfigService.editConfig(id, request)
+            storeAuditConfigService.editConfig(request)
         )
     }
 }
