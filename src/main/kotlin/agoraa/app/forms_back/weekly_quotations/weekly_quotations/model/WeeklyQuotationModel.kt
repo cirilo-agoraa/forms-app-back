@@ -15,6 +15,9 @@ data class WeeklyQuotationModel(
     @Column(nullable=false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
+    @Column(nullable=false)
+    val quotationDate: LocalDateTime = LocalDateTime.now(),
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     val user: UserModel,

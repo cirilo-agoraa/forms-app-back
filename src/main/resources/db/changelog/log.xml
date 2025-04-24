@@ -1423,4 +1423,12 @@
         <addNotNullConstraint tableName="passive_quotation_products" columnName="quantity" columnDataType="INT" defaultNullValue="0"/>
     </changeSet>
 
+    <changeSet id="68" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="weekly_quotations">
+            <column name="quotation_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

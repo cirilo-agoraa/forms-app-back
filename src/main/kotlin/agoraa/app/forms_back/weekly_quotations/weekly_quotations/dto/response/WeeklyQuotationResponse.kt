@@ -11,6 +11,7 @@ data class WeeklyQuotationResponse(
     val id: Long,
     val user: UserResponse,
     val createdAt: LocalDateTime,
+    val quotationDate: LocalDateTime,
     val sector: ProductSectorsEnum,
     var summaries: List<WeeklyQuotationSummariesResponse>? = null
 )

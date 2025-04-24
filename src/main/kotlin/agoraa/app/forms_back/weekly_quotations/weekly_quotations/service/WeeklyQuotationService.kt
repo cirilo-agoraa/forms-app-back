@@ -77,7 +77,8 @@ class WeeklyQuotationService(
             id = weeklyQuotationModel.id,
             user = userDto,
             createdAt = weeklyQuotationModel.createdAt,
-            sector = weeklyQuotationModel.sector
+            sector = weeklyQuotationModel.sector,
+            quotationDate = weeklyQuotationModel.quotationDate
         )
 
         if (full) {
@@ -179,7 +180,8 @@ class WeeklyQuotationService(
         val weeklyQuotationModel = weeklyQuotationRepository.saveAndFlush(
             WeeklyQuotationModel(
                 user = currentUser,
-                sector = request.sector
+                sector = request.sector,
+                quotationDate = request.quotationDate
             )
         )
 
@@ -192,7 +194,8 @@ class WeeklyQuotationService(
 
         val editedWeeklyQuotationModel = weeklyQuotationRepository.saveAndFlush(
             weeklyQuotationModel.copy(
-                sector = request.sector
+                sector = request.sector,
+                quotationDate = request.quotationDate
             )
         )
         weeklyQuotationSummariesService.editOrCreateOrDelete(editedWeeklyQuotationModel, request.summaries)
