@@ -1431,4 +1431,15 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="69" author="PedroCostaa" runInTransaction="true">
+        <addNotNullConstraint tableName="products" columnName="package_quantity" columnDataType="INT"/>
+        <addNotNullConstraint tableName="products" columnName="open_order" columnDataType="DOUBLE"/>
+        <addNotNullConstraint tableName="products" columnName="sales_last_thirty_days" columnDataType="DOUBLE"/>
+        <addNotNullConstraint tableName="products" columnName="sales_last_twelve_months" columnDataType="DOUBLE"/>
+        <addNotNullConstraint tableName="products" columnName="sales_last_seven_days" columnDataType="DOUBLE"/>
+        <addNotNullConstraint tableName="products" columnName="average_sales_last_thirty_days" columnDataType="DOUBLE"/>
+        <addNotNullConstraint tableName="products" columnName="average_sales_last_thirty_days_twelve_months" columnDataType="DOUBLE"/>
+        <addNotNullConstraint tableName="products" columnName="average_expiration" columnDataType="DOUBLE"/>
+    </changeSet>
+
 </databaseChangeLog>

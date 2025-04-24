@@ -1,12 +1,13 @@
 package agoraa.app.forms_back.products.products.dto.request
 
 import agoraa.app.forms_back.shared.enums.ProductGroupsEnum
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import java.time.LocalDate
 
-data class ProductRequest(
+data class ProductsRequestAnticipation(
     val code: String,
     val name: String,
-    val supplier: String,
+    val supplier: SupplierModel,
     val barcode: String,
     val store: agoraa.app.forms_back.shared.enums.StoresEnum,
     val outOfMix: Boolean,

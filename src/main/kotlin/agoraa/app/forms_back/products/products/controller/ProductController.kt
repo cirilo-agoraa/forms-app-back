@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.products.products.controller
 
-import agoraa.app.forms_back.products.products.dto.request.ProductSchema
+import agoraa.app.forms_back.products.products.dto.request.ProductRequest
+import agoraa.app.forms_back.products.products.dto.request.ProductsRequestAnticipation
 import agoraa.app.forms_back.products.products.service.ProductService
 import agoraa.app.forms_back.shared.enums.MipsCategoriesEnum
 import agoraa.app.forms_back.shared.enums.ProductGroupsEnum
@@ -79,7 +80,7 @@ class ProductController(private val productService: ProductService) {
 
     @PostMapping
     fun createProduct(
-        @Valid @RequestBody request: ProductSchema,
+        @Valid @RequestBody request: ProductsRequestAnticipation,
         bindingResult: BindingResult,
     ): ResponseEntity<Any> {
         return when {
@@ -97,7 +98,7 @@ class ProductController(private val productService: ProductService) {
     @PutMapping("/{id}/edit")
     fun editProduct(
         @PathVariable id: Long,
-        @RequestBody request: ProductSchema
+        @RequestBody request: ProductsRequestAnticipation
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             productService.edit(id, request)
@@ -106,7 +107,7 @@ class ProductController(private val productService: ProductService) {
 
     @PutMapping("/edit-or-create-multiple")
     fun editOrCreateMultipleProducts(
-        @Valid @RequestBody request: List<ProductSchema>,
+        @Valid @RequestBody request: List<ProductRequest>,
         bindingResult: BindingResult
     ): ResponseEntity<Any> {
         return when {

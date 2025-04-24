@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.products.products.service
 
-import agoraa.app.forms_back.products.products.dto.request.ProductSchema
+import agoraa.app.forms_back.products.products.dto.request.ProductRequest
+import agoraa.app.forms_back.products.products.dto.request.ProductsRequestAnticipation
 import agoraa.app.forms_back.products.products.dto.response.ProductResponse
 import agoraa.app.forms_back.products.products.model.ProductModel
 import agoraa.app.forms_back.products.products.repository.ProductRepository
@@ -285,9 +286,8 @@ class ProductService(
         return createDto(findById(id), true)
     }
 
-    @Transactional
-    fun create(request: ProductSchema) {
-        val supplier = supplierService.findByName(request.supplier)
+    fun create(request: ProductsRequestAnticipation) {
+        val supplier = supplierService.findByName(request.supplier.name)
             .orElseThrow { ResourceNotFoundException("Supplier not found") }
 
         productRepository.save(
@@ -349,15 +349,16 @@ class ProductService(
                 salesPrice2 = request.salesPrice2,
                 promotionPrice = request.promotionPrice,
                 mipCategory = request.mipCategory,
+                isResource = request.isResource
             )
         )
     }
 
     @Transactional
-    fun edit(id: Long, request: ProductSchema) {
+    fun edit(id: Long, request: ProductsRequestAnticipation) {
         val product = findById(id)
 
-        val supplier = supplierService.findByName(request.supplier)
+        val supplier = supplierService.findByName(request.supplier.name)
             .orElseThrow { ResourceNotFoundException("Supplier not found") }
 
         productRepository.save(
@@ -419,12 +420,13 @@ class ProductService(
                 salesPrice2 = request.salesPrice2,
                 promotionPrice = request.promotionPrice,
                 mipCategory = request.mipCategory,
+                isResource = request.isResource
             )
         )
     }
 
     @Transactional
-    fun editOrCreateMultiple(request: List<ProductSchema>) {
+    fun editOrCreateMultiple(request: List<ProductRequest>) {
         val suppliersNames = request.map { it.supplier }.distinct()
         val suppliers = supplierService.getAll(suppliersNames)
 
