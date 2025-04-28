@@ -1511,4 +1511,8 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="72" author="PedroCostaa" runInTransaction="true">
+        <dropNotNullConstraint tableName="orders" columnName="received_date" columnDataType="DATETIME"/>
+    </changeSet>
+
 </databaseChangeLog>

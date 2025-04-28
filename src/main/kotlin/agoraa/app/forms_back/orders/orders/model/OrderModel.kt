@@ -33,8 +33,8 @@ data class OrderModel(
     @Column(nullable = false)
     val deliveryDate: LocalDateTime,
 
-    @Column(nullable = false)
-    val receivedDate: LocalDateTime,
+    @Column(nullable = true)
+    val receivedDate: LocalDateTime? = null,
 
     @Column(nullable = false)
     val issued: Boolean,
