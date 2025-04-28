@@ -1442,4 +1442,65 @@
         <addNotNullConstraint tableName="products" columnName="average_expiration" columnDataType="DOUBLE"/>
     </changeSet>
 
+    <changeSet id="70" author="PedroCostaa" runInTransaction="true">
+        <createTable tableName="orders">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="supplier_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="store" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="order_number" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="date_created" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="delivery_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="received_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="issued" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="received" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="total_value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="pending_value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="received_value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cancel_issued" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cancel_issued_motive" type="varchar(255)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="orders" baseColumnNames="supplier_id" constraintName="fk_orders_supplier" referencedTableName="suppliers"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>
