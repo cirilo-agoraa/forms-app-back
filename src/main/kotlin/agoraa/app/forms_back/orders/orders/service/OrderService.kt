@@ -30,6 +30,7 @@ class OrderService(
             id = orderModel.id,
             supplier = orderModel.supplier,
             orderNumber = orderModel.orderNumber,
+            buyer = orderModel.buyer,
             store = orderModel.store,
             dateCreated = orderModel.dateCreated,
             deliveryDate = orderModel.deliveryDate,
@@ -184,6 +185,7 @@ class OrderService(
             existingOrder?.copy(
                 store = p.store,
                 supplier = supp,
+                buyer = p.buyer,
                 dateCreated = p.dateCreated,
                 issued = p.issued,
                 received = p.received,
@@ -196,6 +198,7 @@ class OrderService(
                 ?: OrderModel(
                     store = p.store,
                     supplier = supp,
+                    buyer = p.buyer,
                     orderNumber = p.orderNumber,
                     dateCreated = p.dateCreated,
                     issued = p.issued,

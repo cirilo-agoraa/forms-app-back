@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.orders.orders.model
 
+import agoraa.app.forms_back.shared.enums.BuyersEnum
 import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import jakarta.persistence.*
@@ -21,6 +22,10 @@ data class OrderModel(
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val store: StoresEnum,
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    val buyer: BuyersEnum,
 
     @Column(nullable = false)
     val dateCreated: LocalDateTime,

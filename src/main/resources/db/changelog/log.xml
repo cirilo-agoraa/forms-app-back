@@ -1503,4 +1503,12 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="71" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="orders">
+            <column name="buyer" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

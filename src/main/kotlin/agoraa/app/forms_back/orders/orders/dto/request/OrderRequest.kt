@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.orders.orders.dto.request
 
+import agoraa.app.forms_back.shared.enums.BuyersEnum
 import agoraa.app.forms_back.shared.enums.StoresEnum
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDateTime
@@ -26,5 +27,7 @@ data class OrderRequest(
     @field:NotNull(message = "Pending value cannot be null")
     val pendingValue: Double,
     @field:NotNull(message = "Received value cannot be null")
-    val receivedValue: Double
+    val receivedValue: Double,
+    @field:NotNull(message = "Buyer cvalue cannot be null")
+    val buyer: BuyersEnum
 )
