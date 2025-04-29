@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.supplier_registrations.supplier_registrations.dto.response
 
+import agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum
 import agoraa.app.forms_back.supplier_registrations.supplier_registratio_weekly_quotations.dto.response.SupplierRegistrationWeeklyQuotationsDto
 import agoraa.app.forms_back.supplier_registrations.supplier_registration_stores.dto.response.SupplierRegistrationStoresDto
 import agoraa.app.forms_back.users.users.dto.response.UserResponse
@@ -13,7 +14,8 @@ data class SupplierRegistrationDto(
     val user: UserResponse,
     val accepted: Boolean,
     val createdAt: LocalDateTime,
-    val type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum,
+    val type: SuppliersRegistrationTypesEnum,
+    val created: Boolean,
     val companyName: String,
     var stores: List<SupplierRegistrationStoresDto>? = null,
     var weeklyQuotations: List<SupplierRegistrationWeeklyQuotationsDto>? = null,

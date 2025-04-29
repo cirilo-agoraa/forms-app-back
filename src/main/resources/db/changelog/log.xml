@@ -1558,4 +1558,12 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="76" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="supplier_registrations">
+            <column name="created" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

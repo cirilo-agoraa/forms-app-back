@@ -6,6 +6,7 @@ import agoraa.app.forms_back.supplier_registrations.supplier_registratio_weekly_
 import agoraa.app.forms_back.supplier_registrations.supplier_registration_stores.service.SupplierRegistrationStoresService
 import agoraa.app.forms_back.supplier_registrations.supplier_registrations.dto.request.SupplierRegistrationCreateSchema
 import agoraa.app.forms_back.supplier_registrations.supplier_registrations.dto.request.SupplierRegistrationEditSchema
+import agoraa.app.forms_back.supplier_registrations.supplier_registrations.dto.request.SupplierRegistrationPatchRequest
 import agoraa.app.forms_back.supplier_registrations.supplier_registrations.dto.response.SupplierRegistrationDto
 import agoraa.app.forms_back.supplier_registrations.supplier_registrations.model.SupplierRegistrationModel
 import agoraa.app.forms_back.supplier_registrations.supplier_registrations.repository.SupplierRegistrationRepository
@@ -80,9 +81,10 @@ class SupplierRegistrationService(
         username: String? = null,
         createdAt: LocalDateTime? = null,
         accepted: Boolean? = null,
-        type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum? = null,
+        type: SuppliersRegistrationTypesEnum? = null,
         cnpj: String? = null,
         userId: Long? = null,
+        created: Boolean? = null
     ): Specification<SupplierRegistrationModel> {
         return Specification { root: Root<SupplierRegistrationModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -101,6 +103,10 @@ class SupplierRegistrationService(
 
             accepted?.let {
                 predicates.add(criteriaBuilder.equal(root.get<Boolean>("accepted"), it))
+            }
+
+            created?.let {
+                predicates.add(criteriaBuilder.equal(root.get<Boolean>("created"), it))
             }
 
             type?.let {
@@ -134,7 +140,8 @@ class SupplierRegistrationService(
             createdAt = supplierRegistration.createdAt,
             accepted = supplierRegistration.accepted,
             type = supplierRegistration.type,
-            companyName = supplierRegistration.companyName
+            companyName = supplierRegistration.companyName,
+            created = supplierRegistration.created,
         )
 
         if (full) {
@@ -203,13 +210,12 @@ class SupplierRegistrationService(
         username: String?,
         createdAt: LocalDateTime?,
         accepted: Boolean?,
-        type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum?,
-        cnpj: String?,
+        created: Boolean?
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
-        val spec = createCriteria(username, createdAt, accepted)
+        val spec = createCriteria(username, createdAt, accepted, created = created)
 
         return when {
             pagination -> {
@@ -236,7 +242,7 @@ class SupplierRegistrationService(
         direction: String,
         createdAt: LocalDateTime?,
         accepted: Boolean?,
-        type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum?,
+        type: SuppliersRegistrationTypesEnum?,
         cnpj: String?,
     ): Any {
         val currentUser = customUserDetails.getUserModel()
@@ -308,6 +314,16 @@ class SupplierRegistrationService(
 
         supplierRegistrationStoresService.create(supplierRegistration, request.stores)
         request.weeklyQuotations?.let { supplierRegistrationWeeklyQuotationService.create(supplierRegistration, it) }
+    }
+
+    fun patch(customUserDetails: CustomUserDetails, id: Long, request: SupplierRegistrationPatchRequest) {
+        val supplierRegistration = findById(customUserDetails, id)
+
+        supplierRegistrationRepository.save(
+            supplierRegistration.copy(
+                created = request.created ?: supplierRegistration.created,
+            )
+        )
     }
 
     @Transactional

@@ -1,8 +1,10 @@
 package agoraa.app.forms_back.supplier_registrations.supplier_registrations.controller
 
 import agoraa.app.forms_back.config.CustomUserDetails
+import agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum
 import agoraa.app.forms_back.supplier_registrations.supplier_registrations.dto.request.SupplierRegistrationCreateSchema
 import agoraa.app.forms_back.supplier_registrations.supplier_registrations.dto.request.SupplierRegistrationEditSchema
+import agoraa.app.forms_back.supplier_registrations.supplier_registrations.dto.request.SupplierRegistrationPatchRequest
 import agoraa.app.forms_back.supplier_registrations.supplier_registrations.service.SupplierRegistrationService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -26,9 +28,7 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
         @RequestParam(required = false) username: String?,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) accepted: Boolean?,
-        @RequestParam(required = false) type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum?,
-        @RequestParam(required = false) cnpj: String?,
-        @RequestParam(required = false) companyName: String?,
+        @RequestParam(required = false) created: Boolean?,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             supplierRegistrationService.getAll(
@@ -40,8 +40,7 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
                 username,
                 createdAt,
                 accepted,
-                type,
-                cnpj,
+                created
             )
         )
     }
@@ -56,7 +55,7 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
         @RequestParam(defaultValue = "asc") direction: String,
         @RequestParam(required = false) createdAt: LocalDateTime?,
         @RequestParam(required = false) processed: Boolean?,
-        @RequestParam(required = false) type: agoraa.app.forms_back.shared.enums.suppliers_registration.SuppliersRegistrationTypesEnum?,
+        @RequestParam(required = false) type: SuppliersRegistrationTypesEnum?,
         @RequestParam(required = false) cnpj: String?,
         @RequestParam(required = false) companyName: String?,
     ): ResponseEntity<Any> {
@@ -122,6 +121,21 @@ class SupplierRegistrationController(private val supplierRegistrationService: Su
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             supplierRegistrationService.edit(
+                customUserDetails,
+                id,
+                request
+            )
+        )
+    }
+
+    @PatchMapping("/{id}/patch")
+    fun patchSupplierRegistration(
+        @AuthenticationPrincipal customUserDetails: CustomUserDetails,
+        @PathVariable id: Long,
+        @RequestBody request: SupplierRegistrationPatchRequest
+    ): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            supplierRegistrationService.patch(
                 customUserDetails,
                 id,
                 request
