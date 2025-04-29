@@ -1519,4 +1519,43 @@
         <addUniqueConstraint tableName="orders" columnNames="order_number"/>
     </changeSet>
 
+    <changeSet id="74" author="PedroCostaa" runInTransaction="true">
+        <dropColumn tableName="orders" columnName="cancel_issued"/>
+        <dropColumn tableName="orders" columnName="cancel_issued_motive"/>
+    </changeSet>
+
+    <changeSet id="75" author="PedroCostaa" runInTransaction="true">
+        <createTable tableName="orders_cancel_issued_requests">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="motive" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="processed" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="orders_cancel_issued_requests" baseColumnNames="order_id" constraintName="fk_orders_cancel_issued_requests_order" referencedTableName="orders"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="orders_cancel_issued_requests" baseColumnNames="user_id" constraintName="fk_orders_cancel_issued_requests_user" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>

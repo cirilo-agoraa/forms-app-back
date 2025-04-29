@@ -50,10 +50,4 @@ data class OrderModel(
 
     @Column(nullable = false)
     val receivedValue: Double,
-
-    @Column(nullable = false)
-    val cancelIssued: Boolean = false,
-
-    @Column(nullable = true)
-    val cancelIssuedMotive: String? = null,
 )

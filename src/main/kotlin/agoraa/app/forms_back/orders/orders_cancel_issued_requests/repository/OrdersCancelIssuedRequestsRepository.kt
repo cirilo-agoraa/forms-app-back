@@ -1,0 +1,10 @@
+package agoraa.app.forms_back.orders.orders_cancel_issued_requests.repository
+
+import agoraa.app.forms_back.orders.orders_cancel_issued_requests.model.OrderCancelIssuedRequestModel
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
+import org.springframework.stereotype.Repository
+
+@Repository
+interface OrdersCancelIssuedRequestsRepository: JpaRepository<OrderCancelIssuedRequestModel, Long>, JpaSpecificationExecutor<OrderCancelIssuedRequestModel> {
+}

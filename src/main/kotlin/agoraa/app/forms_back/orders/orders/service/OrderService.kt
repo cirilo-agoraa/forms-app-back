@@ -1,10 +1,10 @@
 package agoraa.app.forms_back.orders.orders.service
 
-import agoraa.app.forms_back.orders.orders.dto.request.OrderPatchRequest
 import agoraa.app.forms_back.orders.orders.dto.request.OrderRequest
 import agoraa.app.forms_back.orders.orders.dto.response.OrderResponse
 import agoraa.app.forms_back.orders.orders.model.OrderModel
 import agoraa.app.forms_back.orders.orders.repository.OrderRepository
+import agoraa.app.forms_back.orders.orders_cancel_issued_requests.service.OrdersCancelIssuedRequestsService
 import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
 import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
@@ -23,7 +23,7 @@ import java.time.LocalDateTime
 @Service
 class OrderService(
     private val orderRepository: OrderRepository,
-    private val supplierService: SupplierService
+    private val supplierService: SupplierService,
 ) {
     fun createDto(orderModel: OrderModel): OrderResponse {
         val orderResponse = OrderResponse(
@@ -153,17 +153,6 @@ class OrderService(
 
     fun returnById(id: Long): OrderResponse {
         return createDto(findById(id))
-    }
-
-    fun patch(id: Long, request: OrderPatchRequest) {
-        val order = findById(id)
-
-        orderRepository.save(
-            order.copy(
-                cancelIssued = request.cancelIssued ?: order.cancelIssued,
-                cancelIssuedMotive = request.cancelIssuedMotive ?: order.cancelIssuedMotive,
-            )
-        )
     }
 
     @Transactional

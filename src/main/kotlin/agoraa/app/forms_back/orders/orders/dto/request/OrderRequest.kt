@@ -1,5 +1,6 @@
 package agoraa.app.forms_back.orders.orders.dto.request
 
+import agoraa.app.forms_back.orders.orders_cancel_issued_requests.dto.request.OrdersCancelIssuedRequestsRequest
 import agoraa.app.forms_back.shared.enums.BuyersEnum
 import agoraa.app.forms_back.shared.enums.StoresEnum
 import jakarta.validation.constraints.NotNull
@@ -21,8 +22,6 @@ data class OrderRequest(
     @field:NotNull(message = "Delivery date cannot be null")
     val deliveryDate: LocalDateTime,
 
-    val receivedDate: LocalDateTime? = null,
-
     @field:NotNull(message = "Issued status cannot be null")
     val issued: Boolean,
 
@@ -39,5 +38,7 @@ data class OrderRequest(
     val receivedValue: Double,
 
     @field:NotNull(message = "Buyer cvalue cannot be null")
-    val buyer: BuyersEnum
+    val buyer: BuyersEnum,
+
+    val receivedDate: LocalDateTime? = null,
 )

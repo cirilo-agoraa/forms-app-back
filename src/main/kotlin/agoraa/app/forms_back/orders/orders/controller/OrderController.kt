@@ -1,6 +1,5 @@
 package agoraa.app.forms_back.orders.orders.controller
 
-import agoraa.app.forms_back.orders.orders.dto.request.OrderPatchRequest
 import agoraa.app.forms_back.orders.orders.dto.request.OrderRequest
 import agoraa.app.forms_back.orders.orders.service.OrderService
 import agoraa.app.forms_back.shared.enums.StoresEnum
@@ -55,14 +54,6 @@ class OrderController(private val orderService: OrderService) {
         @PathVariable id: Long,
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK).body(orderService.returnById(id))
-
-    @PatchMapping("/{id}/patch")
-    fun patchOrder(
-        @PathVariable id: Long,
-        @RequestBody request: OrderPatchRequest
-    ): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.patch(id, request))
-    }
 
     @PutMapping("/edit-or-create-multiple")
     fun editOrCreateMultipleOrders(
