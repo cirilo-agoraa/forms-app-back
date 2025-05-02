@@ -132,7 +132,7 @@ class ProductService(
             }
 
             code?.let {
-                predicates.add(criteriaBuilder.like(root.get("code"), "%$it%"))
+                predicates.add(criteriaBuilder.equal(root.get<String>("code"), it))
             }
 
             stores?.let {
