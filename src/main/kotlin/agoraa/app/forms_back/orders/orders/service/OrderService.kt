@@ -4,9 +4,9 @@ import agoraa.app.forms_back.orders.orders.dto.request.OrderRequest
 import agoraa.app.forms_back.orders.orders.dto.response.OrderResponse
 import agoraa.app.forms_back.orders.orders.model.OrderModel
 import agoraa.app.forms_back.orders.orders.repository.OrderRepository
-import agoraa.app.forms_back.orders.orders_cancel_issued_requests.service.OrdersCancelIssuedRequestsService
 import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.shared.exception.ResourceNotFoundException
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
@@ -46,38 +46,43 @@ class OrderService(
     }
 
     private fun createCriteria(
-        dateCreated: LocalDateTime? = null,
-        orderNumber: Long? = null,
-        store: StoresEnum? = null,
-        issued: Boolean? = null,
-        received: Boolean? = null,
-        orderNumbers: List<Long>? = null,
+        dateCreatedEquals: LocalDateTime? = null,
+        orderNumberEquals: Long? = null,
+        storeEquals: StoresEnum? = null,
+        issuedEquals: Boolean? = null,
+        receivedEquals: Boolean? = null,
+        orderNumbersIn: List<Long>? = null,
+        supplierNameEquals: String? = null,
     ): Specification<OrderModel> {
         return Specification { root: Root<OrderModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
 
-            dateCreated?.let {
+            dateCreatedEquals?.let {
                 predicates.add(criteriaBuilder.equal(root.get<LocalDateTime>("dateCreated"), it))
             }
 
-            orderNumber?.let {
+            orderNumberEquals?.let {
                 predicates.add(criteriaBuilder.equal(root.get<Long>("orderNumber"), it))
             }
 
-            store?.let {
+            storeEquals?.let {
                 predicates.add(criteriaBuilder.equal(root.get<StoresEnum>("store"), it))
             }
 
-            issued?.let {
+            issuedEquals?.let {
                 predicates.add(criteriaBuilder.equal(root.get<Boolean>("issued"), it))
             }
 
-            received?.let {
+            receivedEquals?.let {
                 predicates.add(criteriaBuilder.equal(root.get<Boolean>("received"), it))
             }
 
-            orderNumbers?.let {
+            orderNumbersIn?.let {
                 predicates.add(root.get<Long>("orderNumber").`in`(it))
+            }
+
+            supplierNameEquals?.let {
+                predicates.add(criteriaBuilder.equal(root.get<SupplierModel>("supplier").get<String>("name"), it))
             }
 
             criteriaBuilder.and(*predicates.toTypedArray())
@@ -92,11 +97,11 @@ class OrderService(
         received: Boolean?,
     ): List<OrderModel> {
         val spec = createCriteria(
-            dateCreated = dateCreated,
-            orderNumber = orderNumber,
-            store = store,
-            issued = issued,
-            received = received
+            dateCreatedEquals = dateCreated,
+            orderNumberEquals = orderNumber,
+            storeEquals = store,
+            issuedEquals = issued,
+            receivedEquals = received
         )
 
         return orderRepository.findAll(spec)
@@ -113,13 +118,15 @@ class OrderService(
         store: StoresEnum?,
         issued: Boolean?,
         received: Boolean?,
+        supplierName: String?
     ): Any {
         val spec = createCriteria(
-            dateCreated = dateCreated,
-            orderNumber = orderNumber,
-            store = store,
-            issued = issued,
-            received = received
+            dateCreatedEquals = dateCreated,
+            orderNumberEquals = orderNumber,
+            storeEquals = store,
+            issuedEquals = issued,
+            receivedEquals = received,
+            supplierNameEquals = supplierName
         )
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
@@ -163,7 +170,7 @@ class OrderService(
         if (suppliersNames.size != suppliers.size) throw IllegalArgumentException("One or more suppliers not found")
 
         val supplierMap = suppliers.associateBy { it.name }
-        val spec = createCriteria(orderNumbers = request.map { it.orderNumber })
+        val spec = createCriteria(orderNumbersIn = request.map { it.orderNumber })
         val orderModels = orderRepository.findAll(spec)
         val ordersMap = orderModels.associateBy { it.orderNumber }
 

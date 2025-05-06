@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -32,6 +31,7 @@ class OrderController(private val orderService: OrderService) {
         @RequestParam(required = false) store: StoresEnum?,
         @RequestParam(required = false) issued: Boolean?,
         @RequestParam(required = false) received: Boolean?,
+        @RequestParam(required = false) supplier: String?,
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
             .body(
@@ -45,7 +45,8 @@ class OrderController(private val orderService: OrderService) {
                     orderNumber,
                     store,
                     issued,
-                    received
+                    received,
+                    supplier
                 )
             )
 
