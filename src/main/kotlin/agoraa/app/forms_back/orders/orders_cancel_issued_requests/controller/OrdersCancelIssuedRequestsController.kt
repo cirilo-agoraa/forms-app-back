@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -52,7 +53,7 @@ class OrdersCancelIssuedRequestsController(private val ordersCancelIssuedRequest
 
     @PatchMapping("/{id}/patch")
     fun patchCancelIssuedRequest(
-        @RequestParam id: Long,
+        @PathVariable id: Long,
         @RequestBody request: OrdersCancelIssuedRequestsPatchRequest,
     ): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.OK)
