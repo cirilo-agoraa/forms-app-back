@@ -50,7 +50,7 @@ class OrdersCancelIssuedRequestsController(private val ordersCancelIssuedRequest
         }
     }
 
-    @PatchMapping
+    @PatchMapping("/{id}/patch")
     fun patchCancelIssuedRequest(
         @RequestParam id: Long,
         @RequestBody request: OrdersCancelIssuedRequestsPatchRequest,
