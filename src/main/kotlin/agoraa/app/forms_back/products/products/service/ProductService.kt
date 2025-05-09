@@ -290,6 +290,8 @@ class ProductService(
         val supplier = supplierService.findByName(request.supplier.name)
             .orElseThrow { ResourceNotFoundException("Supplier not found") }
 
+        if (productRepository.findByCodeAndStore(request.code, request.store).isPresent) throw IllegalArgumentException("Product already exists")
+
         productRepository.save(
             ProductModel(
                 code = request.code,
