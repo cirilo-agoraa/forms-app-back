@@ -70,9 +70,6 @@ data class SupplierRegistrationModel(
     val sampleDate: LocalDate? = null,
 
     @Column(nullable = true)
-    val sampleArrivedInVix: Boolean? = null,
-
-    @Column(nullable = true)
     val obs: String? = null,
 
     @Column(nullable = true)

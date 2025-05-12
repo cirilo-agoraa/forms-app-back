@@ -39,7 +39,6 @@ data class SupplierRegistrationCreateSchema(
     val catalogFilePath: String? = null,
     val sample: Boolean? = null,
     val sampleDate: LocalDate? = null,
-    val sampleArrivedInVix: Boolean? = null,
     val obs: String? = null,
     val investmentsOnStore: Boolean? = null,
     val purchaseGondola: Boolean? = null,

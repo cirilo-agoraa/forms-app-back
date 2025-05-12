@@ -31,7 +31,6 @@ data class SupplierRegistrationDto(
     var catalogFilePath: String? = null,
     var sample: Boolean? = null,
     var sampleDate: LocalDate? = null,
-    var sampleArrivedInVix: Boolean? = null,
     var obs: String? = null,
     var supplierWebsite: String? = null,
     var minimumOrderValue: Double? = null,

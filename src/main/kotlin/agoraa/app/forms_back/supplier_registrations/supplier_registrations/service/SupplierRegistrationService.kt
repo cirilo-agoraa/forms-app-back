@@ -62,7 +62,7 @@ class SupplierRegistrationService(
         }
         if (
             (request.exchange == true && request.exchangePhysical == null) ||
-            (request.sample == true && request.sampleDate == null && request.sampleArrivedInVix == null)
+            (request.sample == true && request.sampleDate == null)
         ) {
             throw IllegalArgumentException("Invalid payload second")
         }
@@ -158,7 +158,6 @@ class SupplierRegistrationService(
             catalogFilePath = supplierRegistration.catalogFilePath,
             sample = supplierRegistration.sample,
             sampleDate = supplierRegistration.sampleDate,
-            sampleArrivedInVix = supplierRegistration.sampleArrivedInVix,
             negotiateBonusOnFirstPurchase = supplierRegistration.negotiateBonusOnFirstPurchase,
             birthdayParty = supplierRegistration.birthdayParty,
             investmentsOnStore = supplierRegistration.investmentsOnStore,
@@ -287,7 +286,6 @@ class SupplierRegistrationService(
                 factoryWebsite = request.factoryWebsite,
                 sample = request.sample,
                 sampleDate = request.sampleDate,
-                sampleArrivedInVix = request.sampleArrivedInVix,
                 negotiateBonusOnFirstPurchase = request.negotiateBonusOnFirstPurchase,
                 birthdayParty = request.birthdayParty,
                 priceTableFilePath = request.priceTableFilePath,

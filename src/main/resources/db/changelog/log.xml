@@ -1565,5 +1565,44 @@
             </column>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="77" author="PedroCostaa" runInTransaction="true">
+        <createTable tableName="access_permissions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
 
+            <column name="feature" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="endpoint" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="roles" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="78" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="access_permissions">
+            <column name="http_method" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="79" author="PedroCostaa" runInTransaction="true">
+        <addColumn tableName="access_permissions">
+            <column name="nickname" type="varchar(255)" defaultValue="Criar">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="80" author="PedroCostaa" runInTransaction="true">
+        <dropColumn tableName="supplier_registrations" columnName="sample_arrived_in_vix"/>
+    </changeSet>
 </databaseChangeLog>
