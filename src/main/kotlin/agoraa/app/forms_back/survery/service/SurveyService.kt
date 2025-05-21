@@ -16,13 +16,23 @@ import agoraa.app.forms_back.survery.repository.QuestionOptionRepository
 import agoraa.app.forms_back.survery.repository.AnswersRepository
 import agoraa.app.forms_back.survery.model.AnswerModel
 import agoraa.app.forms_back.survery.dto.SurveyAnswerRequest
+import agoraa.app.forms_back.survery.dto.SurveyAnswerHistoryResponse
+import agoraa.app.forms_back.survery.dto.SurveyAnsweredResponse
+import agoraa.app.forms_back.survery.dto.QuestionAnsweredResponse
+
+import agoraa.app.forms_back.users.users.repository.UserRepository
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 
 @Service
 class SurveyService(private val repository: SurveyRepository,
                     private val questionRepository: QuestionRepository,
                     private val questionOptionRepository: QuestionOptionRepository,
-                    private val answerRepository: AnswersRepository
+                    private val answerRepository: AnswersRepository,
+                    private val userRepository: UserRepository
+            
 
 ) {
 
@@ -149,6 +159,52 @@ class SurveyService(private val repository: SurveyRepository,
             
         }
     }
+
+    fun getSurveyAnswerHistory(): List<SurveyAnswerHistoryResponse> {
+        val formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy", Locale("pt", "BR"))
+        val answers = answerRepository.findAll()
+            .map { answer ->
+                SurveyAnswerHistoryResponse(
+                    surveyId = answer.question.survey.id,
+                    surveyTitle = answer.question.survey.title,
+                    userId = answer.userId,
+                    answeredAt = answer.createdAt.format(formatter),
+                    userName = answer.userId?.let { userId ->
+                        userRepository.findById(userId).orElse(null)?.username
+                    }
+                )
+            }
+            .distinctBy { Pair(it.surveyId, it.userId) }
+            .sortedByDescending { 
+                // Parse o answeredAt para LocalDateTime para ordenar corretamente
+                LocalDateTime.parse(it.answeredAt, formatter)
+            }
+        return answers
+    }
+
+    fun getSurveyWithUserResponses(surveyId: Long, userId: Long): SurveyAnsweredResponse {
+        val survey = repository.findById(surveyId).orElseThrow { NoSuchElementException("Survey not found") }
+        val questions = questionRepository.findAllBySurveyId(survey.id)
+        val answers = answerRepository.findAllByUserIdAndSurveyId(userId, surveyId)
+            .associateBy { it.question.id }
+
+        return SurveyAnsweredResponse(
+            id = survey.id,
+            title = survey.title,
+            description = survey.description,
+            isAnonimous = survey.isAnonimous,
+            questions = questions.map { question ->
+                QuestionAnsweredResponse(
+                    id = question.id,
+                    title = question.title,
+                    typeOfQuestion = question.typeOfQuestion.toString(),
+                    response = answers[question.id]?.response,
+                    required = question.required
+                )
+            }
+        )
+    }
+
 
     // fun delete(id: Long) {
     //     repository.deleteById(id)

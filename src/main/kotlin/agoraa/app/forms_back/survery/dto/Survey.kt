@@ -64,3 +64,27 @@ data class QuestionAnswerRequest(
     val questionId: Long,
     val answer: String
 )
+
+data class SurveyAnswerHistoryResponse(
+    val surveyId: Long,
+    val surveyTitle: String,
+    val userId: Long?,
+    val answeredAt: String,
+    val userName: String?,
+)
+
+data class QuestionAnsweredResponse(
+    val id: Long,
+    val title: String,
+    val typeOfQuestion: String,
+    val response: String?,
+    val required: Boolean
+)
+
+data class SurveyAnsweredResponse(
+    val id: Long,
+    val title: String,
+    val description: String?,
+    val isAnonimous: Boolean,
+    val questions: List<QuestionAnsweredResponse>
+)

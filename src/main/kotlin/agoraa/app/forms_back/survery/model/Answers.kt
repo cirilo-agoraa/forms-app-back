@@ -19,4 +19,7 @@ data class AnswerModel(
 
     @Column(name = "user_id", nullable = true)
     val userId: Long? = null,
+
+    @Column(name = "created_at", nullable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now()
 )

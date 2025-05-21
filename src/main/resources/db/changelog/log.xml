@@ -1690,4 +1690,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="86" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="answers">
+            <column name="created_at" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
