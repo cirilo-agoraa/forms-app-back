@@ -1605,4 +1605,89 @@
     <changeSet id="80" author="PedroCostaa" runInTransaction="true">
         <dropColumn tableName="supplier_registrations" columnName="sample_arrived_in_vix"/>
     </changeSet>
+
+    <changeSet id="81" author="Cirilo" runInTransaction="true">
+        <createTable tableName="surveys">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="is_anonimous" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="82" author="Cirilo" runInTransaction="true">
+        <createTable tableName="questions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_of_question" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="survey_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="questions"
+                                baseColumnNames="survey_id"
+                                constraintName="fk_questions_survey"
+                                referencedTableName="surveys"
+                                referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="83" author="Cirilo" runInTransaction="true">
+        <createTable tableName="answers">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="question_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="response" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="answers"
+                                baseColumnNames="question_id"
+                                constraintName="fk_answers_question"
+                                referencedTableName="questions"
+                                referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="84" author="Cirilo" runInTransaction="true">
+    <createTable tableName="question_options">
+        <column name="id" type="BIGINT" autoIncrement="true">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="question_id" type="BIGINT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="option_text" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+    <addForeignKeyConstraint baseTableName="question_options"
+                             baseColumnNames="question_id"
+                             constraintName="fk_question_options_question"
+                             referencedTableName="questions"
+                             referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="85" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="questions">
+            <column name="required" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
