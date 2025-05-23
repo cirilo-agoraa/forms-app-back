@@ -25,4 +25,7 @@ interface AnswersRepository : JpaRepository<AnswerModel, Long> {
         @Param("userId") userId: Long,
         @Param("surveyId") surveyId: Long
     ): List<AnswerModel>
+
+    @Query("SELECT MAX(a.answerIndex) FROM AnswerModel a")
+    fun findMaxAnswerIndex(): Long?
 }

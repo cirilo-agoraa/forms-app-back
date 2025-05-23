@@ -21,5 +21,8 @@ data class AnswerModel(
     val userId: Long? = null,
 
     @Column(name = "created_at", nullable = false)
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column(name = "answer_index")
+    val answerIndex: Long? = null
 )

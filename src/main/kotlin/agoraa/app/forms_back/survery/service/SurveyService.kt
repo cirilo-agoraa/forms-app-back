@@ -95,8 +95,10 @@ class SurveyService(private val repository: SurveyRepository,
 
         val survey = SurveyModel(
             title = request.title,
-            description = request.description
+            description = request.description,
+            isAnonimous = request.isAnonimous
         )
+
         val savedSurvey = repository.save(survey)
 
         request.questions.forEach { q ->
@@ -134,52 +136,97 @@ class SurveyService(private val repository: SurveyRepository,
     }
 
     fun findAllByLoggedUser(userId: Long): List<SurveyUserResponse> {
-        val surveys = repository.findAllByIsAnonimousFalse()
+        val surveys = repository.findAll()
         return surveys.map { survey ->
             val wasAnswered = answerRepository.wasSurveyAnsweredByUser(survey.id, userId)
             SurveyUserResponse(
                 id = survey.id,
                 title = survey.title,
                 description = survey.description,
-                wasAnswered = wasAnswered 
-            )
+                wasAnswered = wasAnswered ,
+                isAnonimous = if (survey.isAnonimous) "Sim" else "Não"            )
         }
     }
 
     fun saveSurveyResponses(request: SurveyAnswerRequest) {
+        // Busca o maior answer_index atual
+        val lastIndex = answerRepository.findMaxAnswerIndex() ?: 0
+        val newIndex = lastIndex + 1
+
         request.respostas.forEach { resposta ->
             val question = questionRepository.findById(resposta.questionId)
                 .orElseThrow { NoSuchElementException("Question not found") }
+            val survey = repository.findById(question.survey.id)
+                .orElseThrow { NoSuchElementException("Survey not found") }
+            val isAnonimous = survey.isAnonimous
             val answer = AnswerModel(
                 question = question,
                 response = resposta.answer.toString(),
-                userId = request.userId
+                userId = if (isAnonimous) null else request.userId,
+                answerIndex = newIndex
             )
             answerRepository.save(answer)
-            
         }
     }
 
-    fun getSurveyAnswerHistory(): List<SurveyAnswerHistoryResponse> {
+    // fun getAnswerHistoryBySurveyId(surveyId: Long): List<Map<String, Any?>> {
+    //     val formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy", Locale("pt", "BR"))
+    //     println("DEBUG surveyId: $surveyId")
+
+    //     val survey = repository.findById(surveyId).orElseThrow { NoSuchElementException("Survey not found") }
+    //     val questions = questionRepository.findAllBySurveyId(survey.id)
+    //     val answers = answerRepository.findAll()
+    //         .filter { it.question.survey.id == surveyId }
+
+    //     val grouped = answers.groupBy { it.answerIndex }
+
+    //     return grouped.values.sortedByDescending { group -> group.firstOrNull()?.createdAt }
+    //         .map { group ->
+    //             val createdAt = group.firstOrNull()?.createdAt?.format(formatter)
+    //             val userId = group.firstOrNull()?.userId
+    //             val userName = userId?.let { userRepository.findById(it).orElse(null)?.username }
+    //             // Aqui cada resposta vira um par: "titulo da pergunta" -> resposta
+    //             val respostas = questions.associate { question ->
+    //                 question.title to group.find { it.question.id == question.id }?.response
+    //             }
+    //             mapOf(
+    //                 "answeredAt" to createdAt,
+    //                 "userId" to userId,
+    //                 "userName" to userName,
+    //                 "answers" to respostas
+    //             )
+    //         }
+    // }
+
+    fun getAnswerHistoryBySurveyId(surveyId: Long): List<Map<String, Any?>> {
         val formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy", Locale("pt", "BR"))
+        println("DEBUG surveyId: $surveyId")
+
+        val survey = repository.findById(surveyId).orElseThrow { NoSuchElementException("Survey not found") }
+        val surveyTitle = survey.title
+        val questions = questionRepository.findAllBySurveyId(survey.id)
         val answers = answerRepository.findAll()
-            .map { answer ->
-                SurveyAnswerHistoryResponse(
-                    surveyId = answer.question.survey.id,
-                    surveyTitle = answer.question.survey.title,
-                    userId = answer.userId,
-                    answeredAt = answer.createdAt.format(formatter),
-                    userName = answer.userId?.let { userId ->
-                        userRepository.findById(userId).orElse(null)?.username
-                    }
+            .filter { it.question.survey.id == surveyId }
+
+        val grouped = answers.groupBy { it.answerIndex }
+
+        return grouped.values.sortedByDescending { group -> group.firstOrNull()?.createdAt }
+            .map { group ->
+                val createdAt = group.firstOrNull()?.createdAt?.format(formatter)
+                val userId = group.firstOrNull()?.userId
+                val userName = userId?.let { userRepository.findById(it).orElse(null)?.username }
+                // Aqui cada resposta vira um par: "titulo da pergunta" -> resposta
+                val respostas = questions.associate { question ->
+                    question.title to group.find { it.question.id == question.id }?.response
+                }
+                mapOf(
+                    "surveyTitle" to surveyTitle,
+                    "answeredAt" to createdAt,
+                    "userId" to userId,
+                    "userName" to userName,
+                    "answers" to respostas
                 )
             }
-            .distinctBy { Pair(it.surveyId, it.userId) }
-            .sortedByDescending { 
-                // Parse o answeredAt para LocalDateTime para ordenar corretamente
-                LocalDateTime.parse(it.answeredAt, formatter)
-            }
-        return answers
     }
 
     fun getSurveyWithUserResponses(surveyId: Long, userId: Long): SurveyAnsweredResponse {

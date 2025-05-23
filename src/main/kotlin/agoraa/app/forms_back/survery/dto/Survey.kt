@@ -52,7 +52,8 @@ data class SurveyUserResponse(
     val id: Long,
     val title: String,
     val description: String?,
-    val wasAnswered: Boolean
+    val wasAnswered: Boolean,
+    val isAnonimous: String,
 )
 
 data class SurveyAnswerRequest(

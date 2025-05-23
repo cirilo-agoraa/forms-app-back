@@ -24,8 +24,9 @@ class SurveyController(private val service: SurveyService) {
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
-    @GetMapping("/history")
-    fun getSurveyAnswerHistory() = ResponseEntity.ok(service.getSurveyAnswerHistory())
+    @GetMapping("/history/{surveyId}")
+    fun getAnswerHistoryBySurveyId(@PathVariable surveyId: Long) =
+        ResponseEntity.ok(service.getAnswerHistoryBySurveyId(surveyId))
 
     @GetMapping("/answers")
     fun getSurveyWithUserResponses(
