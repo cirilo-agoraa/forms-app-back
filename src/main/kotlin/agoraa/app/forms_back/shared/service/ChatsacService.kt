@@ -49,4 +49,57 @@ class ChatsacService {
 
         return response
     }
+
+    fun sendMsg(message: String, number: String): Mono<String> {
+        val body = mapOf(
+            "number" to number, // Exemplo: "5527999000862"
+            "message" to message,
+            "isWhisper" to false,
+            "forceSend" to true,
+            "verifyContact" to false,
+            "delayInSeconds" to 0
+        )
+
+        val response = webClient.post()
+            .uri("/send-text")
+            .bodyValue(body)
+            .retrieve()
+            .bodyToMono(String::class.java)
+            .onErrorResume { error ->
+                if (error is WebClientResponseException) {
+                    val errorBody = error.responseBodyAsString
+                    Mono.just(errorBody.ifEmpty { "Error: ${error.message}" })
+                } else {
+                    Mono.just("Error: ${error.message}")
+                }
+            }
+
+        return response
+    }
+
+    fun sendImg(imageBytes: ByteArray, fileName: String, number: String): Mono<String> {
+    val fileBase64 = java.util.Base64.getEncoder().encodeToString(imageBytes)
+    val body = mapOf(
+        "base64" to fileBase64,
+        "extension" to ".jpg", // ou ".png" se preferir
+        "fileName" to fileName,
+        "contactId" to number,
+        "forceSend" to true,
+        "verifyContact" to true
+    )
+
+        return webClient.post()
+            .uri("/send-media")
+            .bodyValue(body)
+            .retrieve()
+            .bodyToMono(String::class.java)
+            .onErrorResume { error ->
+                if (error is org.springframework.web.reactive.function.client.WebClientResponseException) {
+                    val errorBody = error.responseBodyAsString
+                    Mono.just(errorBody.ifEmpty { "Error: ${error.message}" })
+                } else {
+                    Mono.just("Error: ${error.message}")
+                }
+            }
+    }
 }
