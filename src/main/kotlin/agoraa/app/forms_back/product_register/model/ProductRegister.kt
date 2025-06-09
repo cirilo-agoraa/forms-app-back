@@ -64,6 +64,9 @@ data class ProductRegisterModel(
     @Column(nullable = true)
     val productType: String,
 
+    @Column(nullable = true)
+    val name: String,
+
     @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 )

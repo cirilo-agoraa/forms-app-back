@@ -9,4 +9,5 @@ import java.util.*
 @Repository
 interface ProductRepository : JpaRepository<ProductModel, Long>, JpaSpecificationExecutor<ProductModel> {
     fun findByCodeAndStore(code: String, store: agoraa.app.forms_back.shared.enums.StoresEnum): Optional<ProductModel>
+    fun findByCode(code: String): Optional<ProductModel>
 }

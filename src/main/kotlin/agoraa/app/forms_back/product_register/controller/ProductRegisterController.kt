@@ -30,6 +30,7 @@ class ProductRegisterController(
         @RequestParam grammage: String,
         @RequestParam supplierReference: String,
         @RequestParam productType: String,
+        @RequestParam name: String,
         @RequestPart(required = false) productPhoto: MultipartFile?,
         @RequestPart(required = false) barcodePhoto: MultipartFile?
     ): ResponseEntity<Any> {
@@ -51,7 +52,8 @@ class ProductRegisterController(
             transferPackage = transferPackage,
             grammage = grammage,
             supplierReference = supplierReference,
-            productType = productType
+            productType = productType,
+            name = name
         )
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(dto))
     }

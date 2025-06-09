@@ -1769,5 +1769,13 @@
         <modifyDataType tableName="product_register" columnName="barcode_photo" newDataType="MEDIUMBLOB"/>
         <modifyDataType tableName="product_register" columnName="product_photo" newDataType="MEDIUMBLOB"/>
     </changeSet>
+    
+    <changeSet id="90" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="product_register">
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

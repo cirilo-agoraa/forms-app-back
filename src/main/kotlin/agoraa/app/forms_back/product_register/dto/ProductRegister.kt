@@ -1,6 +1,7 @@
 package agoraa.app.forms_back.products.transfer.dto
 
 data class ProductRegisterRequest(
+    val name: String,
     val barcode: String,
     val store: String,
     val supplier: Long,

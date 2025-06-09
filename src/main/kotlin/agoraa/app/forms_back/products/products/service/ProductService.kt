@@ -563,4 +563,13 @@ class ProductService(
         }
         productRepository.saveAll(resultProducts)
     }
+
+    fun getProductByCode(code: String): ProductResponse? {
+        val product = productRepository.findAll { root, _, cb ->
+            cb.equal(root.get<String>("code"), code)
+        }.firstOrNull()
+        return product?.let { createDto(it, true) }
+    }
+
+
 }

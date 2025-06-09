@@ -13,6 +13,7 @@ class ProductRegisterService(
 ) {
     fun create(request: ProductRegisterRequest): ProductRegisterModel {
         val entity = ProductRegisterModel(
+            name = request.name,
             barcode = request.barcode,
             store = request.store,
             supplier = request.supplier,
@@ -33,9 +34,11 @@ class ProductRegisterService(
             productType = request.productType
         )
         val saved = repository.save(entity)
-
+        val nome = "${request.name} ${request.brand} ${request.purchasePackage} ${request.grammage}".trim()
+        
         val msg = """
             Solicitação de cadastro de produto:
+            • Nome Completo: ${nome}
             • Código de barras: ${request.barcode}
             • Loja: ${request.store}
             • Fornecedor: ${request.supplier}
