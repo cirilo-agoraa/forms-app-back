@@ -49,7 +49,7 @@ class ProductRegisterService(
             if (nome.isNotBlank()) appendLine("• Nome Completo: $nome")
             request.barcode?.takeIf { it.isNotBlank() }?.let { appendLine("• Código de barras: $it") }
             request.store?.takeIf { it.isNotBlank() }?.let { appendLine("• Loja: $it") }
-            fornecedor.name.takeIf { it.isNotBlank() }?.let { appendLine("• Fornecedor: $it") }
+            fornecedor.takeIf { it.isNotBlank() }?.let { appendLine("• Fornecedor: $it") }
             request.transferProduct?.takeIf { it.isNotBlank() }?.let { appendLine("• Produto para transferência: $it") }
             request.reason?.takeIf { it.isNotBlank() }?.let { appendLine("• Motivo: $it") }
             request.cest?.takeIf { it.isNotBlank() }?.let { appendLine("• CEST: $it") }
