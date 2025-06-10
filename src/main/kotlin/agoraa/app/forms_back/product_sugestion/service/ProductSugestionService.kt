@@ -29,7 +29,7 @@ class ProductSugestionService(
         """.trimIndent()
 
         chatsacService.sendMsg(
-            number = "27999000862",
+            number = "663a53e93b0a671bbcb23c93",
             message = msg,
         ).subscribe()
 
@@ -37,7 +37,7 @@ class ProductSugestionService(
             chatsacService.sendImg(
                 imageBytes = productImage.bytes,
                 fileName = "produto_sugerido.jpg",
-                number = "27999000862",
+                number = "663a53e93b0a671bbcb23c93",
                 caption = "Imagem do produto sugerido: ${request.name}"
             ).subscribe()
         }

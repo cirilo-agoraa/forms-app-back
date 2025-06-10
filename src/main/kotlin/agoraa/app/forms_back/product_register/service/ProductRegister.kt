@@ -42,14 +42,14 @@ class ProductRegisterService(
         val fornecedor = supplierRepository.findById(request.supplier)
             .map { it.name }
             .orElse("Fornecedor não encontrado")
-            
+
         println("Fornecedor: $fornecedor")
         val msg = buildString {
             appendLine("Solicitação de cadastro de produto:")
             if (nome.isNotBlank()) appendLine("• Nome Completo: $nome")
             request.barcode?.takeIf { it.isNotBlank() }?.let { appendLine("• Código de barras: $it") }
             request.store?.takeIf { it.isNotBlank() }?.let { appendLine("• Loja: $it") }
-            fornecedor.takeIf { it.isNotBlank() }?.let { appendLine("• Fornecedor: $it") }
+            fornecedor.name.takeIf { it.isNotBlank() }?.let { appendLine("• Fornecedor: $it") }
             request.transferProduct?.takeIf { it.isNotBlank() }?.let { appendLine("• Produto para transferência: $it") }
             request.reason?.takeIf { it.isNotBlank() }?.let { appendLine("• Motivo: $it") }
             request.cest?.takeIf { it.isNotBlank() }?.let { appendLine("• CEST: $it") }
@@ -68,7 +68,7 @@ class ProductRegisterService(
                 ?: appendLine("• Descrição: Nenhuma descrição fornecida")
         }
 
-        val number = "27999000862"
+        val number = "663a53e93b0a671bbcb23c93"
         chatsacService.sendMsg(msg, number).subscribe()
 
         request.productPhoto?.let { photo ->

@@ -52,7 +52,7 @@ class ChatsacService {
 
     fun sendMsg(message: String, number: String): Mono<String> {
         val body = mapOf(
-            "number" to number, // Exemplo: "5527999000862"
+            "number" to number,
             "message" to message,
             "isWhisper" to false,
             "forceSend" to true,
