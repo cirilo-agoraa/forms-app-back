@@ -19,5 +19,6 @@ data class ProductRegisterRequest(
     val transferPackage: String,
     val grammage: String,
     val supplierReference: String,
-    val productType: String
+    val productType: String,
+    val description: String? = null 
 )

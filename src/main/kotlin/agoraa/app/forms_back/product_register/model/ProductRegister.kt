@@ -25,6 +25,9 @@ data class ProductRegisterModel(
     @Column(nullable = false)
     val reason: String,
 
+    @Column(nullable = true)
+    val description: String? = null,
+
     @Lob
     val productPhoto: ByteArray? = null,
 

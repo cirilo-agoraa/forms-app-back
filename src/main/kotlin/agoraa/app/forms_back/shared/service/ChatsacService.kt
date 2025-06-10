@@ -77,16 +77,17 @@ class ChatsacService {
         return response
     }
 
-    fun sendImg(imageBytes: ByteArray, fileName: String, number: String): Mono<String> {
-    val fileBase64 = java.util.Base64.getEncoder().encodeToString(imageBytes)
-    val body = mapOf(
-        "base64" to fileBase64,
-        "extension" to ".jpg", // ou ".png" se preferir
-        "fileName" to fileName,
-        "contactId" to number,
-        "forceSend" to true,
-        "verifyContact" to true
-    )
+    fun sendImg(imageBytes: ByteArray, fileName: String, number: String, caption: String? = null): Mono<String> {
+        val fileBase64 = java.util.Base64.getEncoder().encodeToString(imageBytes)
+        val body = mapOf(
+            "base64" to fileBase64,
+            "extension" to ".jpg",
+            "fileName" to fileName,
+            "contactId" to number,
+            "forceSend" to true,
+            "caption" to (caption ?: ""),
+            "verifyContact" to true
+        )
 
         return webClient.post()
             .uri("/send-media")
@@ -94,7 +95,7 @@ class ChatsacService {
             .retrieve()
             .bodyToMono(String::class.java)
             .onErrorResume { error ->
-                if (error is org.springframework.web.reactive.function.client.WebClientResponseException) {
+                if (error is WebClientResponseException) {
                     val errorBody = error.responseBodyAsString
                     Mono.just(errorBody.ifEmpty { "Error: ${error.message}" })
                 } else {
