@@ -61,7 +61,7 @@ class RupturaService(
             } ?: appendLine("Produto não encontrado para o ID: ${ruptura.productId}")
         }
 
-        chatsacService.sendMsg(msg, "27999000862").subscribe()
+        chatsacService.sendMsg(msg, "663a53e93b0a671bbcb23c93").subscribe()
         return saved
     }  
     
