@@ -43,7 +43,6 @@ class ProductRegisterService(
             .map { it.name }
             .orElse("Fornecedor não encontrado")
 
-        println("Fornecedor: $fornecedor")
         val msg = buildString {
             appendLine("Solicitação de cadastro de produto:")
             if (nome.isNotBlank()) appendLine("• Nome Completo: $nome")

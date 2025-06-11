@@ -571,5 +571,17 @@ class ProductService(
         return product?.let { createDto(it, true) }
     }
 
+    fun getProductsByName(name: String): List<ProductResponse> {
+        val products = productRepository.findAll { root, _, cb ->
+            cb.like(root.get<String>("name"), "%$name%")
+        }
+        return products.map { createDto(it, true) }
+    }
 
+    fun getAllProductsByCode(code: String): List<ProductResponse> {
+        val products = productRepository.findAll { root, _, cb ->
+            cb.equal(root.get<String>("code"), code)
+        }
+        return products.map { createDto(it, true) }
+    }
 }

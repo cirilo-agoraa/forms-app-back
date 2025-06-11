@@ -1808,4 +1808,23 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="95" author="Cirilo" runInTransaction="true">
+        <createTable tableName="rupture">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="rupture"
+                                baseColumnNames="product_id"
+                                constraintName="fk_rupture_product"
+                                referencedTableName="products"
+                                referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>
