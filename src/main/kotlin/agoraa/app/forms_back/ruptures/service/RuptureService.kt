@@ -10,7 +10,8 @@ import agoraa.app.forms_back.shared.service.ChatsacService
 import agoraa.app.forms_back.shared.enums.StoresEnum
 import agoraa.app.forms_back.orders.orders.service.OrderService
 import agoraa.app.forms_back.shared.enums.BuyersEnum
- 
+import java.time.format.DateTimeFormatter
+
 
 @Service
 class RupturaService(
@@ -25,7 +26,7 @@ class RupturaService(
         val saved = repository.save(ruptura)
         val product = productRepository.findById(ruptura.productId).orElse(null)
         val relatedProducts = productService.getAllProductsByCode(product?.code ?: "")
-            .filter { it.store == StoresEnum.TRESMANN_SMJ || it.store == StoresEnum.TRESMANN_VIX }   
+            .filter { it.store == StoresEnum.TRESMANN_SMJ || it.store == StoresEnum.TRESMANN_STT }   
 
         val resumoEstoques = relatedProducts.joinToString("\n") { 
             "• ${it.store}: ${it.availableStock}" 
@@ -48,16 +49,29 @@ class RupturaService(
             "Nenhum pedido emitido e não recebido para este fornecedor."
         }
 
+        val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         val msg = buildString {
             appendLine("Ruptura registrada:")
             product?.let {
-                appendLine("• Produto: ${it.name} (código: ${it.code})")
-                appendLine("• Estoque Rede: ${it.networkStock}")
-                appendLine("• Pd Aberto: ${it.openOrder}")
-                appendLine("• Fornecedor: ${fornecedorName ?: "Não informado"}")
-                appendLine(resumoEstoques)
-                appendLine(ordersInfo)
-
+                appendLine("* Produto: ${it.name} (código: ${it.code})")
+                appendLine("* Fornecedor: ${fornecedorName ?: "Não informado"}")
+                appendLine()
+                appendLine("Estoques:")
+                appendLine("* Estoque Rede: ${it.networkStock}")
+                relatedProducts.forEach { prod ->
+                    appendLine("* ${prod.store}: ${prod.availableStock}")
+                }
+                appendLine()
+                appendLine("Pd em Aberto")
+                appendLine("- Qtde Pd Aberto: ${it.openOrder}")
+                if (orders.isNotEmpty()) {
+                    orders.forEach { order ->
+                        val dataEntrega = order.deliveryDate?.format(dateFormatter) ?: "-"
+                        appendLine("* Pedido ${order.orderNumber} - Entrega: $dataEntrega")
+                    }
+                } else {
+                    appendLine("* Nenhum pedido emitido e não recebido para este fornecedor.")
+                }
             } ?: appendLine("Produto não encontrado para o ID: ${ruptura.productId}")
         }
 
