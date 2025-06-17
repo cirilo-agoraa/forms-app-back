@@ -20,5 +20,7 @@ data class ProductRegisterRequest(
     val grammage: String,
     val supplierReference: String,
     val productType: String,
-    val description: String? = null 
+    val description: String? = null,
+    val costPrice: String, 
+    val salePrice: String
 )

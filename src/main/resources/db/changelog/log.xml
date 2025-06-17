@@ -1857,5 +1857,17 @@
         </addColumn>
     </changeSet>
 
+    <!-- Adicione este trecho ao seu log.xml -->
+    <changeSet id="98" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="product_register">
+            <column name="cost_price" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sale_price" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>

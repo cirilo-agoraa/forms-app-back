@@ -31,6 +31,8 @@ class ProductRegisterController(
         @RequestParam supplierReference: String,
         @RequestParam productType: String,
         @RequestParam name: String,
+        @RequestParam costPrice: String,      // <-- novo campo
+        @RequestParam salePrice: String,
         @RequestParam(required = false) description: String?,
         @RequestPart(required = false) productPhoto: MultipartFile?,
         @RequestPart(required = false) barcodePhoto: MultipartFile?
@@ -55,7 +57,10 @@ class ProductRegisterController(
             supplierReference = supplierReference,
             productType = productType,
             name = name,
-            description = description
+            description = description,
+            costPrice = costPrice,
+            salePrice = salePrice  
+            
 
         )
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(dto))

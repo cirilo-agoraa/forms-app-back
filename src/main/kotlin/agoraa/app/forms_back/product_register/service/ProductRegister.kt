@@ -34,10 +34,13 @@ class ProductRegisterService(
             grammage = request.grammage,
             supplierReference = request.supplierReference,
             productType = request.productType,
-            description = request.description // <-- vírgula corrigida e campo adicionado
+            description = request.description, // <-- vírgula corrigida e campo adicionado
+            costPrice = request.costPrice,      
+            salePrice = request.salePrice 
         )
         val saved = repository.save(entity)
-        val nome = "${request.name} ${request.brand} ${request.grammage}".trim()
+        // val nome = "${request.name} ${request.brand} ${request.grammage}".trim()
+        val nome = "${request.name}"
 
         val fornecedor = supplierRepository.findById(request.supplier)
             .map { it.name }
@@ -62,12 +65,16 @@ class ProductRegisterService(
             request.grammage?.takeIf { it.isNotBlank() }?.let { appendLine("• Gramatura: $it") }
             request.supplierReference?.takeIf { it.isNotBlank() }?.let { appendLine("• Referência do fornecedor: $it") }
             request.productType?.takeIf { it.isNotBlank() }?.let { appendLine("• Tipo de produto: $it") }
+            request.costPrice?.takeIf { it.isNotBlank() }?.let { appendLine("• Preço de custo: $it") }
+            request.salePrice?.takeIf { it.isNotBlank() }?.let { appendLine("• Preço de venda: $it") }
             request.description?.takeIf { it.isNotBlank() }
                 ?.let { appendLine("• Descrição: $it") }
                 ?: appendLine("• Descrição: Nenhuma descrição fornecida")
         }
 
-        val number = "663a53e93b0a671bbcb23c93"
+        // val number = "663a53e93b0a671bbcb23c93"
+        val number = "27999000862"
+
         chatsacService.sendMsg(msg, number).subscribe()
 
         request.productPhoto?.let { photo ->

@@ -71,5 +71,11 @@ data class ProductRegisterModel(
     val name: String,
 
     @Column(nullable = false)
+    val costPrice: String,      // <-- novo campo
+
+    @Column(nullable = false)
+    val salePrice: String,      
+
+    @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 )

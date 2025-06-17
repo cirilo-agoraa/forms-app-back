@@ -101,14 +101,17 @@ class RupturaService(
     }  
     
     fun getAll(): List<RupturaWithProductResponse> =
-        repository.findAll().map { ruptura ->
-            RupturaWithProductResponse(
-                id = ruptura.id,
-                createdAt = ruptura.createdAt,
-                product = productRepository.findById(ruptura.productId).orElse(null), // injete o productRepository no service
-                store = ruptura.store
-            )
-     }   
+        repository.findAll()
+            .sortedByDescending { it.createdAt }
+            .map { ruptura ->
+                RupturaWithProductResponse(
+                    id = ruptura.id,
+                    createdAt = ruptura.createdAt,
+                    product = productRepository.findById(ruptura.productId).orElse(null),
+                    store = ruptura.store
+                )
+            }
+
     fun getById(id: Long): RupturaModel? = repository.findById(id).orElse(null)
     fun delete(id: Long) = repository.deleteById(id)
 
@@ -147,7 +150,7 @@ class RupturaService(
         for (row in sheet.drop(1)) {
             val fornecedor = row.getCell(4)?.toString()?.trim()?.uppercase() ?: ""
             val loja = row.getCell(0)?.toString()?.replace(".0", "")?.trim() ?: ""
-            // println("Fornecedor: $fornecedor, Loja: $row")
+
             if (fornecedor == supplierName.trim().uppercase() && loja == lojaNumero.trim()) {
                 val order = OrderExcel(
                     loja = loja,
