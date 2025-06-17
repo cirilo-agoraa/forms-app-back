@@ -1849,5 +1849,13 @@
                                 referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="97" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="rupture">
+            <column name="store" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>

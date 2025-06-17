@@ -209,9 +209,9 @@ class OrderService(
         orderRepository.saveAll(resultOrders)
     }
     fun getAllBySupplier(supplierId: Long): List<OrderResponse> {
-            val orders = orderRepository.findAll { root, _, cb ->
-                cb.equal(root.get<SupplierModel>("supplier").get<Long>("id"), supplierId)
-            }
-            return orders.map { createDto(it) }
+        val orders = orderRepository.findAll { root, _, cb ->
+            cb.equal(root.get<Long>("supplier").get<Long>("id"), supplierId)
+        }
+        return orders.map { createDto(it) }
     }
 }
