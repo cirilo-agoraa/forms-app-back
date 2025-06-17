@@ -72,8 +72,8 @@ class ProductRegisterService(
                 ?: appendLine("• Descrição: Nenhuma descrição fornecida")
         }
 
-        // val number = "663a53e93b0a671bbcb23c93"
-        val number = "27999000862"
+        val number = "663a53e93b0a671bbcb23c93"
+        // val number = "27999000862"
 
         chatsacService.sendMsg(msg, number).subscribe()
 
