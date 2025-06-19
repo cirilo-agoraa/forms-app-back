@@ -38,6 +38,7 @@ class ProductRegisterService(
             costPrice = request.costPrice,      
             salePrice = request.salePrice 
         )
+        println("${request.costPrice}")
         val saved = repository.save(entity)
         // val nome = "${request.name} ${request.brand} ${request.grammage}".trim()
         val nome = "${request.name}"

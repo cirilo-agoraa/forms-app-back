@@ -1869,5 +1869,46 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="99" author="Cirilo" runInTransaction="true">
+        <createTable tableName="invoices">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="danfe" type="VARCHAR(255)"/>
+            <column name="was_sended" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="loja" type="VARCHAR(255)"/>
+            <column name="nf" type="VARCHAR(255)"/>
+            <column name="liberado" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="toliberation" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="valor_nota" type="DOUBLE"/>
+            <column name="wms" type="VARCHAR(255)"/>
+
+            <column name="to_bonus" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bonus_status" type="VARCHAR(255)"/>
+            <column name="supplier_name" type="VARCHAR(255)"/>
+            <column name="date_emissao" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_entrada" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+
+
+
+
 
 </databaseChangeLog>
