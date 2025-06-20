@@ -66,7 +66,7 @@ class ProductMixService(
         row.createCell(0).setCellValue(productMix.createdAt.format(formatter))
         row.createCell(1).setCellValue(product.code)
         row.createCell(2).setCellValue(product.name)
-        row.createCell(3).setCellValue(if (productMix.foraDoMix) "Sim" else "Não")
+        row.createCell(3).setCellValue(if (productMix.foraDoMix) "Incluir Mix" else "Retirar Mix")
         FileOutputStream(file).use { fos -> workbook.write(fos) }
         workbook.close()
     }
