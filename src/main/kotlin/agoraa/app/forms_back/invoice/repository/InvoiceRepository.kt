@@ -5,4 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface InvoiceRepository : JpaRepository<Invoice, Long>
+interface InvoiceRepository : JpaRepository<Invoice, Long> {
+    fun findByToBonusTrue(): List<Invoice>
+    fun findByRetainedStatusGreaterThan(status: Int): List<Invoice>
+}

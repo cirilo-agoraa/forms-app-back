@@ -1907,6 +1907,20 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="100" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="invoices">
+            <column name="retained_motive" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="retained_status" type="BOOLEAN">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="101" author="Cirilo" runInTransaction="true">
+        <modifyDataType tableName="invoices" columnName="retained_status" newDataType="INT"/>
+    </changeSet>
 
 
 

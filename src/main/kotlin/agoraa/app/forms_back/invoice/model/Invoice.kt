@@ -24,5 +24,8 @@ data class Invoice(
     val supplierName: String? = null,
     val dateEmissao: LocalDateTime? = null,
     val dateEntrada: LocalDateTime? = null,
-    val createdAt: LocalDateTime? = null
+    val createdAt: LocalDateTime? = null,
+    
+    val retainedMotive: String? = null,
+    var retainedStatus: Int? = null
 )
