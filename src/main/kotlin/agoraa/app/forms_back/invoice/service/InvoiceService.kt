@@ -38,20 +38,32 @@ class InvoiceService(
 
     fun saveAll(invoices: List<Invoice>): List<Invoice> {
         val savedInvoices = mutableListOf<Invoice>()
-        val msg = StringBuilder()
-        msg.appendLine("NFs com canhotos retidos:")
-        
-        for (invoice in invoices) {
-            val saved = repository.save(invoice)
-            savedInvoices.add(saved)
-            msg.appendLine("  • ${invoice.danfe}/ ${invoice.supplierName} - Motivo: ${invoice.retainedMotive}")
+
+        // Agrupa as invoices por loja
+        val invoicesPorLoja = invoices.groupBy { it.loja }
+
+        // Para cada loja, monta e envia a mensagem
+        invoicesPorLoja.forEach { (loja, invoicesDaLoja) ->
+            val lojaNome = when (loja) {
+                "1" -> "SMJ"
+                "2" -> "STT"
+                else -> "Desconhecida"
+            }
+            val msg = StringBuilder()
+            msg.appendLine("NFs com canhotos retidos - Loja $lojaNome:")
+            for (invoice in invoicesDaLoja) {
+                val saved = repository.save(invoice)
+                savedInvoices.add(saved)
+                msg.appendLine("  • ${invoice.danfe}/ ${invoice.supplierName} - Motivo: ${invoice.retainedMotive}")
+            }
+            val phoneNumber = when (loja) {
+                "1" -> "27999000862"
+                "2" -> "27999000862"
+                else -> "27999000862"
+            }
+            println(msg.toString())
+            whatsappService.sendMsg(msg.toString(), phoneNumber).subscribe()
         }
-
-        // val number = "27999000862"
-        val number = "663a53e93b0a671bbcb23c93"
-
-        println(msg.toString())
-        whatsappService.sendMsg(msg.toString(), number).subscribe()
 
         return savedInvoices
     }
