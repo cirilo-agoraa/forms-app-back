@@ -57,9 +57,9 @@ class InvoiceService(
                 msg.appendLine("  • ${invoice.danfe}/ ${invoice.supplierName} - Motivo: ${invoice.retainedMotive}")
             }
             val phoneNumber = when (loja) {
-                "1" -> "27999000862"
-                "2" -> "27999000862"
-                else -> "27999000862"
+                "1" -> "663a53e93b0a671bbcb23c93"
+                "2" -> "663a53e93b0a671bbcb23c93"
+                else -> "663a53e93b0a671bbcb23c93"
             }
             println(msg.toString())
             whatsappService.sendMsg(msg.toString(), phoneNumber).subscribe()
