@@ -49,12 +49,19 @@ class ProductSugestionService(
     fun getAll(): List<ProductSugestionModel> = repository.findAll()
 
     fun update(id: Long, request: ProductSugestionRequest, productImage: MultipartFile?): ProductSugestionModel? {
+        println("Updating product suggestion with ID: $id")
+        println("Request data: $request")
         val existing = repository.findById(id).orElse(null) ?: return null
         val updated = existing.copy(
             name = request.name,
             description = request.description,
             status = request.status,
-            productImage = productImage?.bytes ?: existing.productImage
+            productImage = productImage?.bytes ?: existing.productImage,
+            costPrice = request.costPrice ?: existing.costPrice,
+            salePrice = request.salePrice ?: existing.salePrice,
+            supplierId = request.supplierId ?: existing.supplierId,
+            justification = request.justification ?: existing.justification,
+            sector = request.sector // Assuming sector is not in the request, keep existing value
         )
         return repository.save(updated)
     }

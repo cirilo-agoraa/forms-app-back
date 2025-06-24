@@ -23,6 +23,21 @@ data class ProductSugestionModel(
     @Column(nullable = false)
     val status: Int = 0,
 
+    @Column(name = "cost_price")
+    val costPrice: Double? = null,
+
+    @Column(name = "sale_price")
+    val salePrice: Double? = null,
+
+    @Column(name = "supplier_id")
+    val supplierId: Long? = null,
+
+    @Column(name = "justification")
+    val justification: String? = null,
+
+    @Column(name = "sector")
+    val sector: String? = null,
+
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 )

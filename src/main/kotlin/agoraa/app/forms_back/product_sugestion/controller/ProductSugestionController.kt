@@ -45,9 +45,23 @@ class ProductSugestionController(
         @RequestParam name: String,
         @RequestParam status: Int = 0,
         @RequestParam(required = false) description: String?,
-        @RequestPart(required = false) productImage: MultipartFile?
+        @RequestPart(required = false) productImage: MultipartFile?,
+        @RequestParam(required = false) costPrice: Double? = null,
+        @RequestParam(required = false) salePrice: Double? = null,
+        @RequestParam(required = false) supplierId: Long? = null,
+        @RequestParam(required = false) justification: String? = null,
+        @RequestParam(required = false) sector: String? = null
     ): ResponseEntity<ProductSugestionModel> {
-        val data = ProductSugestionRequest(name = name, description = description, status = status)
+        val data = ProductSugestionRequest(
+            name = name,
+            description = description,
+            status = status,
+            costPrice = costPrice,
+            salePrice = salePrice,
+            supplierId = supplierId,
+            justification = justification,
+            sector = sector
+        )
         val updated = service.update(id, data, productImage)
         return if (updated != null)
             ResponseEntity.ok(updated)

@@ -1922,6 +1922,20 @@
         <modifyDataType tableName="invoices" columnName="retained_status" newDataType="INT"/>
     </changeSet>
 
+    <changeSet id="102" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="product_sugestion">
+            <column name="cost_price" type="DOUBLE"/>
+            <column name="sale_price" type="DOUBLE"/>
+            <column name="supplier_id" type="BIGINT"/>
+            <column name="justification" type="VARCHAR(1000)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="103" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="product_sugestion">
+            <column name="sector" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
 
 
 
