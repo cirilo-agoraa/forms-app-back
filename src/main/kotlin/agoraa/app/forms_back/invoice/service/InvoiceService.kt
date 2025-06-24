@@ -17,8 +17,8 @@ class InvoiceService(
 
         
     fun findAllRetained(): List<Invoice> = repository.findByRetainedStatusGreaterThan(0)
-    fun findAllBonificados(): List<Invoice> = repository.findByToBonusTrue()
-
+    fun findAllBonificados(): List<Invoice> = repository.findByToBonusTrueOrderByCreatedAtAsc()
+    
     fun save(dto: InvoiceDTO): InvoiceDTO {
         val entity = dto.toEntity()
         return repository.save(entity).toDTO()

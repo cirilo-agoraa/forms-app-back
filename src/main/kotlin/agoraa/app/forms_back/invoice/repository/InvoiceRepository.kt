@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 interface InvoiceRepository : JpaRepository<Invoice, Long> {
     fun findByToBonusTrue(): List<Invoice>
     fun findByRetainedStatusGreaterThan(status: Int): List<Invoice>
+    fun findByToBonusTrueOrderByCreatedAtAsc(): List<Invoice>
 }
