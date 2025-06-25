@@ -17,5 +17,11 @@ data class ProductMixModel(
     val productId: Long,
 
     @Column(name = "fora_do_mix", nullable = false)
-    val foraDoMix: Boolean = false
+    val foraDoMix: Boolean = false,
+    
+    @Column(name = "store")
+    val store: String? = "AMBAS",
+
+    @Column(name = "motive")
+    val motive: String? = ""
 )

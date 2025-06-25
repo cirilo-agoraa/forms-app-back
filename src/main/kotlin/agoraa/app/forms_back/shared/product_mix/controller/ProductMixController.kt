@@ -11,7 +11,12 @@ import agoraa.app.forms_back.product_mix.dto.ProductMixRegisterRequest
 class ProductMixController(private val service: ProductMixService) {
     @PostMapping
     fun create(@RequestBody request: ProductMixRegisterRequest): ResponseEntity<ProductMixModel> {
-        val saved = service.create(request.productId, request.foraDoMix)
+            val saved = service.create(
+                request.productId,
+                request.foraDoMix,
+                request.store,
+                request.motive
+            )
         return ResponseEntity.ok(saved)
     }
 

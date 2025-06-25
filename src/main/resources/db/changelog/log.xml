@@ -1937,4 +1937,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="104" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="product_mix">
+            <column name="store" type="VARCHAR(255)" defaultValue="AMBAS"/>
+            <column name="motive" type="VARCHAR(1000)" defaultValue="" />
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
