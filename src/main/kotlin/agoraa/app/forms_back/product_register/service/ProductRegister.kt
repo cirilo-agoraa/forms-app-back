@@ -66,8 +66,6 @@ class ProductRegisterService(
             request.grammage?.takeIf { it.isNotBlank() }?.let { appendLine("• Gramatura: $it") }
             request.supplierReference?.takeIf { it.isNotBlank() }?.let { appendLine("• Referência do fornecedor: $it") }
             request.productType?.takeIf { it.isNotBlank() }?.let { appendLine("• Tipo de produto: $it") }
-            request.costPrice?.takeIf { it.isNotBlank() }?.let { appendLine("• Preço de custo: $it") }
-            request.salePrice?.takeIf { it.isNotBlank() }?.let { appendLine("• Preço de venda: $it") }
             request.description?.takeIf { it.isNotBlank() }
                 ?.let { appendLine("• Descrição: $it") }
                 ?: appendLine("• Descrição: Nenhuma descrição fornecida")

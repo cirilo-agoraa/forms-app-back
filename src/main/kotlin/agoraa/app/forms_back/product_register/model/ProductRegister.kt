@@ -70,10 +70,10 @@ data class ProductRegisterModel(
     @Column(nullable = true)
     val name: String,
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     val costPrice: String,      // <-- novo campo
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     val salePrice: String,      
 
     @Column(nullable = false)
