@@ -75,8 +75,9 @@ class RupturaService(
                 }               
                 appendLine()
                 appendLine("Pd em Aberto")
-                appendLine("- Qtde Pd Aberto: ${it.openOrder}")
+          
                 if (orders.isNotEmpty()) {
+                    appendLine("- Qtde Pd Aberto: ${orders.size}")
                     orders.forEach { order ->
                         // val dataEntrega = order.dataEntrega?.format(dateFormatter) ?: "-"
                         val formatoBR = SimpleDateFormat("dd/MM/yyyy", Locale("pt", "BR"))
@@ -95,7 +96,10 @@ class RupturaService(
             } ?: appendLine("Produto não encontrado para o ID: ${ruptura.productId}")
         }
 
-        chatsacService.sendMsg(msg, "663a53e93b0a671bbcb23c93").subscribe()
+        // chatsacService.sendMsg(msg, "663a53e93b0a671bbcb23c93").subscribe()
+        // chatsacService.sendMsg(msg, "27999000862").subscribe()
+        chatsacService.sendMsg(msg, "668ee55a017a45a48df63f6e").subscribe()
+
         println("Mensagem enviada: $msg")
         return saved
     }  
