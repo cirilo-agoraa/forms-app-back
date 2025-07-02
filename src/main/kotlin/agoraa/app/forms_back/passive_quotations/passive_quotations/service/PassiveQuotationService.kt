@@ -35,6 +35,8 @@ import kotlin.math.floor
 import kotlin.math.max
 import kotlin.time.Duration.Companion.days
 import kotlin.time.DurationUnit
+import org.springframework.scheduling.annotation.Scheduled
+import java.time.Duration
 
 @Service
 class PassiveQuotationService(
@@ -130,7 +132,8 @@ class PassiveQuotationService(
             param8 = passiveQuotation.param8,
             bestTerm = passiveQuotation.bestTerm,
             wppGroup = passiveQuotation.wppGroup,
-            createOrder = passiveQuotation.createOrder
+            createOrder = passiveQuotation.createOrder,
+            status = statusToString(passiveQuotation.status) // <-- Aqui retorna a string!
         )
 
         if (full) {
@@ -164,7 +167,12 @@ class PassiveQuotationService(
         val passiveQuotation = findById(customUserDetails, id)
         return createDto(passiveQuotation, full)
     }
-
+    private fun statusToString(status: Int?): String =
+    when (status) {
+        1 -> "Aprovada"
+        2 -> "Recusada"
+        else -> "Pendente"
+    }
     fun getAll(
         full: Boolean,
         pagination: Boolean,
@@ -176,7 +184,8 @@ class PassiveQuotationService(
         supplier: String?,
         createdAt: LocalDateTime?,
         store: StoresEnum?,
-        createOrder: Boolean?
+        createOrder: Boolean?,
+        status: Int? = null
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
@@ -424,10 +433,14 @@ class PassiveQuotationService(
 
     fun patch(customUserDetails: CustomUserDetails, id: Long, request: PassiveQuotationPatchRequest) {
         val extraQuotation = findById(customUserDetails, id)
+        println("Extra Quotation: $extraQuotation")
+        println("Request: $request")
+
 
         passiveQuotationRepository.save(
             extraQuotation.copy(
-                createOrder = request.createOrder
+                createOrder = request.createOrder,
+                status = request.status ?: extraQuotation.status 
             )
         )
     }
@@ -436,5 +449,17 @@ class PassiveQuotationService(
     fun delete(customUserDetails: CustomUserDetails, id: Long) {
         val passiveQuotation = findById(customUserDetails, id)
         passiveQuotationRepository.delete(passiveQuotation)
+    }
+
+    @Scheduled(fixedDelay = 600_000)
+    fun notifyPendingQuotations() {
+        val now = LocalDateTime.now()
+        val pendingQuotations = passiveQuotationRepository.findAll()
+            .filter { it.status == 0 && Duration.between(it.createdAt, now).toMinutes() >= 60 }
+
+        pendingQuotations.forEach { quotation ->
+            val msg = "COTAÇÃO FORNECEDOR ${quotation.supplier.name} PENDENTE há mais de uma hora"
+            chatsacService.sendMsg(msg, "663a53e93b0a671bbcb23c93").subscribe()
+        }
     }
 }

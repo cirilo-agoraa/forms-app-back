@@ -75,5 +75,8 @@ data class PassiveQuotationModel(
     val param8: Double = 0.7,
 
     @Column(nullable = false)
-    val createOrder: Boolean = false
+    val createOrder: Boolean = false,
+
+    @Column(nullable = false)
+    val status: Int = 0
 )

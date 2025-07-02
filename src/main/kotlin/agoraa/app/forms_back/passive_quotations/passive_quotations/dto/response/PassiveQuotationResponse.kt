@@ -31,5 +31,6 @@ data class PassiveQuotationResponse(
     val param7: Double,
     val param8: Double,
     val createOrder: Boolean,
-    var products: List<PassiveQuotationProductsResponse>? = null
+    var products: List<PassiveQuotationProductsResponse>? = null,
+    var status: String? = null
 )

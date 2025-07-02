@@ -24,5 +24,6 @@ data class PassiveQuotationRequest(
     val param7: Double,
     val param8: Double,
     val createOrder: Boolean = false,
-    val products: List<PassiveQuotationProductsRequest>
+    val products: List<PassiveQuotationProductsRequest>,
+    var status: Int = 0
 )
