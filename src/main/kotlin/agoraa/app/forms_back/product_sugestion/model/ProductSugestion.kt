@@ -38,6 +38,12 @@ data class ProductSugestionModel(
     @Column(name = "sector")
     val sector: String? = null,
 
+    @Column(name = "is_product_line", nullable = false)
+    val isProductLine: Boolean = false, // novo campo para indicar se é uma linha
+
     @Column(name = "created_at", nullable = false)
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Transient
+    val lines: List<ProductSugestionLine>? = null
 )

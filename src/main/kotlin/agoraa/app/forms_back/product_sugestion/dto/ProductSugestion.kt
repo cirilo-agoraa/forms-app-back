@@ -1,4 +1,6 @@
 package agoraa.app.forms_back.product_sugestion.dto
+import agoraa.app.forms_back.product_sugestion.dto.ProductSugestionLineResponse
+import java.time.LocalDateTime
 
 data class ProductSugestionRequest(
     val name: String,
@@ -10,4 +12,8 @@ data class ProductSugestionRequest(
     val supplierId: Long? = null,
     val justification: String? = null,
     val sector: String? = null,
+    val isProductLine: Boolean = false, // novo campo para indicar se é uma linha de produto
+    val lines: List<ProductSugestionLineResponse> = emptyList()
+
 )
+
