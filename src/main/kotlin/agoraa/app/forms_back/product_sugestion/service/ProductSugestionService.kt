@@ -10,6 +10,7 @@ import agoraa.app.forms_back.product_sugestion.dto.ProductSugestionLineRequest
 import agoraa.app.forms_back.product_sugestion.service.ProductSugestionLineService
 import agoraa.app.forms_back.product_sugestion.dto.ProductSugestionLineResponse
 import org.springframework.transaction.annotation.Transactional
+import java.util.Base64
 
 @Service
 class ProductSugestionService(
@@ -56,11 +57,13 @@ class ProductSugestionService(
     fun getById(id: Long): ProductSugestionRequest? {
         val suggestion = repository.findById(id).orElse(null) ?: return null
         val lines = productSugestionLineService.findByProductSugestion(suggestion)
+        val productImageBase64 = suggestion.productImage?.let { Base64.getEncoder().encodeToString(it) }
+
         return ProductSugestionRequest(
             name = suggestion.name,
             description = suggestion.description,
             status = suggestion.status,
-            productImage = null, // ou converta se precisar
+            productImage = productImageBase64, // agora retorna a imagem como base64 string
             costPrice = suggestion.costPrice,
             salePrice = suggestion.salePrice,
             supplierId = suggestion.supplierId,
