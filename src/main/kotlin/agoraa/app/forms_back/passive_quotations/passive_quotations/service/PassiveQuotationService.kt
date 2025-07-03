@@ -451,9 +451,12 @@ class PassiveQuotationService(
         passiveQuotationRepository.delete(passiveQuotation)
     }
 
-    @Scheduled(fixedDelay = 600_000)
+    @Scheduled(fixedDelay = 3_600_000)
     fun notifyPendingQuotations() {
         val now = LocalDateTime.now()
+        val hour = now.hour
+        if (hour < 8 || hour >= 18) return // Só executa entre 8h (inclusive) e 18h (exclusive)
+
         val pendingQuotations = passiveQuotationRepository.findAll()
             .filter { it.status == 0 && Duration.between(it.createdAt, now).toMinutes() >= 60 }
 

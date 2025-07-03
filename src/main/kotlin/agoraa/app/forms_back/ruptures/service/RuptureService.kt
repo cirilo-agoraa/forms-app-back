@@ -1,5 +1,4 @@
 package agoraa.app.forms_back.ruptures.service
-
 import agoraa.app.forms_back.ruptures.model.RupturaModel
 import agoraa.app.forms_back.ruptures.repository.RupturaRepository
 import org.springframework.stereotype.Service
@@ -17,6 +16,7 @@ import java.util.Date
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.DateUtil
 import java.text.SimpleDateFormat
+
 import java.util.Locale
 
 @Service
@@ -31,8 +31,12 @@ class RupturaService(
     fun create(ruptura: RupturaModel): RupturaModel {
         val saved = repository.save(ruptura)
         val product = productRepository.findById(ruptura.productId).orElse(null)
-        print(product)
-        print(product?.supplier?.name)
+        val productStore = productRepository.findByCodeAndStore(
+            product.code, // supondo que você já tem o objeto product
+            ruptura.store
+        ).orElse(null)
+        println(productStore)
+
         // return ruptura
         val relatedProducts = productService.getAllProductsByCode(product?.code ?: "")
             .filter { it.store == StoresEnum.TRESMANN_SMJ || it.store == StoresEnum.TRESMANN_STT }   
@@ -45,10 +49,9 @@ class RupturaService(
         } else {
             "* Estoque não encontrado para a loja ${lojaSelecionada.name}"
         }
-        println("Resumo Estoques: $resumoEstoques")
         val fornecedorName = product?.supplier?.name
         val lojaNumero = lojaEnumToNumero(lojaSelecionada)
-        println("Fornecedor: $fornecedorName, Loja Número: $lojaNumero")
+
         val orders = getOrdersFromExcel(fornecedorName ?:"", lojaNumero)
             .filter { 
                 it.emitido == "True" && 
@@ -59,7 +62,6 @@ class RupturaService(
         }
 
         println("Orders: $orders")
-        // return ruptura
         val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         val msg = buildString {
             appendLine("Ruptura registrada:")
@@ -75,20 +77,16 @@ class RupturaService(
                 }               
                 appendLine()
                 appendLine("Pd em Aberto")
-          
+                appendLine("- Qtde Pd Aberto: ${(productStore.openOrder ?: 0.0).toInt()}")
                 if (orders.isNotEmpty()) {
-                    appendLine("- Qtde Pd Aberto: ${orders.size}")
                     orders.forEach { order ->
-                        // val dataEntrega = order.dataEntrega?.format(dateFormatter) ?: "-"
                         val formatoBR = SimpleDateFormat("dd/MM/yyyy", Locale("pt", "BR"))
                         val dataEntregaFormatada = if (order.dataEntrega is java.util.Date) {
                             formatoBR.format(order.dataEntrega)
                         } else {
                             order.dataEntrega?.toString() ?: ""
-}
+                        }
                         appendLine("* Pedido ${order.pedido} - Entrega: $dataEntregaFormatada")
-                        // appendLine("* Pedido ${order.pedido}")
-
                     }
                 } else {
                     appendLine("* Nenhum pedido emitido e não recebido para este fornecedor.")
@@ -183,6 +181,33 @@ class RupturaService(
         workbook.close()
         return orders
     }
+
+
+    // fun getProductByExcel(productCode: String, lojaNumero: String): Map<String, Any?>? {
+    //     val excelPath = "F:\\BI\\Bases\\relatorio_tresmann.xlsx"
+    //     File(excelPath).inputStream().use { input ->
+    //         val workbook = StreamingReader.builder().rowCacheSize(100).bufferSize(4096).open(input)
+    //         val sheet = workbook.getSheetAt(0)
+    //         val headers = listOf(/* ...seus headers... */)
+
+    //         for (row in sheet.drop(1)) {
+    //             val code = row.getCell(0)?.toString()?.trim() ?: ""
+    //             val lojaCell = row.getCell(3)
+    //             val lojaValue = lojaCell?.toString()?.replace(".0", "")?.trim() ?: ""
+
+    //             if (code == productCode && lojaValue == lojaNumero) {
+    //                 val result = mutableMapOf<String, Any?>()
+    //                 headers.forEachIndexed { idx, header ->
+    //                     result[header] = row.getCell(idx)?.toString()
+    //                 }
+    //                 workbook.close()
+    //                 return result
+    //             }
+    //         }
+    //         workbook.close()
+    //     }
+    //     return null
+    // }
 
     fun lojaEnumToNumero(loja: StoresEnum): String = when (loja) {
         StoresEnum.TRESMANN_SMJ -> "1"
