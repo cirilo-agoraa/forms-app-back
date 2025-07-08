@@ -26,6 +26,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 
 @Service
 class ExtraOrderService(
@@ -34,6 +35,7 @@ class ExtraOrderService(
     private val extraOrderStoresService: ExtraOrderStoreService,
     private val extraOrderStoresProductsService: ExtraOrderProductService,
     private val supplierService: SupplierService
+
 ) {
     private fun validateSchema(schema: ExtraOrderRequest) {
         if (schema.partialComplete == PartialCompleteEnum.PARCIAL && (schema.products.isNullOrEmpty() || schema.stores.size != 1)) {
@@ -76,11 +78,11 @@ class ExtraOrderService(
             origin?.let {
                 predicates.add(criteriaBuilder.equal(root.get<OriginEnum>("origin"), it))
             }
-            
             supplierName?.let {
-                predicates.add(criteriaBuilder.like(root.get<agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel>("supplier").get<String>("name"), "%$it%"))
+                predicates.add(criteriaBuilder.like(root.get<SupplierModel>("supplier").get("name"), "%$it%"))
+                // val supplierJoin = root.join<ExtraOrderModel, agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel>("supplier")
+                // predicates.add(criteriaBuilder.like(supplierJoin.get("name"), "%$it%"))
             }
-
             criteriaBuilder.and(*predicates.toTypedArray())
         }
     }

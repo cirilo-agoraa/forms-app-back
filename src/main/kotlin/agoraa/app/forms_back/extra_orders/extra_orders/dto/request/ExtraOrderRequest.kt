@@ -21,5 +21,6 @@ data class ExtraOrderRequest(
 
     val origin: OriginEnum? = null,
     val products: List<ExtraOrderProductRequest>? = null,
-    val processed: Boolean = false
+    val processed: Boolean = false,
+    val supplierName: String? = null
 )
