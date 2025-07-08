@@ -31,6 +31,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
         @RequestParam(required = false) processed: Boolean?,
         @RequestParam(required = false) partialComplete: PartialCompleteEnum?,
         @RequestParam(required = false) origin: OriginEnum?,
+        @RequestBody(required = false) supplierName: String? = null,
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
             extraOrderService.getAll(
@@ -45,6 +46,7 @@ class ExtraOrderController(private val extraOrderService: ExtraOrderService) {
                 processed,
                 partialComplete,
                 origin,
+                supplierName
             )
         )
     }

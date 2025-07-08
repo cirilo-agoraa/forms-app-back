@@ -48,6 +48,7 @@ class ExtraOrderService(
         partialCompleteEnum: PartialCompleteEnum? = null,
         origin: OriginEnum? = null,
         userId: Long? = null,
+        supplierName: String? = null
     ): Specification<ExtraOrderModel> {
         return Specification { root: Root<ExtraOrderModel>, _: CriteriaQuery<*>?, criteriaBuilder: CriteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -74,6 +75,10 @@ class ExtraOrderService(
 
             origin?.let {
                 predicates.add(criteriaBuilder.equal(root.get<OriginEnum>("origin"), it))
+            }
+            
+            supplierName?.let {
+                predicates.add(criteriaBuilder.like(root.get<agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel>("supplier").get<String>("name"), "%$it%"))
             }
 
             criteriaBuilder.and(*predicates.toTypedArray())
@@ -146,11 +151,12 @@ class ExtraOrderService(
         processed: Boolean?,
         partialComplete: PartialCompleteEnum?,
         origin: OriginEnum?,
+        supplierName: String? = null
     ): Any {
         val sortDirection =
             if (direction.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortBy = Sort.by(sortDirection, sort)
-        val spec = createCriteria(username, createdAt, processed, partialComplete, origin)
+        val spec = createCriteria(username, createdAt, processed, partialComplete, origin , supplierName = supplierName)
 
         return when {
             pagination -> {
@@ -180,6 +186,7 @@ class ExtraOrderService(
         accepted: Boolean?,
         partialComplete: PartialCompleteEnum?,
         origin: OriginEnum?,
+        supplierName: String? = null
     ): Any {
         val currentUser = customUserDetails.getUserModel()
         val sortDirection =
@@ -191,7 +198,8 @@ class ExtraOrderService(
                 processed = accepted,
                 partialCompleteEnum = partialComplete,
                 origin = origin,
-                userId = currentUser.id
+                userId = currentUser.id,
+                supplierName = supplierName
             )
 
         return when {
