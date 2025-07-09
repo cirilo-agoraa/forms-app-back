@@ -6,6 +6,7 @@ import agoraa.app.forms_back.invoice.repository.InvoiceRepository
 import org.springframework.stereotype.Service
 import jakarta.transaction.Transactional
 import agoraa.app.forms_back.shared.service.ChatsacService
+import org.springframework.scheduling.annotation.Scheduled
 
 @Service
 class InvoiceService(
@@ -75,7 +76,42 @@ class InvoiceService(
         val invoice = invoiceOpt.get()
         invoice.retainedStatus = retainedStatus
         return repository.save(invoice).toDTO()
-}
+    }
+
+    @Scheduled(cron = "0 0 8 * * *", zone = "America/Sao_Paulo")
+    fun scheduledNotifyAllRetainedInvoices() {
+        notifyAllRetainedInvoices()
+    }
+
+    fun notifyAllRetainedInvoices() {
+        val invoices = repository.findByRetainedStatus(1)
+        println("Notificando ${invoices.size} invoices com canhotos retidos...")
+        if (invoices.isEmpty()) return
+
+        val invoicesPorLoja = invoices.groupBy { it.loja }
+
+        invoicesPorLoja.forEach { (loja, invoicesDaLoja) ->
+            val lojaNome = when (loja) {
+                "1" -> "SMJ"
+                "2" -> "STT"
+                else -> "Desconhecida"
+            }
+            val msg = StringBuilder()
+            msg.appendLine("NFs com canhotos retidos - Loja $lojaNome:")
+            for (invoice in invoicesDaLoja) {
+                msg.appendLine("  • ${invoice.danfe}/ ${invoice.supplierName} - Motivo: ${invoice.retainedMotive}")
+            }
+            val phoneNumber = when (loja) {
+                "1" -> "663a53e93b0a671bbcb23c93"
+                "2" -> "663a53e93b0a671bbcb23c93"
+                else -> "663a53e93b0a671bbcb23c93"
+            }
+            // val phoneNumber = "27999000862" 
+            // println(msg.toString())
+            whatsappService.sendMsg(msg.toString(), phoneNumber).subscribe()
+        }
+    }
+
 }
 
 // Extension functions for mapping
@@ -120,4 +156,3 @@ fun InvoiceDTO.toEntity() = Invoice(
     dateEntrada = dateEntrada,
     createdAt = createdAt
 )
-

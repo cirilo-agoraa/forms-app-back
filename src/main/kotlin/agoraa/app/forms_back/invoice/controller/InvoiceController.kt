@@ -25,6 +25,11 @@ class InvoiceController(
         val retained = service.findAllRetained()
         return ResponseEntity.ok(retained)
     }
+    @GetMapping("/retained/notify")
+    fun notifyAllRetainedInvoices(): ResponseEntity<String> {
+        service.notifyAllRetainedInvoices()
+        return ResponseEntity.ok("Notificação enviada para todas as invoices retidas com status 0.")
+    }
     
     @GetMapping("/bonificados")
     fun getBonificados(): ResponseEntity<List<Invoice>> {
