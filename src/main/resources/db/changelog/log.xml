@@ -1985,4 +1985,12 @@
                                 deleteCascade="true"/>
     </changeSet>
 
+    <changeSet id="108" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="product_mix">
+            <column name="has_processed" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
