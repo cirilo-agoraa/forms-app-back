@@ -58,8 +58,8 @@ class InvoiceService(
                 msg.appendLine("  • ${invoice.danfe}/ ${invoice.supplierName} - Motivo: ${invoice.retainedMotive}")
             }
             val phoneNumber = when (loja) {
-                "1" -> "663a53e93b0a671bbcb23c93"
-                "2" -> "663a53e93b0a671bbcb23c93"
+                "1" -> "663ba0c7f51c2556157bafff"
+                "2" -> "663ba11ff51c2556157f6b0e"
                 else -> "663a53e93b0a671bbcb23c93"
             }
             println(msg.toString())
@@ -102,8 +102,8 @@ class InvoiceService(
                 msg.appendLine("  • ${invoice.danfe}/ ${invoice.supplierName} - Motivo: ${invoice.retainedMotive}")
             }
             val phoneNumber = when (loja) {
-                "1" -> "663a53e93b0a671bbcb23c93"
-                "2" -> "663a53e93b0a671bbcb23c93"
+                "1" -> "663ba0c7f51c2556157bafff"
+                "2" -> "663ba11ff51c2556157f6b0e"
                 else -> "663a53e93b0a671bbcb23c93"
             }
             // val phoneNumber = "27999000862" 
