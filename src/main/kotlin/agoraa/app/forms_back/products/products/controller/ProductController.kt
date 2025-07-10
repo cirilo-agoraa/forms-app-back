@@ -130,6 +130,12 @@ class ProductController(private val productService: ProductService) {
         ResponseEntity.status(HttpStatus.OK).body(productService.getProductByCode(code)
     )
 
+    @GetMapping("/codes/{code}")
+    fun getProductsByCode(
+        @PathVariable code: String,
+    ): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.OK).body(productService.getAllProductsByCode(code))
+
     // @GetMapping("/name/{name}")
     // fun getProductsByName(@PathVariable name: String): ResponseEntity<List<ProductResponse>> =
     //     ResponseEntity.ok(productService.getProductsByName(name))
