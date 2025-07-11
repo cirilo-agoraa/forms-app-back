@@ -462,7 +462,7 @@ class PassiveQuotationService(
 
         pendingQuotations.forEach { quotation ->
             val msg = "COTAÇÃO FORNECEDOR ${quotation.supplier.name} PENDENTE há mais de uma hora"
-            chatsacService.sendMsg(msg, "663a53e93b0a671bbcb23c93").subscribe()
+            chatsacService.sendMsg(msg, "663ba02dc528f6252825d821").subscribe()
         }
     }
 }
