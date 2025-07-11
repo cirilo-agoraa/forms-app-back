@@ -18,6 +18,12 @@ data class ProductMixModel(
 
     @Column(name = "fora_do_mix", nullable = false)
     val foraDoMix: Boolean = false,
+
+    @Column(name = "fora_do_mix_stt", nullable = false)
+    val foraDoMixStt: Boolean = false,
+
+    @Column(name = "fora_do_mix_smj", nullable = false)
+    val foraDoMixSmj: Boolean = false,
     
     @Column(name = "store")
     val store: String? = "AMBAS",

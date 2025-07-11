@@ -15,7 +15,9 @@ class ProductMixController(private val service: ProductMixService) {
                 request.productId,
                 request.foraDoMix,
                 request.store,
-                request.motive
+                request.motive,
+                request.foraDoMixStt,
+                request.foraDoMixSmj
             )
         return ResponseEntity.ok(saved)
     }

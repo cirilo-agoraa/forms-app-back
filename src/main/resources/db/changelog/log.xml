@@ -1993,4 +1993,22 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="109" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="product_mix">
+            <column name="fora_do_mix_stt" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fora_do_mix_smj" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="110" author="Cirilo" runInTransaction="true">
+        <dropNotNullConstraint tableName="product_mix" columnName="fora_do_mix_stt" columnDataType="BOOLEAN"/>
+        <dropDefaultValue tableName="product_mix" columnName="fora_do_mix_stt"/>
+        <dropNotNullConstraint tableName="product_mix" columnName="fora_do_mix_smj" columnDataType="BOOLEAN"/>
+        <dropDefaultValue tableName="product_mix" columnName="fora_do_mix_smj"/>
+    </changeSet>
+
 </databaseChangeLog>

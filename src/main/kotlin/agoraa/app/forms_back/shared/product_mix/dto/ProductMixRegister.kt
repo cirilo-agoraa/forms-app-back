@@ -6,6 +6,8 @@ import agoraa.app.forms_back.products.products.model.ProductModel
 data class ProductMixRegisterRequest(
     val productId: Long,
     val foraDoMix: Boolean = false,
+    val foraDoMixStt: Boolean = false,
+    val foraDoMixSmj: Boolean = false,
     val store: String? = "AMBAS",
     val motive: String? = ""
 )
@@ -14,6 +16,8 @@ data class ProductMixWithProductResponse(
     val createdAt: LocalDateTime,
     val product: ProductModel?,
     val foraDoMix: Boolean = false,
+    val foraDoMixStt: Boolean = false,
+    val foraDoMixSmj: Boolean = false,
     val store: String? = "AMBAS",
     val motive: String? = ""
 )

@@ -23,13 +23,18 @@ class ProductMixService(
         productId: Long,
         foraDoMix: Boolean,
         store: String? = "AMBAS",
-        motive: String? = ""
+        motive: String? = "",
+        foraDoMixStt: Boolean = false,
+        foraDoMixSmj: Boolean = false
     ): ProductMixModel {
         val productMix = ProductMixModel(
             productId = productId,
             foraDoMix = foraDoMix,
             store = store,
-            motive = motive
+            motive = motive,
+            foraDoMixStt = foraDoMixStt,
+            foraDoMixSmj = foraDoMixSmj
+
         )
         val saved = repository.save(productMix)
         logToExcel(saved)
