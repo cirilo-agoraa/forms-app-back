@@ -9,7 +9,7 @@ data class ProductMixRegisterRequest(
     val foraDoMixStt: Boolean = false,
     val foraDoMixSmj: Boolean = false,
     val store: String? = "AMBAS",
-    val motive: String? = ""
+    val motive: String? = "",
     val hasProcessed: Boolean? = null // <-- novo campo
 )
 data class ProductMixWithProductResponse(
@@ -20,6 +20,6 @@ data class ProductMixWithProductResponse(
     val foraDoMixStt: Boolean = false,
     val foraDoMixSmj: Boolean = false,
     val store: String? = "AMBAS",
-    val motive: String? = ""
+    val motive: String? = "",
     val hasProcessed: Boolean? = null 
 )
