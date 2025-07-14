@@ -26,7 +26,7 @@ data class ProductMixModel(
     val foraDoMixSmj: Boolean = false,
     
     @Column(name = "has_processed")
-    val hasProcessed: Boolean? = null, 
+    val hasProcessed: Boolean? = false, 
     
     @Column(name = "store")
     val store: String? = "AMBAS",

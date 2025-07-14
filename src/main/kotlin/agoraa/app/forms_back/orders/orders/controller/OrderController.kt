@@ -50,6 +50,37 @@ class OrderController(private val orderService: OrderService) {
                 )
             )
 
+    @GetMapping("/current-user")
+    fun getOrdersByCurrentUser(
+        @RequestParam(defaultValue = "true") pagination: Boolean,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(defaultValue = "id") sort: String,
+        @RequestParam(defaultValue = "asc") direction: String,
+        @RequestParam(required = false) dateCreated: LocalDateTime?,
+        @RequestParam(required = false) orderNumber: Long?,
+        @RequestParam(required = false) store: StoresEnum?,
+        @RequestParam(required = false) issued: Boolean?,
+        @RequestParam(required = false) received: Boolean?,
+        @RequestParam(required = false) supplier: String?
+    ): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.OK)
+            .body(
+                orderService.getAll(
+                    pagination,
+                    page,
+                    size,
+                    sort,
+                    direction,
+                    dateCreated,
+                    orderNumber,
+                    store,
+                    issued,
+                    received,
+                    supplier
+                )
+            )
+
     @GetMapping("/{id}")
     fun getOrderById(
         @PathVariable id: Long,
