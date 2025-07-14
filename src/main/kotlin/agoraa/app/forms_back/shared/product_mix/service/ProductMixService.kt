@@ -48,6 +48,9 @@ class ProductMixService(
                 createdAt = mix.createdAt,
                 product = productRepository.findById(mix.productId).orElse(null),
                 foraDoMix = mix.foraDoMix,
+                hasProcessed = mix.hasProcessed ?: false,
+                foraDoMixStt = mix.foraDoMixStt,
+                foraDoMixSmj = mix.foraDoMixSmj,
                 store = mix.store ?: "AMBAS",
                 motive = mix.motive ?: ""
             )
