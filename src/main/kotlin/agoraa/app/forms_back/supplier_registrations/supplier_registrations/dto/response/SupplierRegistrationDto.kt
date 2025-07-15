@@ -39,5 +39,8 @@ data class SupplierRegistrationDto(
     var participateInInsert: Boolean? = null,
     var birthdayParty: Boolean? = null,
     var otherParticipation: Boolean? = null,
-    var negotiateBonusOnFirstPurchase: Boolean? = null
+    var negotiateBonusOnFirstPurchase: Boolean? = null,
+    var status: String? = null,
+    var recused: Boolean? = null,
+    var recusedMotive: String? = null,
 )

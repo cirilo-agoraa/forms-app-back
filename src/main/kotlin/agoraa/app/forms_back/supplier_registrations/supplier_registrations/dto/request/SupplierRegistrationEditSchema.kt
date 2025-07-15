@@ -30,5 +30,7 @@ data class SupplierRegistrationEditSchema(
     val participateInInsert: Boolean? = null,
     val birthdayParty: Boolean? = null,
     val otherParticipation: Boolean? = null,
-    val negotiateBonusOnFirstPurchase: Boolean? = null
+    val negotiateBonusOnFirstPurchase: Boolean? = null,
+    val recused: Boolean? = false,
+    val recusedMotive: String? = null
 )

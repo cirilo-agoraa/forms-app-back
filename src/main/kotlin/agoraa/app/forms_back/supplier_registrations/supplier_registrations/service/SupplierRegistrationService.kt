@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import agoraa.app.forms_back.shared.service.ChatsacService
 
 
 @Service
@@ -31,7 +32,8 @@ class SupplierRegistrationService(
     private val supplierRegistrationService: SupplierRegistrationStoresService,
     private val supplierRegistrationStoresService: SupplierRegistrationStoresService,
     private val supplierRegistrationWeeklyQuotationService: SupplierRegistrationWeeklyQuotationService,
-    private val supplierRegistrationRepository: SupplierRegistrationRepository
+    private val supplierRegistrationRepository: SupplierRegistrationRepository,
+    private val whatsappService: ChatsacService
 ) {
 
     private fun validateSchema(request: SupplierRegistrationCreateSchema) {
@@ -138,6 +140,12 @@ class SupplierRegistrationService(
         val supplierRegistrationWeeklyQuotations =
             supplierRegistrationWeeklyQuotationService.findByParentId(supplierRegistration.id)
 
+         val status = when {
+        supplierRegistration.recused -> "Recusado"
+        supplierRegistration.accepted -> "Aprovado"
+        else -> "Análise Pendente"
+        }
+
         val supplierRegistrationDto = SupplierRegistrationDto(
             id = supplierRegistration.id,
             user = userDto,
@@ -169,6 +177,9 @@ class SupplierRegistrationService(
             obs = supplierRegistration.obs,
             weeklyQuotations = supplierRegistrationWeeklyQuotations,
             stores = supplierRegistrationStores,
+            recused = supplierRegistration.recused,
+            recusedMotive = supplierRegistration.recusedMotive,
+            status = status 
         )
 
         return supplierRegistrationDto
@@ -311,11 +322,22 @@ class SupplierRegistrationService(
     fun patch(customUserDetails: CustomUserDetails, id: Long, request: SupplierRegistrationPatchRequest) {
         val supplierRegistration = findById(customUserDetails, id)
 
-        supplierRegistrationRepository.save(
-            supplierRegistration.copy(
-                created = request.created ?: supplierRegistration.created,
-            )
+        val updated = supplierRegistration.copy(
+            created = request.created ?: supplierRegistration.created,
+            accepted = request.accepted ?: supplierRegistration.accepted,
+            recused = request.recused ?: supplierRegistration.recused,
+            recusedMotive = request.recusedMotive ?: supplierRegistration.recusedMotive,
         )
+
+        supplierRegistrationRepository.save(updated)
+        println("Updated supplier registration: ${request.recused}")
+        // Envia mensagem se foi recusado
+        if ((request.recused == true)) {
+            println("Enviando mensagem de recusa para o WhatsApp")
+            val msg = "Solicitação de cadastro do fornecedor ${updated.companyName} foi recusada. Motivo: ${updated.recusedMotive}"
+            whatsappService.sendMsg(msg, "663a53e93b0a671bbcb23c93").subscribe()
+            println("Mensagem enviada com sucesso")
+        }
     }
 
     @Transactional
@@ -348,8 +370,11 @@ class SupplierRegistrationService(
                 exchange = request.exchange ?: supplierRegistration.exchange,
                 negotiateBonusOnFirstPurchase = request.negotiateBonusOnFirstPurchase
                     ?: supplierRegistration.negotiateBonusOnFirstPurchase,
+                recused = request.recused ?: supplierRegistration.recused,
+                recusedMotive = request.recusedMotive ?: supplierRegistration.recusedMotive,
             )
         )
+
 
         request.stores?.let { supplierRegistrationStoresService.edit(supplierRegistrationEdited, it) }
         request.weeklyQuotations?.let {

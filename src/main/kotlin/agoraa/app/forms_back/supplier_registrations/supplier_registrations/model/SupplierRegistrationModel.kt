@@ -94,5 +94,11 @@ data class SupplierRegistrationModel(
     val otherParticipation: Boolean? = null,
 
     @Column(nullable = true)
-    val negotiateBonusOnFirstPurchase: Boolean? = null
+    val negotiateBonusOnFirstPurchase: Boolean? = null,
+
+    @Column(nullable = false)
+    val recused: Boolean = false,
+
+    @Column(nullable = false)
+    val recusedMotive: String? = null,
 )

@@ -2019,4 +2019,15 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="112" author="Cirilo" runInTransaction="true">
+        <addColumn tableName="supplier_registrations">
+            <column name="recused" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="true"/>
+            </column>
+            <column name="recused_motive" type="VARCHAR(255)" >
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
