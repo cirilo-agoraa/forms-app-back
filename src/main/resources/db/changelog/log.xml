@@ -2029,5 +2029,139 @@
             </column>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="113" author="Cirilo" runInTransaction="true">
+    <createTable tableName="products_copy">
+        <column name="id" type="BIGINT" autoIncrement="true">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="code" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="name" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="supplier_id" type="BIGINT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="barcode" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="store" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="out_of_mix" type="BOOLEAN">
+            <constraints nullable="false"/>
+        </column>
+        <column name="weight" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="sector" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="group_name" type="VARCHAR(255)"/>
+        <column name="subgroup" type="VARCHAR(255)"/>
+        <column name="package_quantity" type="INT"/>
+        <column name="minimum_stock" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="sales_last_thirty_days" type="DOUBLE">
+            <constraints nullable="false"/>
+        </column>
+        <column name="sales_last_twelve_months" type="DOUBLE">
+            <constraints nullable="false"/>
+        </column>
+        <column name="sales_last_seven_days" type="DOUBLE">
+            <constraints nullable="false"/>
+        </column>
+        <column name="daily_sales" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="last_cost" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="average_sales_last_thirty_days" type="DOUBLE">
+            <constraints nullable="false"/>
+        </column>
+        <column name="current_stock" type="DOUBLE"/>
+        <column name="open_order" type="DOUBLE">
+            <constraints nullable="false"/>
+        </column>
+        <column name="expiration_date" type="DATE"/>
+        <column name="loss_quantity" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="promotion_type" type="VARCHAR(255)"/>
+        <column name="brand" type="VARCHAR(255)"/>
+        <column name="exchange_quantity" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="flag1" type="VARCHAR(255)"/>
+        <column name="flag2" type="VARCHAR(255)"/>
+        <column name="flag3" type="VARCHAR(255)"/>
+        <column name="flag4" type="VARCHAR(255)"/>
+        <column name="flag5" type="VARCHAR(255)"/>
+        <column name="average_expiration" type="DOUBLE">
+            <constraints nullable="false"/>
+        </column>
+        <column name="network_stock" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="transfer_package" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="promotion_quantity" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="category" type="VARCHAR(255)"/>
+        <column name="no_delivery_quantity" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="average_sales_last_thirty_days_twelve_months" type="DOUBLE">
+            <constraints nullable="false"/>
+        </column>
+        <column name="highest_sales" type="FLOAT"/>
+        <column name="daily_sales_amount" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="days_to_expire" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="sales_projection" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="in_projection" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="excess_stock" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="total_cost" type="FLOAT"/>
+        <column name="total_sales" type="FLOAT"/>
+        <column name="term" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="current_stock_per_package" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="average_sales" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="cost_p" type="FLOAT"/>
+        <column name="sales_p" type="FLOAT"/>
+        <column name="available_stock" type="FLOAT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="stock_turnover" type="FLOAT"/>
+        <column name="net_cost" type="FLOAT"/>
+        <column name="sales_price" type="FLOAT"/>
+        <column name="sales_price2" type="FLOAT"/>
+        <column name="promotion_price" type="FLOAT"/>
+        <column name="is_resource" type="BOOLEAN" defaultValue="0">
+            <constraints nullable="false"/>
+        </column>
+        <column name="mip_category" type="varchar(255)"/>
+    </createTable>
+</changeSet>
 
 </databaseChangeLog>
