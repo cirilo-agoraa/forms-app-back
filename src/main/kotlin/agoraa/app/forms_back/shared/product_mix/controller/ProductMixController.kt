@@ -5,21 +5,26 @@ import agoraa.app.forms_back.product_mix.service.ProductMixService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import agoraa.app.forms_back.product_mix.dto.ProductMixRegisterRequest
+import agoraa.app.forms_back.shared.service.ChatsacService
 
 @RestController
 @RequestMapping("/api/product-mix")
-class ProductMixController(private val service: ProductMixService) {
+class ProductMixController(private val service: ProductMixService,
+                          private val chatsacService: ChatsacService) {
     @PostMapping
     fun create(@RequestBody request: ProductMixRegisterRequest): ResponseEntity<ProductMixModel> {
             val saved = service.create(
-                request.productId,
+                request.productCode,
                 request.foraDoMix,
                 request.store,
                 request.motive,
                 request.foraDoMixStt,
                 request.foraDoMixSmj
             )
-        return ResponseEntity.ok(saved)
+
+
+
+            return ResponseEntity.ok(saved)
     }
 
     @GetMapping

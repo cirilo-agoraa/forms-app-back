@@ -2074,4 +2074,17 @@
     </createTable>
 </changeSet>
 
+<changeSet id="114" author="Cirilo" runInTransaction="true">
+    <preConditions onFail="MARK_RAN">
+        <not>
+            <columnExists tableName="product_mix" columnName="product_code"/>
+        </not>
+    </preConditions>
+    <addColumn tableName="product_mix">
+        <column name="product_code" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+    </addColumn>
+</changeSet>
+
 </databaseChangeLog>

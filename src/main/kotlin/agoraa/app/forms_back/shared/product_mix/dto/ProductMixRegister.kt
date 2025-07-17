@@ -1,25 +1,26 @@
 package agoraa.app.forms_back.product_mix.dto
 
 import java.time.LocalDateTime
-import agoraa.app.forms_back.products.products.model.ProductModel
+import agoraa.app.forms_back.products_resume.dto.ProductsResumeDto
 
 data class ProductMixRegisterRequest(
-    val productId: Long,
+    val productCode: String,
     val foraDoMix: Boolean = false,
     val foraDoMixStt: Boolean = false,
     val foraDoMixSmj: Boolean = false,
     val store: String? = "AMBAS",
     val motive: String? = "",
-    val hasProcessed: Boolean? = null // <-- novo campo
+    val hasProcessed: Boolean? = null
 )
 data class ProductMixWithProductResponse(
     val id: Long,
     val createdAt: LocalDateTime,
-    val product: ProductModel?,
+    val productCode: String?,
     val foraDoMix: Boolean = false,
     val foraDoMixStt: Boolean = false,
     val foraDoMixSmj: Boolean = false,
     val store: String? = "AMBAS",
     val motive: String? = "",
-    val hasProcessed: Boolean? = null 
+    val hasProcessed: Boolean? = null,
+    val product: ProductsResumeDto? = null
 )
