@@ -78,4 +78,5 @@ enum class ProductGroupsEnum {
     CESTAS_DE_NATAL,
     CARNES_BOVINAS,
     CARNES_SUINAS,
+    FOOD_SERVICE
 }
