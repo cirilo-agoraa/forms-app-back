@@ -16,9 +16,6 @@ data class ProductMixModel(
     @Column(name = "product_code", nullable = false)
     val productCode: String,
 
-    @Column(name = "fora_do_mix", nullable = false)
-    val foraDoMix: Boolean = false,
-
     @Column(name = "fora_do_mix_stt", nullable = false)
     val foraDoMixStt: Boolean = false,
 

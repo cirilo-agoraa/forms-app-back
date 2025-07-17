@@ -2087,4 +2087,25 @@
     </addColumn>
 </changeSet>
 
+<changeSet id="115" author="Cirilo" runInTransaction="true">
+    <preConditions onFail="MARK_RAN">
+        <foreignKeyConstraintExists foreignKeyName="fk_product_mix"/>
+    </preConditions>
+    <dropForeignKeyConstraint baseTableName="product_mix" constraintName="fk_product_mix"/>
+</changeSet>
+
+<changeSet id="116" author="Cirilo" runInTransaction="true">
+    <preConditions onFail="MARK_RAN">
+        <columnExists tableName="product_mix" columnName="product_id"/>
+    </preConditions>
+    <dropColumn tableName="product_mix" columnName="product_id"/>
+</changeSet>
+
+<changeSet id="117" author="Cirilo" runInTransaction="true">
+    <preConditions onFail="MARK_RAN">
+        <columnExists tableName="product_mix" columnName="fora_do_mix"/>
+    </preConditions>
+    <dropColumn tableName="product_mix" columnName="fora_do_mix"/>
+</changeSet>
+
 </databaseChangeLog>

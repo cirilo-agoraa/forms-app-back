@@ -5,7 +5,6 @@ import agoraa.app.forms_back.products_resume.dto.ProductsResumeDto
 
 data class ProductMixRegisterRequest(
     val productCode: String,
-    val foraDoMix: Boolean = false,
     val foraDoMixStt: Boolean = false,
     val foraDoMixSmj: Boolean = false,
     val store: String? = "AMBAS",
@@ -16,7 +15,6 @@ data class ProductMixWithProductResponse(
     val id: Long,
     val createdAt: LocalDateTime,
     val productCode: String?,
-    val foraDoMix: Boolean = false,
     val foraDoMixStt: Boolean = false,
     val foraDoMixSmj: Boolean = false,
     val store: String? = "AMBAS",

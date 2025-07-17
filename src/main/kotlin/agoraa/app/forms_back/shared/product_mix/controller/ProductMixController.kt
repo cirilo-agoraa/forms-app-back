@@ -15,7 +15,6 @@ class ProductMixController(private val service: ProductMixService,
     fun create(@RequestBody request: ProductMixRegisterRequest): ResponseEntity<ProductMixModel> {
             val saved = service.create(
                 request.productCode,
-                request.foraDoMix,
                 request.store,
                 request.motive,
                 request.foraDoMixStt,

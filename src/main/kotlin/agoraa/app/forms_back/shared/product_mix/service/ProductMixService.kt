@@ -25,7 +25,6 @@ class ProductMixService(
 ) {
     fun create(
         productCode: String,
-        foraDoMix: Boolean,
         store: String? = "AMBAS",
         motive: String? = "",
         foraDoMixStt: Boolean = false,
@@ -33,7 +32,6 @@ class ProductMixService(
     ): ProductMixModel {
         val productMix = ProductMixModel(
             productCode = productCode,
-            foraDoMix = foraDoMix,
             store = store,
             motive = motive,
             foraDoMixStt = foraDoMixStt,
@@ -72,7 +70,6 @@ class ProductMixService(
                     createdAt = mix.createdAt,
                     productCode = mix.productCode,
                     product = productResumeService.getByCode(mix.productCode),
-                    foraDoMix = mix.foraDoMix,
                     hasProcessed = mix.hasProcessed ?: false,
                     foraDoMixStt = mix.foraDoMixStt,
                     foraDoMixSmj = mix.foraDoMixSmj,
