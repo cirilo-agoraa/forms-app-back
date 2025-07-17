@@ -39,25 +39,6 @@ class ProductMixService(
 
         )
         val saved = repository.save(productMix)
-        val loja = when {
-            foraDoMixStt && foraDoMixSmj -> "todas as lojas"
-            foraDoMixStt -> "loja STT"
-            foraDoMixSmj -> "loja SMJ"
-            else -> saved.store?.uppercase()?.let {
-                when (it) {
-                    "AMBAS" -> "em todas as lojas"
-                    "SMJ" -> "na loja SMJ"
-                    "STT" -> "na loja STT"
-                    else -> "loja não especificada"
-                }
-            } ?: "loja não especificada"
-        }
-        val msg = "Foi solicitada alteração do mix para o produto de código: ${saved.productCode}, de dentro do mix para fora do mix $loja."
-        println(msg)
-        // ...existing code...
-        chatsacService.sendMessage(msg, "663a53e93b0a671bbcb23c93")
-            .doOnError { e -> println("Erro ao enviar mensagem: ${e.message}") }
-            .subscribe()
         return saved
     }
 
