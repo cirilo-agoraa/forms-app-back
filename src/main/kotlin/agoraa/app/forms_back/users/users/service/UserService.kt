@@ -110,6 +110,9 @@ class UserService(
             else -> throw agoraa.app.forms_back.shared.exception.NotAllowedException("You don't have permission to access this resource")
         }
     }
+    fun findUserById(id: Long): UserModel? {
+        return userRepository.findById(id).orElse(null)
+    }
 
     fun getById(customUserDetails: CustomUserDetails, id: Long): UserResponse {
         val user = findById(customUserDetails, id)

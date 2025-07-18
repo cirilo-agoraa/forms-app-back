@@ -18,7 +18,8 @@ class ProductMixController(private val service: ProductMixService,
                 request.store,
                 request.motive,
                 request.foraDoMixStt,
-                request.foraDoMixSmj
+                request.foraDoMixSmj,
+                request.createdBy
             )
 
 

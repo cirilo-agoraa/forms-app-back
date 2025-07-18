@@ -335,7 +335,7 @@ class SupplierRegistrationService(
         if ((request.recused == true)) {
             println("Enviando mensagem de recusa para o WhatsApp")
             val msg = "Solicitação de cadastro do fornecedor ${updated.companyName} foi recusada. Motivo: ${updated.recusedMotive}"
-            whatsappService.sendMsg(msg, "663a53e93b0a671bbcb23c93").subscribe()
+            whatsappService.sendMsg(msg, "668ee55a017a45a48df63f6e").subscribe()
             println("Mensagem enviada com sucesso")
         }
     }

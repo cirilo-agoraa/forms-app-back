@@ -2108,4 +2108,25 @@
     <dropColumn tableName="product_mix" columnName="fora_do_mix"/>
 </changeSet>
 
+<changeSet id="118" author="Cirilo" runInTransaction="true">
+    <preConditions onFail="MARK_RAN">
+        <not>
+            <columnExists tableName="product_mix" columnName="created_by"/>
+        </not>
+    </preConditions>
+    <addColumn tableName="product_mix">
+        <column name="created_by" type="BIGINT">
+            <constraints nullable="true"/>
+        </column>
+    </addColumn>
+</changeSet>
+
+<changeSet id="119" author="Cirilo" runInTransaction="true">
+    <addForeignKeyConstraint baseTableName="product_mix"
+                             baseColumnNames="created_by"
+                             constraintName="fk_product_mix_created_by"
+                             referencedTableName="users"
+                             referencedColumnNames="id"/>
+</changeSet>
+
 </databaseChangeLog>

@@ -14,6 +14,7 @@ import agoraa.app.forms_back.products.products.service.ProductService
 import java.time.format.DateTimeFormatter
 import agoraa.app.forms_back.product_resume.service.ProductResumeService
 import agoraa.app.forms_back.shared.service.ChatsacService
+import agoraa.app.forms_back.users.users.service.UserService
 
 @Service
 class ProductMixService(
@@ -22,42 +23,52 @@ class ProductMixService(
     private val productService: ProductService,
     private val productResumeService: ProductResumeService,
     private val chatsacService: ChatsacService,
+    private val userService: UserService
 ) {
     fun create(
         productCode: String,
         store: String? = "AMBAS",
         motive: String? = "",
         foraDoMixStt: Boolean = false,
-        foraDoMixSmj: Boolean = false
+        foraDoMixSmj: Boolean = false,
+        createdBy: Long? = null
     ): ProductMixModel {
         val productMix = ProductMixModel(
             productCode = productCode,
             store = store,
             motive = motive,
             foraDoMixStt = foraDoMixStt,
-            foraDoMixSmj = foraDoMixSmj
+            foraDoMixSmj = foraDoMixSmj,
+            createdBy = createdBy ?: 1
 
         )
         val saved = repository.save(productMix)
         return saved
     }
 
-    fun getAll(): List<ProductMixWithProductResponse> =
-        repository.findAll()
-            .sortedByDescending { it.createdAt }
-            .map { mix ->
-                ProductMixWithProductResponse(
-                    id = mix.id,
-                    createdAt = mix.createdAt,
-                    productCode = mix.productCode,
-                    product = productResumeService.getByCode(mix.productCode),
-                    hasProcessed = mix.hasProcessed ?: false,
-                    foraDoMixStt = mix.foraDoMixStt,
-                    foraDoMixSmj = mix.foraDoMixSmj,
-                    store = mix.store ?: "AMBAS",
-                    motive = mix.motive ?: ""
-                )
-            }
+fun getAll(): List<ProductMixWithProductResponse> =
+    repository.findAll()
+        .sortedByDescending { it.createdAt }
+        .map { mix ->
+            val userResponse = mix.createdBy?.let { userService.findUserById(it) } // retorna UserModel?
+                ?.let { userModel -> 
+                    // converte para UserResponse (implemente este método em UserService)
+                    userService.createDto(userModel, false)
+                }
+            ProductMixWithProductResponse(
+                id = mix.id,
+                createdAt = mix.createdAt,
+                productCode = mix.productCode,
+                product = productResumeService.getByCode(mix.productCode),
+                hasProcessed = mix.hasProcessed ?: false,
+                foraDoMixStt = mix.foraDoMixStt,
+                foraDoMixSmj = mix.foraDoMixSmj,
+                store = mix.store ?: "AMBAS",
+                motive = mix.motive ?: "",
+                createdBy = mix.createdBy,
+                user = userResponse
+            )
+        }
 
     fun getById(id: Long): ProductMixModel? = repository.findById(id).orElse(null)
     fun delete(id: Long) = repository.deleteById(id)

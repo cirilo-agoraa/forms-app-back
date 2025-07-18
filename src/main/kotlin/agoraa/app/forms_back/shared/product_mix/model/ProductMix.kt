@@ -24,6 +24,9 @@ data class ProductMixModel(
     
     @Column(name = "has_processed")
     val hasProcessed: Boolean? = false, 
+
+    @Column(name = "created_by")
+    val createdBy: Long? = null,
     
     @Column(name = "store")
     val store: String? = "AMBAS",
