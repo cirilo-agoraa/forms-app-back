@@ -264,11 +264,9 @@ class PassiveQuotationService(
             val salesLastTwelveMonthsSum = list
                     .filter { it.store == StoresEnum.TRESMANN_SMJ || it.store == StoresEnum.TRESMANN_STT }
                     .sumOf { it.salesLastTwelveMonths }
-            print("Sales last twelve months sum for $code: $salesLastTwelveMonthsSum")
             val salesLastThirtyDaysSum = list
                     .filter { it.store == StoresEnum.TRESMANN_SMJ || it.store == StoresEnum.TRESMANN_STT }
                     .sumOf { it.salesLastThirtyDays }
-            print("Sales last thirty days sum for $code: $salesLastThirtyDaysSum")
             val salesLastTwelveMonthsDivTwelve = salesLastTwelveMonthsSum / 12
             val currentStockSum = list.sumOf { it.currentStock ?: 0.0 }
             val openOrderSum = list.sumOf { it.openOrder }
@@ -356,8 +354,8 @@ class PassiveQuotationService(
             PassiveQuotationCalculationResponse(
                 productStore,
                 biggestSale.toInt(),
+                salesLastThirtyDaysSumStores.toInt(),
                 stockPlusOpenOrder,
-                salesLastThirtyDaysSumStores,
                 list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_VIX }!!.currentStock
                     ?: 0.0,
                 list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_SMJ }!!.currentStock
@@ -373,6 +371,11 @@ class PassiveQuotationService(
                 !(salesProjection > stockPlusOrder),
             )
         }
+
+    //...lógica do cálculo.
+
+
+        print("Calculated passive quotation response: $response")
 
         return response
     }
