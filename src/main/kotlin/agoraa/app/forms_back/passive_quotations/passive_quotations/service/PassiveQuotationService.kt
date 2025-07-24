@@ -239,6 +239,11 @@ class PassiveQuotationService(
     fun calculateQuotation(request: PassiveQuotationCalculateRequest): List<PassiveQuotationCalculationResponse> {
         val requestCodes = request.products.map { it.code }
         val products = productsService.findAll(requestCodes)
+        val productsStores = productsService.findAll(codes = requestCodes, stores = listOf(StoresEnum.TRESMANN_SMJ, StoresEnum.TRESMANN_STT))
+        val salesLastThirtyDaysSumStores = productsStores.sumOf { it.salesLastThirtyDays }
+        print("Sales last thirty days sum for stores: $salesLastThirtyDaysSumStores")
+        val salesLastTwelveMonthsSumStores = productsStores.sumOf { it.salesLastTwelveMonths }
+
 
         if (products.isEmpty()) {
             throw agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Products not found")
@@ -256,8 +261,14 @@ class PassiveQuotationService(
             val requestItem = requestProductsMap[code]!!
             val storeMap = list.associateBy { it.store }
             val productStore = storeMap[request.store] ?: list.first()
-            val salesLastTwelveMonthsSum = list.sumOf { it.salesLastTwelveMonths }
-            val salesLastThirtyDaysSum = list.sumOf { it.salesLastThirtyDays }
+            val salesLastTwelveMonthsSum = list
+                    .filter { it.store == StoresEnum.TRESMANN_SMJ || it.store == StoresEnum.TRESMANN_STT }
+                    .sumOf { it.salesLastTwelveMonths }
+            print("Sales last twelve months sum for $code: $salesLastTwelveMonthsSum")
+            val salesLastThirtyDaysSum = list
+                    .filter { it.store == StoresEnum.TRESMANN_SMJ || it.store == StoresEnum.TRESMANN_STT }
+                    .sumOf { it.salesLastThirtyDays }
+            print("Sales last thirty days sum for $code: $salesLastThirtyDaysSum")
             val salesLastTwelveMonthsDivTwelve = salesLastTwelveMonthsSum / 12
             val currentStockSum = list.sumOf { it.currentStock ?: 0.0 }
             val openOrderSum = list.sumOf { it.openOrder }
@@ -346,6 +357,7 @@ class PassiveQuotationService(
                 productStore,
                 biggestSale.toInt(),
                 stockPlusOpenOrder,
+                salesLastThirtyDaysSumStores,
                 list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_VIX }!!.currentStock
                     ?: 0.0,
                 list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_SMJ }!!.currentStock

@@ -5,6 +5,7 @@ import agoraa.app.forms_back.products.products.model.ProductModel
 data class PassiveQuotationCalculationResponse(
     val product: ProductModel,
     val biggestSale: Int,
+    val salesLastThirtyDaysSumStores : Double,
     val stockPlusOpenOrder: Double,
     val stockVix: Double,
     val stockSmj: Double,
