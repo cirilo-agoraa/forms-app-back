@@ -354,7 +354,7 @@ class PassiveQuotationService(
             PassiveQuotationCalculationResponse(
                 productStore,
                 biggestSale.toInt(),
-                salesLastThirtyDaysSumStores.toInt(),
+                salesLastThirtyDaysSumStores= salesLastThirtyDaysSum.toInt(),
                 stockPlusOpenOrder,
                 list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_VIX }!!.currentStock
                     ?: 0.0,
@@ -371,11 +371,6 @@ class PassiveQuotationService(
                 !(salesProjection > stockPlusOrder),
             )
         }
-
-    //...lógica do cálculo.
-
-
-        print("Calculated passive quotation response: $response")
 
         return response
     }
