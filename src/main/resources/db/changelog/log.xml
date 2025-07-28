@@ -2129,4 +2129,25 @@
                              referencedColumnNames="id"/>
 </changeSet>
 
+<changeSet id="120" author="Cirilo" runInTransaction="true">
+    <addColumn tableName="product_sugestion">
+        <column name="created_by" type="BIGINT">
+            <constraints nullable="true"/>
+        </column>
+        <column name="updated_by" type="BIGINT">
+            <constraints nullable="true"/>
+        </column>
+    </addColumn>
+    <addForeignKeyConstraint baseTableName="product_sugestion"
+                             baseColumnNames="created_by"
+                             constraintName="fk_product_sugestion_created_by"
+                             referencedTableName="users"
+                             referencedColumnNames="id"/>
+    <addForeignKeyConstraint baseTableName="product_sugestion"
+                             baseColumnNames="updated_by"
+                             constraintName="fk_product_sugestion_updated_by"
+                             referencedTableName="users"
+                             referencedColumnNames="id"/>
+</changeSet>
+
 </databaseChangeLog>

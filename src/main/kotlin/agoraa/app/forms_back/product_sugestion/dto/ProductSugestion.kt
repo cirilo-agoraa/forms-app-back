@@ -13,7 +13,10 @@ data class ProductSugestionRequest(
     val justification: String? = null,
     val sector: String? = null,
     val isProductLine: Boolean = false, // novo campo para indicar se é uma linha de produto
-    val lines: List<ProductSugestionLineResponse> = emptyList()
-
+    val lines: List<ProductSugestionLineResponse> = emptyList(),
+    val createdBy: Long? = null,
+    val updatedBy: Long? = null,
+    val createdByUsername: String? = null,
+    val updatedByUsername: String? = null
 )
 

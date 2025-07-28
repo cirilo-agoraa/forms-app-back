@@ -44,6 +44,12 @@ data class ProductSugestionModel(
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
+    @Column(name = "created_by")
+    val createdBy: Long? = null,
+
+    @Column(name = "updated_by")
+    val updatedBy: Long? = null,
+
     @Transient
     val lines: List<ProductSugestionLine>? = null
 )

@@ -11,35 +11,44 @@ import agoraa.app.forms_back.product_sugestion.service.ProductSugestionLineServi
 import agoraa.app.forms_back.product_sugestion.dto.ProductSugestionLineResponse
 import org.springframework.transaction.annotation.Transactional
 import java.util.Base64
+import agoraa.app.forms_back.users.users.service.UserService
+import org.springframework.beans.factory.annotation.Autowired
+import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
+import java.text.NumberFormat
+import java.util.Locale
 
 @Service
 class ProductSugestionService(
     private val repository: ProductSugestionRepository,
     private val chatsacService: ChatsacService,
-    private val productSugestionLineService: ProductSugestionLineService // adicione esta linha
+    private val productSugestionLineService: ProductSugestionLineService, // adicione esta linha
+    private val supplierService: SupplierService,
+    @Autowired private val userService: UserService
 
 ) {
     fun create(request: ProductSugestionRequest, productImage: MultipartFile?): ProductSugestionModel {
-
-
+        val authUser = userService.getAuthUser()
         val entity = ProductSugestionModel(
             name = request.name,
             description = request.description,
             isProductLine = request.isProductLine,
-            productImage = productImage?.bytes
+            productImage = productImage?.bytes,
+            createdBy = authUser?.id, 
         )
         val resp =  repository.save(entity)
 
         val msg = """
-            Solicitação de cadastro de produto:
-            • Nome: ${request.name}
-            • Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
+            Nova Sugestão de Produto
+            Loja Solicitante: ${authUser?.store ?: "N/A"}
+            Produto: ${request.name}
+            Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
+            Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
         """.trimIndent()
 
-        // chatsacService.sendMsg(
-        //     number = "663a53e93b0a671bbcb23c93",
-        //     message = msg,
-        // ).subscribe()
+        chatsacService.sendMsg(
+            number = "663a53e93b0a671bbcb23c93",
+            message = msg,
+        ).subscribe()
 
         if (productImage != null) {
             chatsacService.sendImg(
@@ -90,8 +99,7 @@ class ProductSugestionService(
         productImage: MultipartFile?,
         productLines: List<ProductSugestionLineRequest> = emptyList()
     ): ProductSugestionModel? {
-        println("Updating product suggestion with ID: $id")
-        println("Request data: $request")
+        val authUser = userService.getAuthUser()
         val existing = repository.findById(id).orElse(null) ?: return null
         val updated = existing.copy(
             name = request.name,
@@ -102,13 +110,37 @@ class ProductSugestionService(
             salePrice = request.salePrice ?: existing.salePrice,
             supplierId = request.supplierId ?: existing.supplierId,
             justification = request.justification ?: existing.justification,
-            sector = request.sector
+            sector = request.sector,
+            updatedBy = authUser?.id
         )
         val saved = repository.save(updated)
+        // val lines = productSugestionLineService.findByProductSugestion(saved)
+        val fornecedor = supplierService.findById(request.supplierId ?: 0L)?.name ?: "Fornecedor não encontrado"
+        val numberFormat = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
+        val produtos = productLines.joinToString("\n") {
+            val preco = it.costPrice?.let { v -> numberFormat.format(v) } ?: "-"
+            "${it.name} / $preco" 
+        }
 
         if (request.isProductLine) {
             productSugestionLineService.saveLines(saved, productLines)
         }
+
+        val msg = """
+            Tratativa de Nova Sugestão de Produto
+            Loja Solicitante: ${authUser?.store ?: "N/A"}
+            Produto: ${request.name}
+            Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
+            Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
+            Fornecedor: $fornecedor
+
+            $produtos
+        """.trimIndent().replace(Regex("^ +", RegexOption.MULTILINE), "")
+
+        chatsacService.sendMsg(
+            number = "663a53e93b0a671bbcb23c93",
+            message = msg,
+        ).subscribe()
 
         return saved
     }

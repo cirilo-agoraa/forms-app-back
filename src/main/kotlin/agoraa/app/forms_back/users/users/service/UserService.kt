@@ -1,6 +1,5 @@
 package agoraa.app.forms_back.users.users.service
 
-import agoraa.app.forms_back.config.CustomUserDetails
 import agoraa.app.forms_back.users.user_roles.service.AuthorityService
 import agoraa.app.forms_back.users.users.dto.request.ChangePasswordRequest
 import agoraa.app.forms_back.users.users.dto.request.UserCreateRequest
@@ -20,6 +19,8 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.security.core.context.SecurityContextHolder
+import agoraa.app.forms_back.config.CustomUserDetails
 
 @Service
 class UserService(
@@ -167,5 +168,15 @@ class UserService(
                 firstAccess = !user.firstAccess
             )
         )
+    }
+
+    fun getAuthUser(): UserModel? {
+        val authentication = SecurityContextHolder.getContext().authentication
+        val principal = authentication?.principal
+        return if (principal is CustomUserDetails) {
+            principal.getUserModel()
+        } else {
+            null
+        }
     }
 }
