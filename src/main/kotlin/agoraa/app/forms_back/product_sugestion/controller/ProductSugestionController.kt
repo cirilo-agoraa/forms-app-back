@@ -17,7 +17,7 @@ class ProductSugestionController(
     private val service: ProductSugestionService
 ) {
     @GetMapping
-    fun getAll(): ResponseEntity<List<ProductSugestionModel>> {
+    fun getAll(): ResponseEntity<List<ProductSugestionRequest>> {
         val suggestions = service.getAll()
         return ResponseEntity.ok(suggestions)
     }

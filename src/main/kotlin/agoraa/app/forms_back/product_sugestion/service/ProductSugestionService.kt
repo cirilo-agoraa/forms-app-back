@@ -90,7 +90,40 @@ class ProductSugestionService(
             }
         )
     }
-    fun getAll(): List<ProductSugestionModel> = repository.findAll()
+    fun getAll(): List<ProductSugestionRequest> {
+        return repository.findAllByOrderByIdDesc().map { suggestion ->
+            val createdByUsername = suggestion.createdBy?.let { userService.findUserById(it)?.username }
+            val updatedByUsername = suggestion.updatedBy?.let { userService.findUserById(it)?.username }
+            val lines = productSugestionLineService.findByProductSugestion(suggestion)
+            val productImageBase64 = suggestion.productImage?.let { Base64.getEncoder().encodeToString(it) }
+
+            ProductSugestionRequest(
+                name = suggestion.name,
+                description = suggestion.description,
+                status = suggestion.status,
+                productImage = productImageBase64,
+                costPrice = suggestion.costPrice,
+                salePrice = suggestion.salePrice,
+                supplierId = suggestion.supplierId,
+                justification = suggestion.justification,
+                sector = suggestion.sector,
+                isProductLine = suggestion.isProductLine,
+                lines = lines.map {
+                    ProductSugestionLineResponse(
+                        id = it.id,
+                        name = it.name,
+                        costPrice = it.costPrice,
+                        salePrice = it.salePrice,
+                        createdAt = it.createdAt
+                    )
+                },
+                createdBy = suggestion.createdBy,
+                updatedBy = suggestion.updatedBy,
+                createdByUsername = createdByUsername,
+                updatedByUsername = updatedByUsername
+            )
+        }
+    }
 
     @Transactional
     fun update(
