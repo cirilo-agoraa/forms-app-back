@@ -3,6 +3,7 @@ import agoraa.app.forms_back.product_sugestion.dto.ProductSugestionLineResponse
 import java.time.LocalDateTime
 
 data class ProductSugestionRequest(
+    val id: Long? = null,
     val name: String,
     val description: String? = null,
     val status: Int = 0,

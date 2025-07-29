@@ -98,6 +98,7 @@ class ProductSugestionService(
             val productImageBase64 = suggestion.productImage?.let { Base64.getEncoder().encodeToString(it) }
 
             ProductSugestionRequest(
+                id = suggestion.id,
                 name = suggestion.name,
                 description = suggestion.description,
                 status = suggestion.status,
@@ -166,7 +167,7 @@ class ProductSugestionService(
             Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
             Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
             Fornecedor: $fornecedor
-            
+
             Produtos / Custos:
             $produtos
         """.trimIndent().replace(Regex("^ +", RegexOption.MULTILINE), "")
