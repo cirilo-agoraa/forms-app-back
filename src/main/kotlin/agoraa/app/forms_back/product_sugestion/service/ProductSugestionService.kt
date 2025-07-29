@@ -160,13 +160,14 @@ class ProductSugestionService(
         }
 
         val msg = """
-            Tratativa de Nova Sugestão de Produto
+            Segue tratativa de Nova Sugestão de Produtos, para aprovações:
             Loja Solicitante: ${authUser?.store ?: "N/A"}
             Produto: ${request.name}
             Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
             Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
             Fornecedor: $fornecedor
-
+            
+            Produtos / Custos:
             $produtos
         """.trimIndent().replace(Regex("^ +", RegexOption.MULTILINE), "")
 
