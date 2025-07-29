@@ -18,6 +18,7 @@ data class ProductSugestionRequest(
     val createdBy: Long? = null,
     val updatedBy: Long? = null,
     val createdByUsername: String? = null,
-    val updatedByUsername: String? = null
+    val updatedByUsername: String? = null,
+    val createdAt: LocalDateTime? = null,
 )
 

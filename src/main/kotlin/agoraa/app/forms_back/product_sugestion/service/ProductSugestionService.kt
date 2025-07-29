@@ -109,6 +109,7 @@ class ProductSugestionService(
                 justification = suggestion.justification,
                 sector = suggestion.sector,
                 isProductLine = suggestion.isProductLine,
+                createdAt = suggestion.createdAt,
                 lines = lines.map {
                     ProductSugestionLineResponse(
                         id = it.id,
