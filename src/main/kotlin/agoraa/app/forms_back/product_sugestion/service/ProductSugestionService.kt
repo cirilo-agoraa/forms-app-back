@@ -169,27 +169,45 @@ class ProductSugestionService(
             productSugestionLineService.saveLines(saved, productLines)
         }
 
-        val msg = """
-            Segue tratativa de Nova Sugestão de Produtos, para aprovações:
-            Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
-            Produto: ${request.name}
-            Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
-            Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
-            Fornecedor: $fornecedor
-            $produtos
-        """.trimIndent().replace(Regex("^ +", RegexOption.MULTILINE), "")
-
+        val msg = when (request.status) {
+            2 -> """
+        Sugestão de Produto Aprovada!
+        Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
+        Produto: ${request.name}
+        Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
+        Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
+        Fornecedor: $fornecedor
+        $produtos
+        """.trim()
+            3 -> """
+        Sugestão de Produto Reprovada.
+        Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
+        Produto: ${request.name}
+        Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
+        Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
+        Fornecedor: $fornecedor
+        $produtos
+        Motivo: ${request.justification ?: "Nenhum motivo fornecido"}
+        """.trim()
+            else -> """
+        Segue tratativa de Nova Sugestão de Produtos, para aprovações:
+        Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
+        Produto: ${request.name}
+        Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
+        Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
+        Fornecedor: $fornecedor
+        $produtos
+        """.trim()
+        }
+        // 663a53e93b0a671bbcb23c93
         chatsacService.sendMsg(
             number = "663a53e93b0a671bbcb23c93",
             message = msg,
         ).subscribe()
         val productImage = existing.productImage ?: productImage
         // Envia a imagem do produto sugerido, se existir
-        val imageBytes: ByteArray? = when {
-            productImage is MultipartFile -> productImage.bytes
-            productImage is ByteArray -> productImage
-            else -> null
-        }
+        val imageBytes: ByteArray? = saved.productImage
+
         if (imageBytes != null) {
             chatsacService.sendImg(
                 imageBytes = imageBytes,

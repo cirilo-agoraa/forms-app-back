@@ -34,14 +34,14 @@ class ProductSugestionController(
         return ResponseEntity.status(HttpStatus.CREATED).body(saved)
     }
 
-@GetMapping("/{id}")
-fun getById(@PathVariable id: Long): ResponseEntity<ProductSugestionRequest> {
-    val suggestion = service.getById(id)
-    return if (suggestion != null)
-        ResponseEntity.ok(suggestion)
-    else
-        ResponseEntity.notFound().build()
-}
+    @GetMapping("/{id}")
+    fun getById(@PathVariable id: Long): ResponseEntity<ProductSugestionRequest> {
+        val suggestion = service.getById(id)
+        return if (suggestion != null)
+            ResponseEntity.ok(suggestion)
+        else
+            ResponseEntity.notFound().build()
+    }
 
     @PatchMapping("/{id}/patch", consumes = ["multipart/form-data"])
     fun update(
@@ -69,19 +69,20 @@ fun getById(@PathVariable id: Long): ResponseEntity<ProductSugestionRequest> {
             sector = sector,
             isProductLine = isProductLine
         )
-
+        
         // Permite products ser array ou objeto único
         val productLines = if (isProductLine && !products.isNullOrBlank()) {
             val mapper = jacksonObjectMapper()
             try {
-                mapper.readValue(products, Array<ProductSugestionLineRequest>::class.java).toList()
+                // Tenta desserializar como array
+                mapper.readValue<List<ProductSugestionLineRequest>>(products)
             } catch (ex: Exception) {
+                // Se falhar, tenta como objeto único
                 listOf(mapper.readValue(products, ProductSugestionLineRequest::class.java))
             }
         } else {
             emptyList()
         }
-
         val updated = service.update(id, data, productImage, productLines)
         return if (updated != null)
             ResponseEntity.ok(updated)
