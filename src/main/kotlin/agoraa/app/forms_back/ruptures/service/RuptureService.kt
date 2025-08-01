@@ -31,6 +31,7 @@ class RupturaService(
     fun create(ruptura: RupturaModel): RupturaModel {
         val saved = repository.save(ruptura)
         val product = productRepository.findById(ruptura.productId).orElse(null)
+
         val productStore = productRepository.findByCodeAndStore(
             product.code, // supondo que você já tem o objeto product
             ruptura.store
@@ -71,7 +72,7 @@ class RupturaService(
                 appendLine("* Fornecedor: ${fornecedorName ?: "Não informado"}")
                 appendLine()
                 appendLine("Estoques:")
-                appendLine("* Estoque Rede: ${product.networkStock}")
+                appendLine("* Estoque Rede: ${productStore.networkStock}")
                 relatedProducts.forEach { prod ->
                     appendLine("* ${prod.store}: ${prod.availableStock}")
                 }               

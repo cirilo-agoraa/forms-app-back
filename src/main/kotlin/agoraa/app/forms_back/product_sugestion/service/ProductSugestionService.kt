@@ -136,6 +136,8 @@ class ProductSugestionService(
     ): ProductSugestionModel? {
         val authUser = userService.getAuthUser()
         val existing = repository.findById(id).orElse(null) ?: return null
+        val userStoreWhoCreated = existing.createdBy?.let { userService.findUserById(it)?.store }
+        print(authUser)
         val updated = existing.copy(
             name = request.name,
             description = request.description,
@@ -169,7 +171,7 @@ class ProductSugestionService(
 
         val msg = """
             Segue tratativa de Nova Sugestão de Produtos, para aprovações:
-            Loja Solicitante: ${authUser?.store ?: "N/A"}
+            Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
             Produto: ${request.name}
             Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
             Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
@@ -197,7 +199,7 @@ class ProductSugestionService(
             ).subscribe()
         }
 
-        // print(msg)
+        print(msg)
         return saved
     }
 
