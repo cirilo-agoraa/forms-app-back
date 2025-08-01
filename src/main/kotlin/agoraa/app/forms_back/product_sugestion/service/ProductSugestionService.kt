@@ -152,9 +152,15 @@ class ProductSugestionService(
         // val lines = productSugestionLineService.findByProductSugestion(saved)
         val fornecedor = supplierService.findById(request.supplierId ?: 0L)?.name ?: "Fornecedor não encontrado"
         val numberFormat = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
-        val produtos = productLines.joinToString("\n") {
-            val preco = it.costPrice?.let { v -> numberFormat.format(v) } ?: "-"
-            "${it.name} / $preco" 
+
+        val produtos = if (request.isProductLine) {
+            "Produtos / Custos:\n" + productLines.joinToString("\n") {
+                val preco = it.costPrice?.let { v -> numberFormat.format(v) } ?: "-"
+                "${it.name} / $preco"
+            }
+        } else {
+            val preco = request.costPrice?.let { v -> numberFormat.format(v) } ?: "-"
+            "Custo: $preco"
         }
 
         if (request.isProductLine) {
@@ -168,8 +174,6 @@ class ProductSugestionService(
             Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
             Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
             Fornecedor: $fornecedor
-
-            Produtos / Custos:
             $produtos
         """.trimIndent().replace(Regex("^ +", RegexOption.MULTILINE), "")
 
@@ -177,7 +181,23 @@ class ProductSugestionService(
             number = "663a53e93b0a671bbcb23c93",
             message = msg,
         ).subscribe()
+        val productImage = existing.productImage ?: productImage
+        // Envia a imagem do produto sugerido, se existir
+        val imageBytes: ByteArray? = when {
+            productImage is MultipartFile -> productImage.bytes
+            productImage is ByteArray -> productImage
+            else -> null
+        }
+        if (imageBytes != null) {
+            chatsacService.sendImg(
+                imageBytes = imageBytes,
+                fileName = "produto_sugerido.jpg",
+                number = "663a53e93b0a671bbcb23c93",
+                caption = "Imagem do produto sugerido: ${request.name}"
+            ).subscribe()
+        }
 
+        // print(msg)
         return saved
     }
 
