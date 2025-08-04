@@ -270,13 +270,9 @@ class PassiveQuotationService(
             println("teste 2")
             val currentStockSum = list.sumOf { it.currentStock ?: 0.0 }
             val openOrderSum = list.sumOf { it.openOrder }
-            println("teste 3")
             val biggestSale = max(salesLastTwelveMonthsDivTwelve, salesLastThirtyDaysSum)
-            println("teste 4")
             val stockPlusOpenOrder = requestItem.stockPlusOpenOrder ?: (currentStockSum + openOrderSum)
-            println("teste 5")
             val salesDay = (stockPlusOpenOrder / (biggestSale / 30))
-            println("teste 6")
             val flag1 = when {
                 productStore.netCost == null || productStore.netCost == 0.0 -> 1
                 requestItem.price < (productStore.netCost!! * (1 - request.variation)) -> 4
@@ -284,9 +280,10 @@ class PassiveQuotationService(
                 requestItem.price > (productStore.netCost!! * (1 + request.variation)) -> 2
                 else -> 3
             }
-            println("teste 7")
             val flag2 = when {
-                requestItem.price > (productStore.netCost!! * request.param7) || requestItem.price < (productStore.netCost!! * request.param8) -> 2
+                requestItem.price > (productStore.netCost
+                    ?: (0.0 * request.param7)) || requestItem.price < (productStore.netCost
+                    ?: (0.0 * request.param8)) -> 2
                 else -> 0
             }
             println("teste 8")
