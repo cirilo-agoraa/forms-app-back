@@ -38,15 +38,15 @@ class ProductSugestionService(
         val resp =  repository.save(entity)
 
         val msg = """
-            Nova Sugestão de Produto
-            Loja Solicitante: ${authUser?.store ?: "N/A"}
-            Produto: ${request.name}
-            Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
-            Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
+        Nova Sugestão de Produto
+        Loja Solicitante: ${authUser?.store ?: "N/A"}
+        Produto: ${request.name}
+        Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
+        Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
         """.trimIndent()
 
         chatsacService.sendMsg(
-            number = "663a53e93b0a671bbcb23c93",
+            number = "688ced38f01d7d8e8491f9f4",
             message = msg,
         ).subscribe()
 
@@ -54,7 +54,7 @@ class ProductSugestionService(
             chatsacService.sendImg(
                 imageBytes = productImage.bytes,
                 fileName = "produto_sugerido.jpg",
-                number = "663a53e93b0a671bbcb23c93",
+                number = "688ced38f01d7d8e8491f9f4",
                 caption = "Imagem do produto sugerido: ${request.name}"
             ).subscribe()
         }
@@ -92,8 +92,8 @@ class ProductSugestionService(
     }
     fun getAll(): List<ProductSugestionRequest> {
         return repository.findAllByOrderByIdDesc().map { suggestion ->
-            val createdByUsername = suggestion.createdBy?.let { userService.findUserById(it)?.username }
-            val updatedByUsername = suggestion.updatedBy?.let { userService.findUserById(it)?.username }
+            val createdByUsername = suggestion.createdBy?.let { userService.findUserById(it)?.nickname }
+            val updatedByUsername = suggestion.updatedBy?.let { userService.findUserById(it)?.nickname }
             val lines = productSugestionLineService.findByProductSugestion(suggestion)
             val productImageBase64 = suggestion.productImage?.let { Base64.getEncoder().encodeToString(it) }
 
@@ -172,36 +172,36 @@ class ProductSugestionService(
         val msg = when (request.status) {
             2 -> """
         Sugestão de Produto Aprovada!
-        Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
-        Produto: ${request.name}
-        Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
-        Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
-        Fornecedor: $fornecedor
-        $produtos
+Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
+Produto: ${request.name}
+Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
+Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
+Fornecedor: $fornecedor
+$produtos
         """.trim()
             3 -> """
         Sugestão de Produto Reprovada.
-        Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
-        Produto: ${request.name}
-        Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
-        Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
-        Fornecedor: $fornecedor
-        $produtos
-        Motivo: ${request.justification ?: "Nenhum motivo fornecido"}
+Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
+Produto: ${request.name}
+Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
+Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
+Fornecedor: $fornecedor
+$produtos
+Motivo: ${request.justification ?: "Nenhum motivo fornecido"}
         """.trim()
             else -> """
         Segue tratativa de Nova Sugestão de Produtos, para aprovações:
-        Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
-        Produto: ${request.name}
-        Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
-        Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
-        Fornecedor: $fornecedor
-        $produtos
+Loja Solicitante: ${userStoreWhoCreated ?: "N/A"}
+Produto: ${request.name}
+Linha Completa: ${if (request.isProductLine) "Sim" else "Não"}
+Descrição: ${request.description ?: "Nenhuma descrição fornecida"}
+Fornecedor: $fornecedor
+$produtos
         """.trim()
         }
         // 663a53e93b0a671bbcb23c93
         chatsacService.sendMsg(
-            number = "663a53e93b0a671bbcb23c93",
+            number = "688ced38f01d7d8e8491f9f4",
             message = msg,
         ).subscribe()
         val productImage = existing.productImage ?: productImage
@@ -212,12 +212,10 @@ class ProductSugestionService(
             chatsacService.sendImg(
                 imageBytes = imageBytes,
                 fileName = "produto_sugerido.jpg",
-                number = "663a53e93b0a671bbcb23c93",
+                number = "688ced38f01d7d8e8491f9f4",
                 caption = "Imagem do produto sugerido: ${request.name}"
             ).subscribe()
         }
-
-        print(msg)
         return saved
     }
 
