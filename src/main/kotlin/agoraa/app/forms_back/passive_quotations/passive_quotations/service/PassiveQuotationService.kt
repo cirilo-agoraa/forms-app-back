@@ -241,9 +241,7 @@ class PassiveQuotationService(
         val products = productsService.findAll(requestCodes)
         val productsStores = productsService.findAll(codes = requestCodes, stores = listOf(StoresEnum.TRESMANN_SMJ, StoresEnum.TRESMANN_STT))
         val salesLastThirtyDaysSumStores = productsStores.sumOf { it.salesLastThirtyDays }
-        print("Sales last thirty days sum for stores: $salesLastThirtyDaysSumStores")
         val salesLastTwelveMonthsSumStores = productsStores.sumOf { it.salesLastTwelveMonths }
-
 
         if (products.isEmpty()) {
             throw agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Products not found")
@@ -267,12 +265,18 @@ class PassiveQuotationService(
             val salesLastThirtyDaysSum = list
                     .filter { it.store == StoresEnum.TRESMANN_SMJ || it.store == StoresEnum.TRESMANN_STT }
                     .sumOf { it.salesLastThirtyDays }
+            println("teste 1")
             val salesLastTwelveMonthsDivTwelve = salesLastTwelveMonthsSum / 12
+            println("teste 2")
             val currentStockSum = list.sumOf { it.currentStock ?: 0.0 }
             val openOrderSum = list.sumOf { it.openOrder }
+            println("teste 3")
             val biggestSale = max(salesLastTwelveMonthsDivTwelve, salesLastThirtyDaysSum)
+            println("teste 4")
             val stockPlusOpenOrder = requestItem.stockPlusOpenOrder ?: (currentStockSum + openOrderSum)
+            println("teste 5")
             val salesDay = (stockPlusOpenOrder / (biggestSale / 30))
+            println("teste 6")
             val flag1 = when {
                 productStore.netCost == null || productStore.netCost == 0.0 -> 1
                 requestItem.price < (productStore.netCost!! * (1 - request.variation)) -> 4
