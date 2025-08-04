@@ -265,12 +265,18 @@ class PassiveQuotationService(
             val salesLastThirtyDaysSum = list
                     .filter { it.store == StoresEnum.TRESMANN_SMJ || it.store == StoresEnum.TRESMANN_STT }
                     .sumOf { it.salesLastThirtyDays }
+            println("teste 1")
             val salesLastTwelveMonthsDivTwelve = salesLastTwelveMonthsSum / 12
+            println("teste 2")
             val currentStockSum = list.sumOf { it.currentStock ?: 0.0 }
             val openOrderSum = list.sumOf { it.openOrder }
+            println("teste 3")
             val biggestSale = max(salesLastTwelveMonthsDivTwelve, salesLastThirtyDaysSum)
+            println("teste 4")
             val stockPlusOpenOrder = requestItem.stockPlusOpenOrder ?: (currentStockSum + openOrderSum)
+            println("teste 5")
             val salesDay = (stockPlusOpenOrder / (biggestSale / 30))
+            println("teste 6")
             val flag1 = when {
                 productStore.netCost == null || productStore.netCost == 0.0 -> 1
                 requestItem.price < (productStore.netCost!! * (1 - request.variation)) -> 4
@@ -278,10 +284,12 @@ class PassiveQuotationService(
                 requestItem.price > (productStore.netCost!! * (1 + request.variation)) -> 2
                 else -> 3
             }
+            println("teste 7")
             val flag2 = when {
                 requestItem.price > (productStore.netCost!! * request.param7) || requestItem.price < (productStore.netCost!! * request.param8) -> 2
                 else -> 0
             }
+            println("teste 8")
             val unityNecessity = when {
                 flag1 >= request.param5 -> {
                     when {
@@ -297,8 +305,11 @@ class PassiveQuotationService(
                     }
                 }
             }
+            println("teste 9")
             val boxNecessity = (unityNecessity / productStore.packageQuantity)
+            println("teste 10")
             val finalStock = boxNecessity * productStore.packageQuantity + stockPlusOpenOrder
+            println("teste 11")
             val salesNetStock = when {
                 stockPlusOpenOrder < productStore.transferPackage * request.param4 -> false
                 else -> when {
@@ -306,6 +317,7 @@ class PassiveQuotationService(
                     else -> false
                 }
             }
+            println("teste 12")
             val mirrorQuantity = when {
                 salesNetStock -> 0
                 else -> when {
@@ -313,11 +325,16 @@ class PassiveQuotationService(
                     else -> ceil(boxNecessity).toInt()
                 }
             }
+            println("teste 13")
             val currentStocks = list.map { it.currentStock ?: 0.0 }
+            println("teste 14")
             val tolerance = 1e-9
+            println("teste 15")
             val zeroOrNegativeStock = currentStocks.count { it < -tolerance || abs(it - 0.0) < tolerance }
+            println("teste 16")
             val relevantParam =
                 (request.param3 - zeroOrNegativeStock) * productStore.transferPackage
+            println("teste 17")
             val relevantPurchase = when {
                 stockPlusOpenOrder < relevantParam -> true
                 else -> {
@@ -327,15 +344,21 @@ class PassiveQuotationService(
                     }
                 }
             }
+            println("teste 18")
             val saleDay = salesLastTwelveMonthsDivTwelve / 30
+            println("teste 19")
             val biggestValidity = list.maxOf { it.expirationDate ?: LocalDate.now().plusYears(1) }
+            println("teste 20")
             val expirationDays =
                 (biggestValidity.toEpochDay() - LocalDate.now().toEpochDay()).days.toInt(unit = DurationUnit.DAYS)
+            println("teste 21")
             val salesProjection = saleDay * expirationDays
+            println("teste 22")
             val maxPurchase = when {
                 (salesProjection - currentStockSum) / productStore.packageQuantity <= 0 -> 0
                 else -> floor((salesProjection - currentStockSum) / productStore.packageQuantity)
             }
+            println("teste 23")
             var finalQtt = requestItem.quantity ?: when {
                 (biggestSale < (request.param1 * productStore.packageQuantity) && stockPlusOpenOrder > request.param2 * productStore.packageQuantity) || !relevantPurchase || salesNetStock -> 0
                 else -> {
@@ -345,9 +368,13 @@ class PassiveQuotationService(
                     }
                 }
             }
+            println("teste 24")
             finalQtt = ceil(finalQtt.toDouble())
+            println("teste 25")
             val total = requestItem.price * finalQtt * productStore.packageQuantity
+            println("teste 26")
             val stockPlusOrder = stockPlusOpenOrder + finalQtt * productStore.packageQuantity
+            println("teste 27")
 
             PassiveQuotationCalculationResponse(
                 productStore,
