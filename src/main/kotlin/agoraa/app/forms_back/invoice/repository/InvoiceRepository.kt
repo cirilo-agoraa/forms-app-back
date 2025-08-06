@@ -10,4 +10,5 @@ interface InvoiceRepository : JpaRepository<Invoice, Long> {
     fun findByRetainedStatusGreaterThan(status: Int): List<Invoice>
     fun findByToBonusTrueOrderByCreatedAtAsc(): List<Invoice>
     fun findByRetainedStatus(retainedStatus: Int): List<Invoice>
+    fun findByToBonusTrueOrderByDateEntradaDesc(): List<Invoice>
 }
