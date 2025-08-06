@@ -241,9 +241,7 @@ class PassiveQuotationService(
         val products = productsService.findAll(requestCodes)
         val productsStores = productsService.findAll(codes = requestCodes, stores = listOf(StoresEnum.TRESMANN_SMJ, StoresEnum.TRESMANN_STT))
         val salesLastThirtyDaysSumStores = productsStores.sumOf { it.salesLastThirtyDays }
-        print("Sales last thirty days sum for stores: $salesLastThirtyDaysSumStores")
         val salesLastTwelveMonthsSumStores = productsStores.sumOf { it.salesLastTwelveMonths }
-
 
         if (products.isEmpty()) {
             throw agoraa.app.forms_back.shared.exception.ResourceNotFoundException("Products not found")
@@ -281,7 +279,9 @@ class PassiveQuotationService(
                 else -> 3
             }
             val flag2 = when {
-                requestItem.price > (productStore.netCost!! * request.param7) || requestItem.price < (productStore.netCost!! * request.param8) -> 2
+                requestItem.price > (productStore.netCost
+                    ?: (0.0 * request.param7)) || requestItem.price < (productStore.netCost
+                    ?: (0.0 * request.param8)) -> 2
                 else -> 0
             }
             val unityNecessity = when {
@@ -356,11 +356,11 @@ class PassiveQuotationService(
                 biggestSale.toInt(),
                 salesLastThirtyDaysSumStores= salesLastThirtyDaysSum.toInt(),
                 stockPlusOpenOrder,
-                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_VIX }!!.currentStock
+                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_VIX }?.currentStock
                     ?: 0.0,
-                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_SMJ }!!.currentStock
+                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_SMJ }?.currentStock
                     ?: 0.0,
-                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_STT }!!.currentStock
+                list.find { it.store == agoraa.app.forms_back.shared.enums.StoresEnum.TRESMANN_STT }?.currentStock
                     ?: 0.0,
                 finalQtt,
                 maxPurchase.toDouble(),
