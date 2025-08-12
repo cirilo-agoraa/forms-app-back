@@ -12,6 +12,7 @@ import agoraa.app.forms_back.passive_quotations.passive_quotations.model.Passive
 import agoraa.app.forms_back.passive_quotations.passive_quotations.repository.PassiveQuotationRepository
 import agoraa.app.forms_back.products.products.service.ProductService
 import agoraa.app.forms_back.shared.enums.StoresEnum
+import agoraa.app.forms_back.shared.enums.WppGroupsEnum
 import agoraa.app.forms_back.shared.service.ChatsacService
 import agoraa.app.forms_back.suppliers.suppliers.model.SupplierModel
 import agoraa.app.forms_back.suppliers.suppliers.service.SupplierService
@@ -472,7 +473,7 @@ class PassiveQuotationService(
 
         pendingQuotations.forEach { quotation ->
             val msg = "COTAÇÃO FORNECEDOR ${quotation.supplier.name} PENDENTE há mais de uma hora"
-            chatsacService.sendMsg(msg, "6749b7eb8f2a5e3014639a2c").subscribe()
+            chatsacService.sendMsg(msg, quotation.wppGroup.getGroupId()).subscribe()
         }
     }
 }
